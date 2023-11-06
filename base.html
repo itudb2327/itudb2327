@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sogan DataBase</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+  </head>
+
+
+    
+
+  <body>
+    <!-- common sidebar -->
+    <main class="d-flex flex-nowrap">
+        
+      
+      <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark border-right" style="width: 280px; height: 100vh;">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+          <svg fill="none" height="70" viewBox="0 13 85 80" width="70" xmlns="http://www.w3.org/2000/svg"><path d="m50.1008 25.9008c-.0623-.5117-.4945-.9008-1.01-.9008h-2.1636c-.523 0-.9594.4012-1.0155.9212-.1926 1.7826-.7311 5.7748-1.9117 8.5788-1.072 2.546-4.1793 5.7746-7.9813 8.0333-7.5187 4.4667-12.0187 9.4279-12.0187 16.4667 0 10.4934 10.7452 19 24 19s24-8.5066 24-19c0-7.0918-5.4371-12.1963-12.1813-16.5403-3.8187-2.4597-6.7549-5.3037-7.8187-7.9597-1.0928-2.7285-1.6806-6.8061-1.8992-8.5992z" fill="#e289b0"/><path clip-rule="evenodd" d="m46.9272 23h2.1636c1.5443 0 2.8128 1.1613 2.9953 2.6589.2204 1.8078.7869 5.6417 1.7705 8.0975.8266 2.0639 3.3238 4.6249 7.0451 7.0219 6.7698 4.3605 13.0983 9.9885 13.0983 18.2217 0 12.0083-12.1014 21-26 21s-26-8.9917-26-21c0-8.1184 5.2832-13.6035 12.9972-18.1862 3.5951-2.1357 6.3138-5.0813 7.1595-7.0899 1.0551-2.5057 1.5737-6.2323 1.7665-8.0175.1631-1.5099 1.434-2.7064 3.004-2.7064zm2.1636 2c.5155 0 .9477.3891 1.01.9008.2186 1.7931.8064 5.8707 1.8992 8.5992 1.0638 2.656 4 5.5 7.8187 7.9597 6.7442 4.344 12.1813 9.4485 12.1813 16.5403 0 10.4934-10.7452 19-24 19s-24-8.5066-24-19c0-7.0388 4.5-12 12.0187-16.4667 3.802-2.2587 6.9093-5.4873 7.9813-8.0333 1.1806-2.804 1.7191-6.7962 1.9117-8.5788.0561-.52.4925-.9212 1.0155-.9212z" fill="#9d225d" fill-rule="evenodd"/><path d="m41.1779 46.6172c2.3165 2.3695 1.1073 7.3086-2.7009 11.0318s-8.7733 4.8207-11.0899 2.4513c-2.3165-2.3694-1.1073-7.3085 2.7009-11.0318 3.8082-3.7232 8.7733-4.8207 11.0899-2.4513z" fill="#ffa7cf"/><path clip-rule="evenodd" d="m46.7373 25.0179c-.4354.0834-.7764.4477-.8256.9033-.0657.6073-.1714 1.4711-.329 2.4569.4782-1.2185.8685-2.411 1.1546-3.3602zm-16.353 46.8863c2.9992 1.8084 6.5095 3.1241 10.3515 3.7505 13.0821 2.1329 25.0561-4.5338 26.7446-14.8905 1.1412-6.9993-3.4037-12.9123-9.361-18.2849-2.6912-2.4271-4.7887-5.0053-5.8429-7.3668 1.2416 2.4763 4.0156 5.0756 7.5422 7.3472 6.7442 4.3439 12.1813 9.4485 12.1813 16.5403 0 10.4934-10.7452 19-24 19-6.9621 0-13.2318-2.3469-17.6157-6.0958z" fill="#c7638f" fill-rule="evenodd"/><path d="m50 58c0 9.9411-.4477 18-1 18s-1-8.0589-1-18 .4477-18 1-18 1 8.0589 1 18z" fill="#c54c82"/><path d="m66 57.5c0 8.5604-8.4207 15.5-8.9712 15.5s6.9776-6.9396 6.9776-15.5-7.5281-15.5-6.9776-15.5 8.9712 6.9396 8.9712 15.5z" fill="#c54c82"/><path d="m30 57.5c0 8.5604 8.4207 15.5 8.9712 15.5s-6.9776-6.9396-6.9776-15.5 7.5281-15.5 6.9776-15.5-8.9712 6.9396-8.9712 15.5z" fill="#c54c82"/><path d="m58 58.5c0 9.665-4.7426 17.5-4.9872 17.5-.2447 0 2.1011-7.835 2.1011-17.5s-2.3458-17.5-2.1011-17.5c.2446 0 4.9872 7.835 4.9872 17.5z" fill="#c54c82"/><path d="m39 58.5c0 9.665 4.7426 17.5 4.9872 17.5.2447 0-2.1011-7.835-2.1011-17.5s2.3458-17.5 2.1011-17.5c-.2446 0-4.9872 7.835-4.9872 17.5z" fill="#c54c82"/><g fill="#a3446e"><path d="m65.7796 61.0085c-.3975.7672-1.3417 1.0669-2.1089.6695-.7672-.3975-1.067-1.3417-.6695-2.1089.3975-.7673 1.3417-1.067 2.1089-.6695.7673.3975 1.067 1.3417.6695 2.1089z"/><path d="m69.0389 65.7163c-.3975.7672-1.3417 1.067-2.1089.6695s-1.067-1.3417-.6695-2.1089 1.3417-1.067 2.1089-.6695 1.067 1.3417.6695 2.1089z"/><path d="m70.0525 60.1975c-.2981.5754-1.0062.8002-1.5816.5021-.5755-.2981-.8003-1.0062-.5021-1.5817.2981-.5754 1.0062-.8002 1.5816-.5021.5755.2981.8003 1.0063.5021 1.5817z"/><path d="m65.7747 70.3375c-.3975.7672-1.3416 1.067-2.1089.6695-.7672-.3975-1.0669-1.3417-.6694-2.1089.3974-.7672 1.3416-1.067 2.1088-.6695.7673.3975 1.067 1.3417.6695 2.1089z"/><path d="m63.4964 65.552c-.3975.7672-1.3417 1.067-2.1089.6695s-1.067-1.3417-.6695-2.1089c.3975-.7673 1.3417-1.067 2.1089-.6695.7673.3975 1.067 1.3417.6695 2.1089z"/><path d="m60.3792 73.5496c-.3975.7672-1.3417 1.067-2.1089.6695s-1.0669-1.3417-.6695-2.1089c.3975-.7672 1.3417-1.067 2.1089-.6695.7673.3975 1.067 1.3417.6695 2.1089z"/><path d="m59.0067 68.778c-.3975.7672-1.3417 1.067-2.1089.6695-.7673-.3975-1.067-1.3417-.6695-2.1089s1.3417-1.067 2.1089-.6695 1.0669 1.3417.6695 2.1089z"/><path d="m54.472 75.3303c-.2981.5754-1.0063.8002-1.5817.5021-.5754-.2982-.8002-1.0063-.5021-1.5817s1.0062-.8002 1.5817-.5021c.5754.2981.8002 1.0062.5021 1.5817z"/></g><path clip-rule="evenodd" d="m33.6676 51.0765c.7999.7618.8308 2.0277.069 2.8276-.5812.6102-.9819 1.2725-1.2285 1.9957-.3565 1.0454-1.493 1.604-2.5384 1.2475-1.0455-.3565-1.604-1.493-1.2476-2.5384.4423-1.2971 1.157-2.4545 2.1179-3.4635.7618-.7998 2.0278-.8307 2.8276-.0689z" fill="#fff" fill-rule="evenodd"/></svg>
+          <span class="sidebar-heading" style="font-size:xx-large;">Sogan</span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+          <li class="nav-item">
+            <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %} text-white" aria-current="page">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door" viewBox="0 0 16 16">
+                  <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146ZM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5Z"/>
+                </svg>
+              Home
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link {% if request.path == '/orders' %}active{% endif %} text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-table" viewBox="0 0 16 16">
+                  <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z"/>
+                </svg>
+              Orders
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link {% if request.path == '/products' %}active{% endif %} text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag" viewBox="0 0 16 16">
+                  <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
+                </svg>
+              Products
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link {% if request.path == '/customers' %}active{% endif %} text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
+                  <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8Zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022ZM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816ZM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z"/>
+                </svg>
+              Customers
+            </a>
+          </li>
+          <li>
+              <a href="#" class="nav-link {% if request.path == '/shippers' %}active{% endif %} text-white">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-truck" viewBox="0 0 16 16">
+                      <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5v-7zm1.294 7.456A1.999 1.999 0 0 1 4.732 11h5.536a2.01 2.01 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456zM12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12v4zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+                    </svg>
+                Shippers
+              </a>
+            </li>
+            <li>
+              <a href="#" class="nav-link {% if request.path == '/employees' %}active{% endif %} text-white">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-gear" viewBox="0 0 16 16">
+                      <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm.256 7a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Zm3.63-4.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382l.045-.148ZM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z"/>
+                    </svg>
+                Employees
+              </a>
+            </li>
+            <li>
+              <a href="#" class="nav-link {% if request.path == '/suppliers' %}active{% endif %} text-white">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-buildings" viewBox="0 0 16 16">
+                      <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022ZM6 8.694 1 10.36V15h5V8.694ZM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5V15Z"/>
+                      <path d="M2 11h1v1H2v-1Zm2 0h1v1H4v-1Zm-2 2h1v1H2v-1Zm2 0h1v1H4v-1Zm4-4h1v1H8V9Zm2 0h1v1h-1V9Zm-2 2h1v1H8v-1Zm2 0h1v1h-1v-1Zm2-2h1v1h-1V9Zm0 2h1v1h-1v-1ZM8 7h1v1H8V7Zm2 0h1v1h-1V7Zm2 0h1v1h-1V7ZM8 5h1v1H8V5Zm2 0h1v1h-1V5Zm2 0h1v1h-1V5Zm0-2h1v1h-1V3Z"/>
+                    </svg>
+                Suppliers
+              </a>
+            </li>
+        </ul>
+        <hr>
+        <div class="dropdown">
+          <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                  <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                </svg>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+            <li><a class="dropdown-item" href="#">New project...</a></li>
+            <li><a class="dropdown-item" href="#">Settings</a></li>
+            <li><a class="dropdown-item" href="#">Profile</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Sign out</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+
+</body>
+</html>
