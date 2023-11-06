@@ -1,0 +1,67 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Supplier Records</title>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Supplier Records</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Company</th>
+                    <th>Last Name</th>
+                    <th>First Name</th>
+                    <th>Email Address</th>
+                    <th>Job Title</th>
+                    <th>Business Phone</th>
+                    <th>Home Phone</th>
+                    <th>Mobile Phone</th>
+                    <th>Fax Number</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>State/Province</th>
+                    <th>Zip/Postal Code</th>
+                    <th>Country/Region</th>
+                    <th>Web Page</th>
+                    <th>Notes</th>
+                    <th>Attachments</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for record in records %}
+                <tr>
+                    <td>{{ record[0] }}</td>
+                    <td>{{ record[1] }}</td>
+                    <td>{{ record[2] }}</td>
+                    <td>{{ record[3] }}</td>
+					<td>{{ record[4] }}</td>
+                    <td>{{ record[5] }}</td>
+					<td>{{ record[6] }}</td>
+                    <td>{{ record[7] }}</td>
+					<td>{{ record[8] }}</td>
+                    <td>{{ record[9] }}</td>
+					<td>{{ record[10] }}</td>
+                    <td>{{ record[11] }}</td>
+					<td>{{ record[12] }}</td>
+                    <td>{{ record[13] }}</td>
+					<td>{{ record[14] }}</td>
+                    <td>{{ record[15] }}</td>
+					<td>{{ record[16] }}</td>
+                    <td>{{ record[17] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
