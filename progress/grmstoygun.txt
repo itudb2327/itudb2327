@@ -1,0 +1,1 @@
+6.11.23 commit: Created a database instance on AWS, fed the tables and data to the database and established connection with the project.
