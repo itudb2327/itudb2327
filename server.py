@@ -22,9 +22,6 @@ def supplier():
 
     cursor.close()
 
-    
-    db.close()
-
     return render_template('suppliers.html', records=records)
 
 if __name__ == '__main__':
