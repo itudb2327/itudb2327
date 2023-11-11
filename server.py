@@ -1,6 +1,7 @@
 import mysql.connector
 from flask import Flask, render_template,url_for,request
 from supplier import Supplier
+from employee import Employees
 
 db = mysql.connector.connect(
     host="northwind.cfl4fp0ymkxx.eu-north-1.rds.amazonaws.com",
@@ -48,6 +49,20 @@ def supplier():
     
 
     return render_template('suppliers.html', records=records)
+
+
+@app.route("/employees")
+def employees_page():
+     cursor = db.cursor()
+     employee_list = []
+     select_query=" SELECT id, first_name, last_name, job_title, business_phone, notes FROM employees "
+     cursor.execute(select_query)
+     for employee_id, first_name, last_name, job_title, business_phone, notes in cursor:
+        employee_list.append((employee_id, Employees(first_name,last_name, job_title, business_phone, notes)))
+     cursor.close()
+     return render_template("employees.html", employee_list=employee_list)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

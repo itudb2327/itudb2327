@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block employees %}
+{% if employee_list %}
+<div class="p-3 m-0 border-0 bd-example m-0 border-0">
+    <div class="accordion" id="accordionExample" style="width: 50rem;" >
+        {% for employee_id, employee in employee_list %}
+        <div class="accordion-item">
+        <h2 class="accordion-header ">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{employee_id}}" aria-expanded="false" aria-controls="collapse{{employee_id}}">
+             {{employee_id}} {{employee.name}} {{employee.surname}}
+            </button>
+        </h2>
+      <div id="collapse{{employee_id}}" class="accordion-collapse collapse" data-bs-parent="#accordionExample" >
+        
+        <div class="accordion-body">
+            {{employee.name}} {{employee.surname}} details.
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    
+</div> 
+{% endif %}
+
+
+{% endblock %}
