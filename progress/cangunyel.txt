@@ -1,1 +1,3 @@
 6.11.23 commit: updating server.py file for fetching table from aws server, creating a suppliers.html file for displaying fetched "suppliers" table.
+
+11.11.23 commit: updating server.py file for taking form from user(not completed yet), updating supplier.html and created supplier.css for adding record screen, style changes in supplier table and new sorting feature.

@@ -1,67 +1,307 @@
-
+<!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{url_for('static',filename='styles/suppliers.css')}}">
+    <!-- Title of the page -->
     <title>Supplier Records</title>
-</head>
-<body>
-
+  </head>
+  <body>
+    <!-- Main container -->
     <div class="container">
-        <h1>Supplier Records</h1>
+      <h1>Supplier Records</h1>
+      <div class="table-container">
+        <!-- Table container -->
         <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Company</th>
-                    <th>Last Name</th>
-                    <th>First Name</th>
-                    <th>Email Address</th>
-                    <th>Job Title</th>
-                    <th>Business Phone</th>
-                    <th>Home Phone</th>
-                    <th>Mobile Phone</th>
-                    <th>Fax Number</th>
-                    <th>Address</th>
-                    <th>City</th>
-                    <th>State/Province</th>
-                    <th>Zip/Postal Code</th>
-                    <th>Country/Region</th>
-                    <th>Web Page</th>
-                    <th>Notes</th>
-                    <th>Attachments</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for record in records %}
-                <tr>
-                    <td>{{ record[0] }}</td>
-                    <td>{{ record[1] }}</td>
-                    <td>{{ record[2] }}</td>
-                    <td>{{ record[3] }}</td>
-					<td>{{ record[4] }}</td>
-                    <td>{{ record[5] }}</td>
-					<td>{{ record[6] }}</td>
-                    <td>{{ record[7] }}</td>
-					<td>{{ record[8] }}</td>
-                    <td>{{ record[9] }}</td>
-					<td>{{ record[10] }}</td>
-                    <td>{{ record[11] }}</td>
-					<td>{{ record[12] }}</td>
-                    <td>{{ record[13] }}</td>
-					<td>{{ record[14] }}</td>
-                    <td>{{ record[15] }}</td>
-					<td>{{ record[16] }}</td>
-                    <td>{{ record[17] }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
+          <thead>
+            <!-- Table headers with sorting functionality -->
+            <tr>
+              <th class="sortable">ID</th>
+              <th class="sortable">Company</th>
+              <th class="sortable">Last Name</th>
+              <th class="sortable">First Name</th>
+              <th class="sortable">Email Address</th>
+              <th class="sortable">Job Title</th>
+              <th class="sortable">Business Phone</th>
+              <th class="sortable">Home Phone</th>
+              <th class="sortable">Mobile Phone</th>
+              <th class="sortable">Fax Number</th>
+              <th class="sortable">Address</th>
+              <th class="sortable">City</th>
+              <th class="sortable">State/Province</th>
+              <th class="sortable">Zip/Postal Code</th>
+              <th class="sortable">Country/Region</th>
+              <th class="sortable">Web Page</th>
+              <th class="sortable">Notes</th>
+              <th class="sortable">Attachments</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Display supplier records from db--> {% for record in records %} <tr>
+              <td>{{ record[0] }}</td>
+              <td>{{ record[1] }}</td>
+              <td>{{ record[2] }}</td>
+              <td>{{ record[3] }}</td>
+              <td>{{ record[4] }}</td>
+              <td>{{ record[5] }}</td>
+              <td>{{ record[6] }}</td>
+              <td>{{ record[7] }}</td>
+              <td>{{ record[8] }}</td>
+              <td>{{ record[9] }}</td>
+              <td>{{ record[10] }}</td>
+              <td>{{ record[11] }}</td>
+              <td>{{ record[12] }}</td>
+              <td>{{ record[13] }}</td>
+              <td>{{ record[14] }}</td>
+              <td>{{ record[15] }}</td>
+              <td>{{ record[16] }}</td>
+              <td>{{ record[17] }}</td>
+            </tr> {% endfor %}
+          </tbody>
         </table>
+      </div>
+      <div class="button-container">
+        <!-- Button container for update and add actions -->
+        <button id="updateButton" class="btn btn-primary">Update Record</button>
+        <button id="addButton" class="btn btn-success" data-toggle="modal" data-target="#myModal">Add New Record</button>
+      </div>
+      <!-- Modal for adding new records -->
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="myModalLabel">Enter new values</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+				<!-- Form takes input one by one -->
+              <div class="modal-split">
+                <form action="/suppliers" method="post">
+                  <label for="company">Company:</label>
+                  <br>
+                  <input type="text" id="company" name="company">
+                  <br>
+                </form>
+              </div>
+              <div class="modal-split">
+                <form action="/suppliers" method="post">
+                  <label for="last_name">Last name:</label>
+                  <br>
+                  <input type="text" id="last_name" name="last_name">
+                  <br>
+                </form>
+              </div>
+              <div class="modal-split">
+                <form action="/suppliers" method="post">
+                  <label for="first_name">First name:</label>
+                  <br>
+                  <input type="text" id="first_name" name="first_name">
+                  <br>
+                </form>
+              </div>
+              <div class="modal-split">
+                <form action="/suppliers" method="post">
+                  <label for="email_addres">Email Adress:</label>
+                  <br>
+                  <input type="text" id="email_addres" name="email_addres">
+                  <br>
+                </form>
+              </div>
+              <div class="modal-split">
+                <form action="/suppliers" method="post">
+                  <label for="job_tittle">Job Title:</label>
+                  <br>
+                  <input type="text" id="job_tittle" name="job_tittle">
+                  <br>
+                </form>
+              </div>
+              <div class="modal-split">
+                <form action="/suppliers" method="post">
+                  <label for="business_phone">Business Phone:</label>
+                  <br>
+                  <input type="text" id="business_phone" name="business_phone">
+                  <br>
+                </form>
+              </div>
+              <div class="modal-split">
+                <form action="/suppliers" method="post">
+                  <label for="fax_number">Fax Number:</label>
+                  <br>
+                  <input type="text" id="fax_number" name="fax_number">
+                  <br>
+                </form>
+              </div>
+              <div class="modal-split">
+                <form action="/suppliers" method="post">
+                  <label for="address">Address:</label>
+                  <br>
+                  <input type="text" id="address" name="address">
+                  <br>
+                </form>
+              </div>
+              <div class="modal-split">
+                <form action="/suppliers" method="post">
+                  <label for="city">City:</label>
+                  <br>
+                  <input type="text" id="city" name="city">
+                  <br>
+                </form>
+              </div>
+              <div class="modal-split">
+                <form action="/suppliers" method="post">
+                  <label for="state_province">State:</label>
+                  <br>
+                  <input type="text" id="state_province" name="state_province">
+                  <br>
+                </form>
+              </div>
+              <div class="modal-split">
+                <form action="/suppliers" method="post">
+                  <label for="zip_postal_code">Zip/Postal Code:</label>
+                  <br>
+                  <input type="text" id="zip_postal_code" name="zip_postal_code">
+                  <br>
+                </form>
+              </div>
+              <div class="modal-split">
+                <form action="/suppliers" method="post">
+                  <label for="country_region">Country:</label>
+                  <br>
+                  <input type="text" id="country_region" name="country_region">
+                  <br>
+                </form>
+              </div>
+              <div class="modal-split">
+                <form action="/suppliers" method="post">
+                  <label for="web_page">Webpage:</label>
+                  <br>
+                  <input type="text" id="web_page" name="web_page">
+                  <br>
+                </form>
+              </div>
+              <div class="modal-split">
+                <form action="/suppliers" method="post">
+                  <label for="notes">Any notes?</label>
+                  <br>
+                  <input type="text" id="notes" name="notes">
+                  <br>
+                </form>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <!--Footer -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Bootstrap JavaScript and jQuery -->
     </div>
-
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+    <script>
+      $(document).ready(function() {
+        $('th.sortable').click(function() {
+          var table = $(this).parents('table').eq(0);
+          var rows = table.find('tr:gt(0)').toArray();
+          var isAscending = $(this).hasClass('asc');
+          // Remove the "asc" class from all headers
+          $('th.sortable').removeClass('asc');
+          if (isAscending) {
+            $(this).removeClass('asc');
+          } else {
+            $(this).addClass('asc');
+          }
+          rows.sort(comparator($(this).index()));
+          if (!isAscending) {
+            rows = rows.reverse();
+          }
+          for (var i = 0; i < rows.length; i++) {
+            table.append(rows[i]);
+          }
+        });
+
+        function comparator(index) {
+          return function(a, b) {
+            var valA = getCellValue(a, index),
+              valB = getCellValue(b, index);
+            return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB);
+          }
+        }
+
+        function getCellValue(row, index) {
+          return $(row).children('td').eq(index).text();
+        }
+      });
+    </script>
+    <script>
+      $(document).ready(function() {
+        prep_modal();
+      });
+
+      function prep_modal() {
+        $(".modal").each(function() {
+          var element = this;
+          var pages = $(this).find('.modal-split');
+          if (pages.length != 0) {
+            pages.hide();
+            pages.eq(0).show();
+            var b_button = document.createElement("button");
+            b_button.setAttribute("type", "button");
+            b_button.setAttribute("class", "btn btn-primary");
+            b_button.setAttribute("style", "display: none;");
+            b_button.innerHTML = "Back";
+            var n_button = document.createElement("button");
+            n_button.setAttribute("type", "button");
+            n_button.setAttribute("class", "btn btn-primary");
+            n_button.innerHTML = "Next";
+            $(this).find('.modal-footer').append(b_button).append(n_button);
+            var page_track = 0;
+            $(n_button).click(function() {
+              this.blur();
+              if (page_track == 0) {
+                $(b_button).show();
+              }
+              if (page_track == pages.length - 2) {
+                $(n_button).text("Submit");
+              }
+              if (page_track == pages.length - 1) {
+                console.log($(element).find("form").serialize());
+                $(element).find("form").submit();
+              }
+              if (page_track < pages.length - 1) {
+                page_track++;
+                pages.hide();
+                pages.eq(page_track).show();
+              }
+            });
+            $(b_button).click(function() {
+              if (page_track == 1) {
+                $(b_button).hide();
+              }
+              if (page_track == pages.length - 1) {
+                $(n_button).text("Next");
+              }
+              if (page_track > 0) {
+                page_track--;
+                pages.hide();
+                pages.eq(page_track).show();
+              }
+            });
+          }
+        });
+      }
+    </script>
+    <script>
+      $(document).on("keydown", "form", function(event) {
+        return event.key != "Enter";
+      });
+    </script>
+  </body>
 </html>
