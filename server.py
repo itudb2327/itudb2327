@@ -2,6 +2,7 @@ import mysql.connector
 from flask import Flask, render_template,url_for,request
 from supplier import Supplier
 from employee import Employees
+import customers
 
 db = mysql.connector.connect(
     host="northwind.cfl4fp0ymkxx.eu-north-1.rds.amazonaws.com",
@@ -62,7 +63,9 @@ def employees_page():
      cursor.close()
      return render_template("employees.html", employee_list=employee_list)
 
-
+@app.route("/customers")
+def customers_page():
+    return customers.index(db)
 
 if __name__ == '__main__':
     app.run(debug=True)
