@@ -52,16 +52,16 @@ def supplier():
     return render_template('suppliers.html', records=records)
 
 
-@app.route("/employees")
+@app.route("/employees", methods=("GET","POST"))
 def employees_page():
-     cursor = db.cursor()
-     employee_list = []
-     select_query=" SELECT id, first_name, last_name, job_title, business_phone, notes FROM employees "
-     cursor.execute(select_query)
-     for employee_id, first_name, last_name, job_title, business_phone, notes in cursor:
-        employee_list.append((employee_id, Employees(first_name,last_name, job_title, business_phone, notes)))
-     cursor.close()
-     return render_template("employees.html", employee_list=employee_list)
+     employee_list=Employees.get_all_employees(db)
+     if request.method == "POST":
+        employee_name =request.form['search']
+        employee_name = employee_name.upper()
+        filtered_employee_list = Employees.search_employee(employee_name, employee_list) 
+        return render_template("employees.html", employee_list=filtered_employee_list)
+     else:
+        return render_template("employees.html", employee_list=employee_list)
 
 @app.route("/customers")
 def customers_page():

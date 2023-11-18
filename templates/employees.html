@@ -1,26 +1,53 @@
 {% extends "base.html" %}
 {% block page_content %}
-{% if employee_list %}
-<div class="p-3 m-0 border-0 bd-example m-0 border-0">
-    <div class="accordion" id="accordionExample" style="width: 50rem;" >
-        {% for employee_id, employee in employee_list %}
-        <div class="accordion-item">
-        <h2 class="accordion-header ">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{employee_id}}" aria-expanded="false" aria-controls="collapse{{employee_id}}">
-             {{employee_id}} {{employee.name}} {{employee.surname}}
-            </button>
-        </h2>
-      <div id="collapse{{employee_id}}" class="accordion-collapse collapse" data-bs-parent="#accordionExample" >
+
+
+<div class="container" style="padding-top: 8%;">
+
+      <div class="row">
         
-        <div class="accordion-body">
-            {{employee.name}} {{employee.surname}} details.
+        <div class="col">
+          <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+            Sort By
+          </button>
         </div>
-      </div>
-      {% endfor %}
-    </div>
+        <div class="col">
+          <form class="d-flex" method="post">
+            <input class="form-control me-2" name="search" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
     
-</div> 
-{% endif %}
+        </div>
+       
+      </div>
+   
+  <div class="container-fluid align-items-center" style="padding-top: 2%;">
+  
+      <div class="accordion" id="accordionExample" style="width: 50rem;">
+        {% for employee_id, employee in employee_list %}
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{employee_id}}">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapse{{employee_id}}" aria-expanded="false"
+                      aria-controls="collapse{{employee_id}}"
+                      onclick="toggleAccordion('{{employee_id}}')">
+                {{employee.name}} {{employee.surname}}
+              </button>
+            </h2>
+            <div id="collapse{{employee_id}}" class="accordion-collapse collapse"
+                aria-labelledby="heading{{employee_id}}" data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                {{employee.name}} {{employee.surname}} details.
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+</div>
+
+
 
 
 {% endblock %}
+

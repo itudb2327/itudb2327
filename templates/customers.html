@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% block page_content %}
-<div class="container">
+<div class="container" style="padding-top: 8%;">
   <form action="/customers" method="get">
     <label for="sort">Sort by:</label>
     <select name="sort_by" id="sort">
@@ -14,7 +14,7 @@
     </select>
     <input type="submit" class="btn btn-success" value="Sort" />
   </form>
-  <div style="padding-top: 40px">
+  <div class="mt-4">
     <table class="table table-light table-striped table-hover">
       <thead>
         <tr>
