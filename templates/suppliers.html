@@ -1,22 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{url_for('static',filename='styles/suppliers.css')}}">
-    <!-- Title of the page -->
-    <title>Supplier Records</title>
-  </head>
-  <body>
+{% extends "base.html" %}
+{% block page_content %}
+<link rel="stylesheet" href="{{url_for('static',filename='styles/suppliers.css')}}">
+
     <!-- Main container -->
-    <div class="container">
+    <div class="container" style="padding-top: 8%;">
       <h1>Supplier Records</h1>
       <div class="table-container">
         <!-- Table container -->
-        <table class="table table-striped">
+        <table class="table table-striped" id="supplierTable">
           <thead>
             <!-- Table headers with sorting functionality -->
             <tr>
@@ -41,7 +32,9 @@
             </tr>
           </thead>
           <tbody>
-            <!-- Display supplier records from db--> {% for record in records %} <tr>
+            <!-- Display supplier records from db--> 
+			{% for record in records %} 
+			<tr>
               <td>{{ record[0] }}</td>
               <td>{{ record[1] }}</td>
               <td>{{ record[2] }}</td>
@@ -66,11 +59,12 @@
       </div>
       <div class="button-container">
         <!-- Button container for update and add actions -->
-        <button id="updateButton" class="btn btn-primary">Update Record</button>
+		<button id="updateButton" class="btn btn-primary" data-toggle="modal" data-target="#updateModal">Update Record</button>
         <button id="addButton" class="btn btn-success" data-toggle="modal" data-target="#myModal">Add New Record</button>
       </div>
       <!-- Modal for adding new records -->
       <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -87,112 +81,101 @@
                   <br>
                   <input type="text" id="company" name="company">
                   <br>
-                </form>
+                
               </div>
               <div class="modal-split">
-                <form action="/suppliers" method="post">
                   <label for="last_name">Last name:</label>
                   <br>
                   <input type="text" id="last_name" name="last_name">
                   <br>
-                </form>
               </div>
               <div class="modal-split">
-                <form action="/suppliers" method="post">
                   <label for="first_name">First name:</label>
                   <br>
                   <input type="text" id="first_name" name="first_name">
                   <br>
-                </form>
               </div>
               <div class="modal-split">
-                <form action="/suppliers" method="post">
-                  <label for="email_addres">Email Adress:</label>
+                  <label for="email_address">Email Adress:</label>
                   <br>
-                  <input type="text" id="email_addres" name="email_addres">
+                  <input type="text" id="email_address" name="email_address">
                   <br>
-                </form>
               </div>
               <div class="modal-split">
-                <form action="/suppliers" method="post">
-                  <label for="job_tittle">Job Title:</label>
+                  <label for="job_title">Job Title:</label>
                   <br>
-                  <input type="text" id="job_tittle" name="job_tittle">
+                  <input type="text" id="job_title" name="job_title">
                   <br>
-                </form>
               </div>
               <div class="modal-split">
-                <form action="/suppliers" method="post">
                   <label for="business_phone">Business Phone:</label>
                   <br>
                   <input type="text" id="business_phone" name="business_phone">
                   <br>
-                </form>
+              </div>
+			  <div class="modal-split">
+                  <label for="home_phone">Home Phone:</label>
+                  <br>
+                  <input type="text" id="home_phone" name="home_phone">
+                  <br>
+              </div>
+			  <div class="modal-split">
+                  <label for="mobile_phone">Mobile Phone:</label>
+                  <br>
+                  <input type="text" id="mobile_phone" name="mobile_phone">
+                  <br>
               </div>
               <div class="modal-split">
-                <form action="/suppliers" method="post">
                   <label for="fax_number">Fax Number:</label>
                   <br>
                   <input type="text" id="fax_number" name="fax_number">
                   <br>
-                </form>
               </div>
               <div class="modal-split">
-                <form action="/suppliers" method="post">
                   <label for="address">Address:</label>
                   <br>
                   <input type="text" id="address" name="address">
                   <br>
-                </form>
               </div>
               <div class="modal-split">
-                <form action="/suppliers" method="post">
                   <label for="city">City:</label>
                   <br>
                   <input type="text" id="city" name="city">
                   <br>
-                </form>
               </div>
               <div class="modal-split">
-                <form action="/suppliers" method="post">
                   <label for="state_province">State:</label>
                   <br>
                   <input type="text" id="state_province" name="state_province">
                   <br>
-                </form>
               </div>
               <div class="modal-split">
-                <form action="/suppliers" method="post">
                   <label for="zip_postal_code">Zip/Postal Code:</label>
                   <br>
                   <input type="text" id="zip_postal_code" name="zip_postal_code">
                   <br>
-                </form>
               </div>
               <div class="modal-split">
-                <form action="/suppliers" method="post">
                   <label for="country_region">Country:</label>
                   <br>
                   <input type="text" id="country_region" name="country_region">
                   <br>
-                </form>
               </div>
               <div class="modal-split">
-                <form action="/suppliers" method="post">
                   <label for="web_page">Webpage:</label>
                   <br>
                   <input type="text" id="web_page" name="web_page">
                   <br>
-                </form>
               </div>
               <div class="modal-split">
-                <form action="/suppliers" method="post">
                   <label for="notes">Any notes?</label>
                   <br>
                   <input type="text" id="notes" name="notes">
                   <br>
-                </form>
               </div>
+			  <input type="hidden" name="operation" value="0"><!--operation 0 create-->
+
+                </form>
             </div>
             <div class="modal-footer">
               <!--Footer -->
@@ -200,7 +183,184 @@
           </div>
         </div>
       </div>
-      <!-- Bootstrap JavaScript and jQuery -->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="updateModalLabel">Update Record</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/suppliers" method="post">
+			<div class="form-group">
+				<label for="updateId">Select ID:</label>
+				<select id="updateId" name="updateId" class="form-control" onChange="document.querySelector('#updateIdInfo input').value = this.value" required>
+					{% for record in records %}
+						<option value="{{ record[0] }}">{{ record[0] }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<input type="hidden" name="operation" value="2"><!--operation 2 update-->
+			<button type="submit" id="updateButton" data-toggle="modal" data-target="#changeRecordModal" class="btn btn-primary">Update</button>
+			<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteConfirmModal">Delete</button>
+		</form>
+         
+      </div>
+      <div class="modal-footer">
+        <!-- Footer -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add a confirmation modal for delete action -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="deleteConfirmModalLabel">Confirm Delete</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this record?</p>
+      </div>
+      <div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+	    <form action="/suppliers" method="post">
+			<span id="updateIdInfo">
+			<input type="hidden" value="1" name="updateId">
+			</span >
+			<input type="hidden" name="operation" value="1"><!--operation 1 delete-->
+        <button type="submit" class="btn btn-danger" >Delete</button>
+		</form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal for updating value -->
+      <div class="modal fade" id="changeRecordModal" tabindex="-1" role="dialog" aria-labelledby="changeRecordModalLabel">
+	  
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="myModalLabel">Enter new values</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+				<!-- Form takes input one by one -->
+              <div class="modal-split">
+                <form action="/suppliers" method="post">
+                  <label for="company">Company:</label>
+                  <br>
+                  <input type="text" id="company" name="company">
+                  <br>
+                
+              </div>
+              <div class="modal-split">
+                  <label for="last_name">Last name:</label>
+                  <br>
+                  <input type="text" id="last_name" name="last_name">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="first_name">First name:</label>
+                  <br>
+                  <input type="text" id="first_name" name="first_name">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="email_address">Email Adress:</label>
+                  <br>
+                  <input type="text" id="email_address" name="email_address">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="job_title">Job Title:</label>
+                  <br>
+                  <input type="text" id="job_title" name="job_title">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="business_phone">Business Phone:</label>
+                  <br>
+                  <input type="text" id="business_phone" name="business_phone">
+                  <br>
+              </div>
+			  <div class="modal-split">
+                  <label for="home_phone">Home Phone:</label>
+                  <br>
+                  <input type="text" id="home_phone" name="home_phone">
+                  <br>
+              </div>
+			  <div class="modal-split">
+                  <label for="mobile_phone">Mobile Phone:</label>
+                  <br>
+                  <input type="text" id="mobile_phone" name="mobile_phone">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="fax_number">Fax Number:</label>
+                  <br>
+                  <input type="text" id="fax_number" name="fax_number">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="address">Address:</label>
+                  <br>
+                  <input type="text" id="address" name="address">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="city">City:</label>
+                  <br>
+                  <input type="text" id="city" name="city">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="state_province">State:</label>
+                  <br>
+                  <input type="text" id="state_province" name="state_province">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="zip_postal_code">Zip/Postal Code:</label>
+                  <br>
+                  <input type="text" id="zip_postal_code" name="zip_postal_code">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="country_region">Country:</label>
+                  <br>
+                  <input type="text" id="country_region" name="country_region">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="web_page">Webpage:</label>
+                  <br>
+                  <input type="text" id="web_page" name="web_page">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="notes">Any notes?</label>
+                  <br>
+                  <input type="text" id="notes" name="notes">
+                  <br>
+              </div>
+				<!-- <input> -->
+                </form>
+            </div>
+            <div class="modal-footer">
+              <!--Footer -->
+            </div>
+          </div>
+        </div>
+      </div>	  
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
@@ -303,5 +463,6 @@
         return event.key != "Enter";
       });
     </script>
-  </body>
-</html>
+	
+	
+{% endblock %}
