@@ -34,8 +34,11 @@ def employees_page():
      else:
         return render_template("employees.html", employee_list=employee_list)
 
-@app.route("/customers")
+@app.route("/customers", methods=("GET","POST"))
 def customers_page():
+    if request.method == "POST":
+        if 'confirmDelete' in request.form:
+            return customers.delete(db)
     return customers.index(db)
 
 if __name__ == '__main__':

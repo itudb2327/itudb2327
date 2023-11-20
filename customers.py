@@ -1,5 +1,5 @@
 import mysql.connector
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash
 
 class Customer:
     def __init__(self, id, company, last_name, first_name, job_title, business_phone, address, city) :
@@ -26,4 +26,27 @@ def index(db):
         customers_list.append(Customer(id, company, last_name, first_name, job_title, business_phone, address, city))
     cursor.close()
     return render_template("customers.html", customers_list = customers_list)
+
+def delete(db):
+    cursor = db.cursor()
+    id = request.form.get("customer_id")
+    delete_query = f"DELETE FROM customers WHERE id = '{id}'"
+    cursor.execute(delete_query)
+    flash('Customer deleted successfully', 'success')
+    return index(db)
+
+
+
+"""def update(db):
+    id = request.form.get('id')
+    company = request.form.get('company')
+    last_name = request.form.get('last_name')
+    first_name = request.form.get('first_name')
+    job_title = request.form.get('job_title')
+    business_phone = request.form.get('business_phone')
+    address = request.form.get('address')
+    city = request.form.get('city')
+
+    update_query = f"UPDATE customers SET id = {id}, company = {company},last_name = {last_name}, first_name = {first_name}, job_title = {job_title}, 
+    business_phone = {business_phone}, address = {address}, city = {city} WHERE """
 

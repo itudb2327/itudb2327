@@ -1,3 +1,5 @@
 6.11.23 commit: Created a database instance on AWS, fed the tables and data to the database and established connection with the project.
 
 13.11.23 commit: Created a webpage for displaying customers. Fetched customer information from the database with a query and implemented an ordering function in the webpage that modifies the query. 
+
+20.11.23 commit: Added update and delete buttons to the customer table, implemented delete request handling in the html file and backend with delete query.
