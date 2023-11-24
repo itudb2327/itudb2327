@@ -3,3 +3,5 @@
 11.11.23 commit: updating server.py file for taking form from user(not completed yet), updating supplier.html and created supplier.css for adding record screen, style changes in supplier table and new sorting feature.
 
 20.11.23 commit: creating supplier.py. updating supplier.py and supplier.html file for taking input for new supplier and insert into database, deleting existing suppliers by id. Also started updating feature for existing records but not completed.
+
+24.11.23 commit: updated supplier.py and supplier.html for updating existing records. Also a table created for keep track of update times. Metadata(record count,last update time) information added to supplier page.Also supplier.py file structure improved.

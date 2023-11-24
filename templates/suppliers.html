@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="{{url_for('static',filename='styles/suppliers.css')}}">
 
     <!-- Main container -->
-    <div class="container" style="padding-top: 8%;">
+    <div class="container" style="padding-top:8%;">
       <h1>Supplier Records</h1>
       <div class="table-container">
         <!-- Table container -->
@@ -57,6 +57,10 @@
           </tbody>
         </table>
       </div>
+	    <div class="record-count">
+			
+			<p>Total Records: {{ records|length }} Last Update Time: {{ last_update_time }}</p>
+		</div>
       <div class="button-container">
         <!-- Button container for update and add actions -->
 		<button id="updateButton" class="btn btn-primary" data-toggle="modal" data-target="#updateModal">Update Record</button>
@@ -202,8 +206,8 @@
 					{% endfor %}
 				</select>
 			</div>
-			<input type="hidden" name="operation" value="2"><!--operation 2 update-->
-			<button type="submit" id="updateButton" data-toggle="modal" data-target="#changeRecordModal" class="btn btn-primary">Update</button>
+			
+			<button type="button" id="updateButton" data-toggle="modal" data-target="#changeRecordModal" class="btn btn-primary">Update</button>
 			<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteConfirmModal">Delete</button>
 		</form>
          
@@ -352,6 +356,10 @@
                   <input type="text" id="notes" name="notes">
                   <br>
               </div>
+			  <input type="hidden" name="operation" value="2"><!--operation 2 update-->
+			  <span id="updateIdInfo">
+				<input type="hidden" value="1" name="updateId">
+			  </span >
 				<!-- <input> -->
                 </form>
             </div>
