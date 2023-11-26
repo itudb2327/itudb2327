@@ -27,11 +27,11 @@ def index(db):
     cursor.close()
     return render_template("customers.html", customers_list = customers_list)
 
-def delete(db):
+def delete(db, customer_id):
     cursor = db.cursor()
-    id = request.form.get("customer_id")
-    delete_query = f"DELETE FROM customers WHERE id = '{id}'"
+    delete_query = f"DELETE FROM customers WHERE id = '{customer_id}'"
     cursor.execute(delete_query)
+    cursor.commit()
     flash('Customer deleted successfully', 'success')
     return index(db)
 

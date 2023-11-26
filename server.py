@@ -36,10 +36,10 @@ def employees_page():
 
 @app.route("/customers", methods=("GET","POST"))
 def customers_page():
-    if request.method == "POST":
-        if 'confirmDelete' in request.form:
-            return customers.delete(db)
     return customers.index(db)
 
+@app.route("/delete_customer/<int:customer_id>", methods=("GET", "POST"))
+def delete_customer(customer_id):
+    return customers.delete(db, customer_id)
 if __name__ == '__main__':
     app.run(debug=True)
