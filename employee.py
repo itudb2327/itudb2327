@@ -11,7 +11,7 @@ class Employees:
     def get_all_employees(db):
         cursor = db.cursor()
         employee_list = []
-        select_query=" SELECT id, first_name, last_name, job_title, business_phone, notes FROM employees "
+        select_query=""" SELECT id, first_name, last_name, job_title, business_phone, notes FROM employees """
         cursor.execute(select_query)
         for employee_id, first_name, last_name, job_title, business_phone, notes in cursor:
             employee_list.append((employee_id, Employees(first_name,last_name, job_title, business_phone, notes)))
@@ -24,3 +24,10 @@ class Employees:
             if name in full_name.upper(): 
                 filtered_employee.append((employee_id, employee))
         return filtered_employee
+    def add_employee(db, new_employee):
+        cursor= db.cursor()
+        query= """ INSERT INTO employees (last_name, first_name, job_title, business_phone, notes)
+          VALUES (%s, %s, %s, %s, %s) """
+        values= (new_employee.surname, new_employee.name, new_employee.job_title, new_employee.phone_number, new_employee.note)
+        cursor.execute(query, values)
+        

@@ -3,3 +3,5 @@
 11.11.23 commit: For creating the employees page :created employee class in employee modul, fetched employee data from database, visualized employees in employee.html.
 
 18.11.23 commit: sidebar was changed, add sort by button and search form to employee.html, create employee search function.
+
+28.11.23 commit: new employee form and function was created. 
