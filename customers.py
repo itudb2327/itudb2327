@@ -27,14 +27,27 @@ def index(db):
     cursor.close()
     return render_template("customers.html", customers_list = customers_list)
 
-def delete(db, customer_id):
+def delete(db):
     cursor = db.cursor()
-    delete_query = f"DELETE FROM customers WHERE id = '{customer_id}'"
+    id = request.form.get('deleteCustomerId')
+    delete_query = f"DELETE FROM customers WHERE id = '{id}'"
     cursor.execute(delete_query)
-    cursor.commit()
     flash('Customer deleted successfully', 'success')
     return index(db)
 
+def new(db):
+    cursor = db.cursor()
+    company = request.form.get('customerCompany')
+    first_name = request.form.get('customerFirstName')
+    last_name = request.form.get('customerLastName')
+    job_title = request.form.get('customerJobTitle')
+    bussiness_phone = request.form.get('customerBussinessPhone')
+    address = request.form.get('customerAddress')
+    city = request.form.get('customerCity')
+    insert_query = f"INSERT INTO customers(company, last_name, first_name, job_title, business_phone, address, city) VALUES ('{company}', '{last_name}', '{first_name}', '{job_title}', '{bussiness_phone}', '{address}', '{city}')"
+    cursor.execute(insert_query)
+    flash('Customer added succesfully', 'success')
+    return index(db)
 
 
 """def update(db):

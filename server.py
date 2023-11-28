@@ -10,9 +10,6 @@ db = mysql.connector.connect(
     database="northwind"
 )
 
-
-
-
 app = Flask(__name__)
 
 @app.route('/')
@@ -36,10 +33,13 @@ def employees_page():
 
 @app.route("/customers", methods=("GET","POST"))
 def customers_page():
+    if request.method == 'POST':
+        if 'deleteCustomerId' in request.form:
+            return customers.delete(db)
+        elif 'newCustomerId' in request.form:
+            return customers.new(db)
+        
     return customers.index(db)
 
-@app.route("/delete_customer/<int:customer_id>", methods=("GET", "POST"))
-def delete_customer(customer_id):
-    return customers.delete(db, customer_id)
 if __name__ == '__main__':
     app.run(debug=True)

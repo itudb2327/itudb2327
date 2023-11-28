@@ -3,3 +3,7 @@
 13.11.23 commit: Created a webpage for displaying customers. Fetched customer information from the database with a query and implemented an ordering function in the webpage that modifies the query. 
 
 20.11.23 commit: Added update and delete buttons to the customer table, implemented delete request handling in the html file and backend with delete query.
+
+26.11.23 commit: Fixed delete function functionality for the customer table
+
+28.11.23 commit: Added a modal for new customer and implemented a form to collect data. Made insertion functionality to table by a sql query. 
