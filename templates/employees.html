@@ -6,22 +6,62 @@
 
       <div class="row">
         
-        <div class="col">
-          <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+        <div class="col-md-auto">
+          <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" >
             Sort By
           </button>
         </div>
-        <div class="col">
+        <div class="col-md-auto">
+          <!-- New Customer button -->
+          <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#newCustomerCollapse" aria-expanded="false" >New Employee</button>
+        </div>
+        <div class="col-md-auto">
           <form class="d-flex" method="post">
             <input class="form-control me-2" name="search" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
     
-        </div>
+       </div>
        
-      </div>
+</div>
+<div class="collapse" id="newCustomerCollapse">
+        <div class="container mt-3">
+            <form method="post">
+                <div class="mb-3">
+                    <label for="firstName" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="firstName" name="first_name" required>
+                </div>
+      
+                <div class="mb-3">
+                    <label for="lastName" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="lastName" name="last_name" required>
+                </div>
+      
+                <div class="mb-3">
+                    <label for="jobTitle" class="form-label">Job Title</label>
+                    <input type="text" class="form-control" id="jobTitle" name="job_title" required>
+                </div>
+      
+                <div class="mb-3">
+                    <label for="phoneNumber" class="form-label">Phone Number</label>
+                    <input type="tel" class="form-control" id="phoneNumber" name="phone_number" required>
+                </div>
+      
+                <div class="mb-3">
+                    <label for="extraNotes" class="form-label">Extra Notes</label>
+                    <textarea class="form-control" id="extraNotes" name="extra_notes" rows="3"></textarea>
+                </div>
+      
+                <button type="submit" class="btn btn-success">Create Employee</button>
+                <button type="button" class="btn btn-secondary" onclick="closeNewCustomerCollapse()">
+                  
+                  Cancel
+              </button>
+            </form>
+        </div>
+</div>
    
-  <div class="container-fluid align-items-center" style="padding-top: 2%;">
+<div class="container-fluid align-items-center" style="padding-top: 2%;">
   
       <div class="accordion" id="accordionExample" style="width: 50rem;">
         {% for employee_id, employee in employee_list %}
@@ -46,6 +86,14 @@
     </div>
 </div>
 
+<script>
+  function closeNewCustomerCollapse() {
+      var newCustomerCollapse = new bootstrap.Collapse(document.getElementById('newCustomerCollapse'), {
+          toggle: false
+      });
+      newCustomerCollapse.hide();
+  }
+</script>
 
 
 
