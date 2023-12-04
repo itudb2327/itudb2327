@@ -7,3 +7,5 @@
 26.11.23 commit: Fixed delete function functionality for the customer table
 
 28.11.23 commit: Added a modal for new customer and implemented a form to collect data. Made insertion functionality to table by a sql query. 
+
+4.12.23 commit: Added a modal for updating a customer record a form for collecting the data. Made update functionality to the table by an sql query.

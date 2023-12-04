@@ -32,6 +32,7 @@ def delete(db):
     id = request.form.get('deleteCustomerId')
     delete_query = f"DELETE FROM customers WHERE id = '{id}'"
     cursor.execute(delete_query)
+    db.commit()
     flash('Customer deleted successfully', 'success')
     return index(db)
 
@@ -41,25 +42,27 @@ def new(db):
     first_name = request.form.get('customerFirstName')
     last_name = request.form.get('customerLastName')
     job_title = request.form.get('customerJobTitle')
-    bussiness_phone = request.form.get('customerBussinessPhone')
+    business_phone = request.form.get('customerBussinessPhone')
     address = request.form.get('customerAddress')
     city = request.form.get('customerCity')
-    insert_query = f"INSERT INTO customers(company, last_name, first_name, job_title, business_phone, address, city) VALUES ('{company}', '{last_name}', '{first_name}', '{job_title}', '{bussiness_phone}', '{address}', '{city}')"
+    insert_query = f"INSERT INTO customers(company, last_name, first_name, job_title, business_phone, address, city) VALUES ('{company}', '{last_name}', '{first_name}', '{job_title}', '{business_phone}', '{address}', '{city}')"
     cursor.execute(insert_query)
-    flash('Customer added succesfully', 'success')
+    db.commit()
     return index(db)
 
 
-"""def update(db):
-    id = request.form.get('id')
-    company = request.form.get('company')
-    last_name = request.form.get('last_name')
-    first_name = request.form.get('first_name')
-    job_title = request.form.get('job_title')
-    business_phone = request.form.get('business_phone')
-    address = request.form.get('address')
-    city = request.form.get('city')
-
-    update_query = f"UPDATE customers SET id = {id}, company = {company},last_name = {last_name}, first_name = {first_name}, job_title = {job_title}, 
-    business_phone = {business_phone}, address = {address}, city = {city} WHERE """
+def update(db):
+    cursor = db.cursor()
+    id = request.form.get('updateCustomerId')
+    company = request.form.get('customerCompany')
+    first_name = request.form.get('customerFirstName')
+    last_name = request.form.get('customerLastName')
+    job_title = request.form.get('customerJobTitle')
+    business_phone = request.form.get('customerBussinessPhone')
+    address = request.form.get('customerAddress')
+    city = request.form.get('customerCity')
+    update_query = f"UPDATE customers SET company = '{company}',last_name = '{last_name}', first_name = '{first_name}', job_title = '{job_title}', business_phone = '{business_phone}', address = '{address}', city = '{city}' WHERE id = {id}"
+    cursor.execute(update_query)
+    db.commit()
+    return index(db)
 

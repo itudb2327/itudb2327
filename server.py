@@ -45,6 +45,8 @@ def customers_page():
             return customers.delete(db)
         elif 'newCustomerId' in request.form:
             return customers.new(db)
+        elif 'updateCustomerId' in request.form:
+            return customers.update(db)
         
     return customers.index(db)
 
