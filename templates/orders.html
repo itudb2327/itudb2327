@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block page_content %}
+<link rel="stylesheet" href="{{url_for('static',filename='styles/orders.css')}}">
+
+<div class="container" style="padding-top:8%;">
+<form action="/orders" method="post">
+    <!-- Create four buttons side by side -->
+    <button class="button {% if active_filter == '0' %}active{% endif %}" type="submit" name="filter" value="0">New Orders</button><!--filter 0 new-->
+    <button class="button {% if active_filter == '1' %}active{% endif %}" type="submit" name="filter" value="1">Submitted Orders</button><!--filter 1 submitted-->
+    <button class="button {% if active_filter == '2' %}active{% endif %}" type="submit" name="filter" value="2">Approved Orders</button><!--filter 2 approved-->
+    <button class="button {% if active_filter == '3' %}active{% endif %}" type="submit" name="filter" value="3">Closed Orders</button><!--filter 3 closed-->
+</form>
+<div class="table-container">
+        <!-- Table container -->
+        <table class="table table-striped" id="supplierTable">
+          <thead>
+            <!-- Table headers with sorting functionality -->
+            <tr>
+              <th class="sortable">ID</th>
+              <th class="sortable">Supplier ID</th>
+              <th class="sortable">Creator</th>
+              <th class="sortable">Submission Date</th>
+              <th class="sortable">Creation Date</th>
+              <th class="sortable">Status</th>
+              <th class="sortable">Estimated Date</th>
+              <th class="sortable">Shipping Fee</th>
+              <th class="sortable">Taxes</th>
+              <th class="sortable">Payment Date</th>
+              <th class="sortable">Payment Method</th>
+              <th class="sortable">Notes</th>
+              <th class="sortable">Approver</th>
+              <th class="sortable">Approvement Date</th>
+              <th class="sortable">Submitter</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Display supplier records from db--> 
+			{% for record in records %} 
+			<tr>
+              <td>{{ record[0] }}</td>
+              <td>{{ record[1] }}</td>
+              <td>{{ record[2] }}</td>
+              <td>{{ record[3] }}</td>
+              <td>{{ record[4] }}</td>
+              <td>{{ record[5] }}</td>
+              <td>{{ record[6] }}</td>
+              <td>{{ record[7] }}</td>
+              <td>{{ record[8] }}</td>
+              <td>{{ record[9] }}</td>
+              <td>{{ record[10] }}</td>
+              <td>{{ record[11] }}</td>
+              <td>{{ record[12] }}</td>
+              <td>{{ record[13] }}</td>
+              <td>{{ record[14] }}</td>
+            </tr> {% endfor %}
+          </tbody>
+        </table>
+      </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script>
+      $(document).ready(function() {
+        $('th.sortable').click(function() {
+          var table = $(this).parents('table').eq(0);
+          var rows = table.find('tr:gt(0)').toArray();
+          var isAscending = $(this).hasClass('asc');
+          // Remove the "asc" class from all headers
+          $('th.sortable').removeClass('asc');
+          if (isAscending) {
+            $(this).removeClass('asc');
+          } else {
+            $(this).addClass('asc');
+          }
+          rows.sort(comparator($(this).index()));
+          if (!isAscending) {
+            rows = rows.reverse();
+          }
+          for (var i = 0; i < rows.length; i++) {
+            table.append(rows[i]);
+          }
+        });
+
+        function comparator(index) {
+          return function(a, b) {
+            var valA = getCellValue(a, index),
+              valB = getCellValue(b, index);
+            return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB);
+          }
+        }
+
+        function getCellValue(row, index) {
+          return $(row).children('td').eq(index).text();
+        }
+      });
+    </script>
+
+{% endblock %}

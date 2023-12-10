@@ -7,3 +7,5 @@
 24.11.23 commit: updated supplier.py and supplier.html for updating existing records. Also a table created for keep track of update times. Metadata(record count,last update time) information added to supplier page.Also supplier.py file structure improved.
 
 1.12.23 commit: login_register.py, login.html and register.html file created for user register, login and logout functions. Accessing to pages without login restricted. users table created in database for users' registration informations.
+
+10.12.23 commit: orders.py, orders.html, orders.css created for orders page in site. Filter added to orders page.

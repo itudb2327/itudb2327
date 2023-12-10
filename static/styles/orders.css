@@ -1,0 +1,47 @@
+.button.active {
+    background-color: #ACFCD9; 
+    color: black;
+}
+.button {
+    background-color: #554971;
+    color: white; /* White text */
+    border: none; /* No border */
+    padding: 5px 20px; /* Padding */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    border-radius: 10px; /* Rounded corners */
+    cursor: pointer;
+	margin-right: 10px;
+	margin-bottom: 5px;
+}
+
+/* Style the table container */
+.table-container {
+    max-width: 100%; /* Set maximum width */
+    overflow-x: auto; /* Allow horizontal scrolling */
+    max-height: 80vh; /* Adjust the maximum height as needed */
+    border: 1px solid #ccc; /* Add border */
+    border-radius: 5px; /* Add rounded corners */
+    padding: 10px; /* Add padding */
+}
+
+/* Style the table within the container */
+.table-container table {
+    width: 100%; /* Set table width to 100% */
+}
+/*--------------------------------------------------------*/
+/* Style sortable table headers */
+th.sortable {
+    cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+th.sortable:hover::after {
+    content: " ▼"; /* Add down arrow on hover */
+}
+
+th.sortable.asc::after {
+    content: " ▲"; /* Add up arrow for ascending order */
+}
+/*--------------------------------------------------------*/

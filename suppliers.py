@@ -1,7 +1,7 @@
 import mysql.connector
+from flask import Flask, render_template, request,redirect,session
 import time
 from datetime import datetime, timedelta
-from flask import Flask, render_template, request,redirect,session
 class Supplier:
     def __init__(self, id=None, company=None, last_name=None, first_name=None, email_address=None, job_title=None,
                  business_phone=None, home_phone=None, mobile_phone=None, fax_number=None, address=None,

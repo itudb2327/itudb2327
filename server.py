@@ -5,6 +5,7 @@ from login_register import login_page, register_page, validate_login
 import mysql.connector
 import suppliers
 import customers
+import orders
 from employee import Employees
 app = Flask(__name__)
 app.secret_key = 'MongoDB'
@@ -59,6 +60,11 @@ def register():
 @login_required
 def supplier():
     return suppliers.index(db)
+    
+@app.route('/orders',methods=("GET","POST"))
+@login_required
+def order():
+    return orders.index(db)    
     
 @app.route("/employees", methods=("GET","POST"))
 @login_required
