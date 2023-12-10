@@ -15,7 +15,7 @@ login_manager = LoginManager(app)
 db = mysql.connector.connect(
     host="northwind.cfl4fp0ymkxx.eu-north-1.rds.amazonaws.com",
     user="admin",
-    password="dh8zcJMSGQhlcHT554yX",
+    password="z2dz8C0kIuN3EZqEoi82",
     database="northwind"
 )
 @login_manager.user_loader
