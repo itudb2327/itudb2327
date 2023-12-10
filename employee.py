@@ -1,5 +1,5 @@
 import mysql.connector
-
+from flask import Flask, render_template, request, flash
 class Employees:
     def __init__(self, name, surname, job_title, phone_number, note) :
         self.name= name
@@ -30,4 +30,10 @@ class Employees:
           VALUES (%s, %s, %s, %s, %s) """
         values= (new_employee.surname, new_employee.name, new_employee.job_title, new_employee.phone_number, new_employee.note)
         cursor.execute(query, values)
+        
+    def delete_employee(db, id):
+        cursor = db.cursor()
+        
+        delete_query = f"DELETE FROM employees WHERE id = '{id}'"
+        cursor.execute(delete_query)
         

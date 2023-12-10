@@ -67,7 +67,7 @@ def order():
     return orders.index(db)    
     
 @app.route("/employees", methods=("GET","POST"))
-@login_required
+#@login_required
 def employees_page():
      employee_list=Employees.get_all_employees(db)
      if request.method == "POST":
@@ -82,6 +82,12 @@ def employees_page():
             employee_name = employee_name.upper()
             filtered_employee_list = Employees.search_employee(employee_name, employee_list) 
             return render_template("employees.html", employee_list=filtered_employee_list)
+        elif("deleteId" in request.form):
+            deletedEmployeeId = request.form['deleteId']
+            print("Id: ", deletedEmployeeId)
+            Employees.delete_employee(db, deletedEmployeeId)
+            new_list = Employees.get_all_employees(db)
+            return render_template("employees.html", employee_list=new_list)
      else:
         return render_template("employees.html", employee_list=employee_list)
 

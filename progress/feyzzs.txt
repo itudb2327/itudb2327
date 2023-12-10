@@ -5,3 +5,7 @@
 18.11.23 commit: sidebar was changed, add sort by button and search form to employee.html, create employee search function.
 
 28.11.23 commit: new employee form and function was created. 
+
+01.12.23 commit: profile dropdown button fixed
+
+10.12.23 commit: Update and delete button are added in the employee page, delete function was created.

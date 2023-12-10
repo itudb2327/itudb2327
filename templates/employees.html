@@ -12,8 +12,8 @@
           </button>
         </div>
         <div class="col-md-auto">
-          <!-- New Customer button -->
-          <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#newCustomerCollapse" aria-expanded="false" >New Employee</button>
+          <!-- New Employee button -->
+          <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#newEmployeeCollapse" aria-expanded="false" >New Employee</button>
         </div>
         <div class="col-md-auto">
           <form class="d-flex" method="post">
@@ -24,7 +24,7 @@
        </div>
        
 </div>
-<div class="collapse" id="newCustomerCollapse">
+<div class="collapse" id="newEmployeeCollapse">
         <div class="container mt-3">
             <form method="post">
                 <div class="mb-3">
@@ -53,7 +53,7 @@
                 </div>
       
                 <button type="submit" class="btn btn-success">Create Employee</button>
-                <button type="button" class="btn btn-secondary" onclick="closeNewCustomerCollapse()">
+                <button type="button" class="btn btn-secondary" onclick="closeNewEmployeeCollapse()">
                   
                   Cancel
               </button>
@@ -78,7 +78,81 @@
             <div id="collapse{{employee_id}}" class="accordion-collapse collapse"
                 aria-labelledby="heading{{employee_id}}" data-bs-parent="#accordionExample">
               <div class="accordion-body">
-                {{employee.name}} {{employee.surname}} details.
+                <div>
+                  <strong>ID: </strong> {{employee_id}}<br>
+                 <strong> Employee Name: </strong>{{employee.name}} {{employee.surname}}<br>
+                  <strong> Job Title:</strong> {{employee.job_title}}<br>
+                  <strong>Phone Number: </strong>{{employee.business_phone}}<br>
+                  {% if employee.business_phone %}<br>
+                  <strong>Phone Number: </strong>{{employee.business_phone}}<br>
+                  {%endif%}
+                  
+                  {% if employee.notes %}
+                  <strong>>Notes:</strong> {{employee.notes}}<br>
+                  {%endif%}
+                </div>
+                <div>
+                  <button class="btn btn-warning" data-bs-toggle="collapse" data-bs-target="#updateEmployeeCollapse" aria-expanded="false">Update</button>
+                  
+                  <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal{{employe_id}}">Delete</button>
+                </div>
+                <div class="collapse" id="updateEmployeeCollapse">
+                  <div class="container mt-3">
+                      <form method="post">
+                          <div class="mb-3">
+                              <label for="firstName" class="form-label">First Name</label>
+                              <input type="text" class="form-control" id="newFirstName" name="newFirst_name" required>
+                          </div>
+                
+                          <div class="mb-3">
+                              <label for="lastName" class="form-label">Last Name</label>
+                              <input type="text" class="form-control" id="newLastName" name="newLast_name" required>
+                          </div>
+                
+                          <div class="mb-3">
+                              <label for="jobTitle" class="form-label">Job Title</label>
+                              <input type="text" class="form-control" id="newJobTitle" name="newJob_title" required>
+                          </div>
+                
+                          <div class="mb-3">
+                              <label for="phoneNumber" class="form-label">Phone Number</label>
+                              <input type="tel" class="form-control" id="newPhoneNumber" name="newPhone_number" required>
+                          </div>
+                
+                          <div class="mb-3">
+                              <label for="extraNotes" class="form-label">Extra Notes</label>
+                              <textarea class="form-control" id="newExtraNotes" name="newExtra_notes" rows="3"></textarea>
+                          </div>
+                
+                          <button type="submit" class="btn btn-success">Update Employee</button>
+                          <button type="button" class="btn btn-secondary" onclick="closeUpdateEmployeeCollapse()">
+                            Cancel
+                        </button>
+                      </form>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+            <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Are You Sure?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    Do you really want to delete this employee? This action can not be undone.
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form method="POST">
+                      <input type="hidden" id="deleteId" name="deleteId" value="{{employee_id}}">
+                      <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -87,12 +161,19 @@
     </div>
 </div>
 
+
 <script>
-  function closeNewCustomerCollapse() {
-      var newCustomerCollapse = new bootstrap.Collapse(document.getElementById('newCustomerCollapse'), {
+  function closeNewEmployeeCollapse() {
+      var newEmployeeCollapse = new bootstrap.Collapse(document.getElementById('newEmployeeCollapse'), {
           toggle: false
       });
-      newCustomerCollapse.hide();
+      newEmployeeCollapse.hide();
+  }
+  function closeUpdateEmployeeCollapse() {
+      var updateEmployeeCollapse = new bootstrap.Collapse(document.getElementById('updateEmployeeCollapse'), {
+          toggle: false
+      });
+      updateEmployeeCollapse.hide();
   }
 </script>
 
