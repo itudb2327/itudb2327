@@ -93,17 +93,18 @@ def employees_page():
 
 
 @app.route("/customers", methods=("GET","POST"))
-@login_required
+#@login_required
 def customers_page():
-    if request.method == 'POST':
+    form = customers.CustomerForm()
+    if request.method == 'POST' and form.validate_on_submit():
         if 'deleteCustomerId' in request.form:
-            return customers.delete(db)
+            return customers.delete(db, form)
         elif 'newCustomerId' in request.form:
-            return customers.new(db)
+            return customers.new(db, form)
         elif 'updateCustomerId' in request.form:
-            return customers.update(db)
+            return customers.update(db, form)
         
-    return customers.index(db)
+    return customers.index(db, form)
 
 if __name__ == '__main__':
     app.run(debug=True)

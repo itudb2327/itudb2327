@@ -84,6 +84,7 @@
           </div>
           <div class="modal-body">
             <form action="/customers" method="post" name="customerUpdate">
+              {{ form.hidden_tag() }}
               <div class="mb-3">
                 <input type="hidden" class="form-control" name="updateCustomerId" id="updateCustomerId" value="">
               </div>
@@ -91,34 +92,17 @@
                 <label for="updateCustomerId" class="form-label">Id</label>
                 <input type="text" class="form-control" name="displayCustomerId" id="displayCustomerId" value="" disabled>
               </div>
+              {% for field in form if field.name != 'csrf_token' %}
               <div class="mb-3">
-                <label for="customerCompany" class="form-label">Company</label>
-                <input type="text" class="form-control" name="customerCompany" id="customerCompany" value="">
+                  <label for="{{ field.id }}" class="form-label">{{ field.label }}</label>
+                  <input type="text" class="form-control {{ 'is-invalid' if field.errors else '' }}" id="{{ field.id }}" name="{{ field.name }}" value="{{ field.data if field.data is not none else '' }}">
+                  {% if field.errors %}
+                      <div class="invalid-feedback">
+                          {{ field.errors[0] }}
+                      </div>
+                  {% endif %}
               </div>
-              <div class="mb-3">
-                <label for="customerFirstName" class="form-label">First Name</label>
-                <input type="text" class="form-control" name="customerFirstName" id="customerFirstName" value="">
-              </div>
-              <div class="mb-3">
-                <label for="customerLastName" class="form-label">Last Name</label>
-                <input type="text" class="form-control" name="customerLastName" id="customerLastName" value="">
-              </div>
-              <div class="mb-3">
-                <label for="customerJobTitle" class="form-label">Job Title</label>
-                <input type="text" class="form-control" name="customerJobTitle" id="customerJobTitle" value="">
-              </div>
-              <div class="mb-3">
-                <label for="customerBussinessPhone" class="form-label">Bussiness Phone</label>
-                <input type="text" class="form-control" name="customerBussinessPhone" id="customerBussinessPhone" value="">
-              </div>
-              <div class="mb-3">
-                <label for="customerAddress" class="form-label">Address</label>
-                <input type="text" class="form-control" name="customerAddress" id="customerAddress" value="">
-              </div>
-              <div class="mb-3">
-                <label for="customerCity" class="form-label">City</label>
-                <input type="text" class="form-control" name="customerCity" id="customerCity" value="">
-              </div>
+          {% endfor %}
           </div>
           <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -142,38 +126,22 @@
           </div>
           <div class="modal-body">
             <form action="/customers" method="post" name="customerNew">
+              {{ form.hidden_tag() }}
               <div class="mb-3">
                 <input type="hidden" class="form-control" name="newCustomerId">
               </div>
+              {% for field in form if field.name != 'csrf_token' %}
               <div class="mb-3">
-                <label for="customerCompany" class="form-label">Company</label>
-                <input type="text" class="form-control" name="customerCompany">
+                  <label for="{{ field.id }}" class="form-label">{{ field.label }}</label>
+                  <input type="text" class="form-control {{ 'is-invalid' if field.errors else '' }}" id="{{ field.id }}" name="{{ field.name }}" value="{{ field.data if field.data is not none else '' }}">
+                  {% if field.errors %}
+                      <div class="invalid-feedback">
+                          {{ field.errors[0] }}
+                      </div>
+                  {% endif %}
               </div>
-              <div class="mb-3">
-                <label for="customerFirstName" class="form-label">First Name</label>
-                <input type="text" class="form-control" name="customerFirstName">
-              </div>
-              <div class="mb-3">
-                <label for="customerLastName" class="form-label">Last Name</label>
-                <input type="text" class="form-control" name="customerLastName">
-              </div>
-              <div class="mb-3">
-                <label for="customerJobTitle" class="form-label">Job Title</label>
-                <input type="text" class="form-control" name="customerJobTitle">
-              </div>
-              <div class="mb-3">
-                <label for="customerBussinessPhone" class="form-label">Bussiness Phone</label>
-                <input type="text" class="form-control" name="customerBussinessPhone">
-              </div>
-              <div class="mb-3">
-                <label for="customerAddress" class="form-label">Address</label>
-                <input type="text" class="form-control" name="customerAddress">
-              </div>
-              <div class="mb-3">
-                <label for="customerCity" class="form-label">City</label>
-                <input type="text" class="form-control" name="customerCity">
-              </div>
-          </div>
+          {% endfor %}
+                </div>
           <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
               <button type="submit" class="btn btn-primary">Create</button>
