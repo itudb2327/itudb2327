@@ -4,13 +4,12 @@ from flask_login import UserMixin, login_user
 import mysql.connector
 
 class User(UserMixin):
-    def __init__(self, id, username, password, status, joined,profile_picture):
+    def __init__(self, id, username, password, status, joined):
         self.id = id
         self.username = username
         self.password = password
         self.status = status
         self.joined = joined
-        self.profile_picture = profile_picture
 def add_user(db, username, password,status='user'):
     password_hash = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
     cursor = db.cursor()
@@ -28,8 +27,9 @@ def validate_login(db, username, password):
     user = cursor.fetchone()
 
     if user and check_password_hash(user['password_hash'], password):
-        return User(id=user['id'], username=user['username'], status=user['status'], joined=user['joined'], profile_picture=user['profile_picture'])
+        return User(id=user['id'], username=user['username'], password=user['password_hash'], status=user['status'], joined=user['joined'])
     return None
+
 
 def login_page(db):
     if request.method == 'POST':
@@ -39,7 +39,7 @@ def login_page(db):
         if validate_user := validate_login(db, username, password):
             login_user(validate_user)
             flash('Login successful', 'success')
-            return redirect(url_for('/'))  
+            return redirect(url_for('home'))  
         else:
             flash('Invalid username or password', 'error')
 

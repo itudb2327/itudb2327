@@ -31,7 +31,7 @@ def load_user(user_id):
     user = cursor.fetchone()
 
     if user:
-        user_obj = User(id=user['id'], username=user['username'], password=user['password_hash'],status=user['status'], joined=user['joined'],profile_picture=['profile_picture'])
+        user_obj = User(id=user['id'], username=user['username'], password=user['password_hash'],status=user['status'], joined=user['joined'])
         return user_obj
     return None
     
@@ -53,7 +53,7 @@ def home():
     # cursor = db.cursor()
     # cursor.execute("select * from TableLastUpdateInfo;")
     # cursor.execute("CREATE TABLE TableLastUpdateInfo (table_name VARCHAR(255) NOT NULL,update_time TIMESTAMP NOT NULL,PRIMARY KEY (table_name));")
-    # cursor.execute("INSERT INTO TableLastUpdateInfo (table_name,update_time)VALUES ('suppliers',NOW());")
+    # cursor.execute("UPDATE users SET status='admin' where username='admin';")
     # asd=cursor.fetchall()
     # print(asd)
     # cursor.execute("CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY,username VARCHAR(50) NOT NULL UNIQUE,password_hash VARCHAR(100) NOT NULL,status VARCHAR(20) NOT NULL default 'user',joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP, profile_picture BLOB);")
