@@ -1,0 +1,57 @@
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.profile-container {
+    width: 400px;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-info {
+    margin-top: 20px;
+}
+
+.profile-info p {
+    margin: 10px 0;
+}
+
+/* Style for password field and checkbox */
+#password {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+}
+
+/* Style for profile picture upload */
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    text-align: center; 
+}
+
+.profile-picture-container {
+    margin-bottom: 20px; 
+}
+
+#current-profile-picture {
+    width: 150px; 
+    height: 150px;
+    object-fit: cover; 
+    border-radius: 50%; 
+}
+
+#password {
+    width: 150px;
+	height:30px;
+    border-radius: 5px; 
+}

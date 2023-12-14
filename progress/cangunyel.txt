@@ -9,3 +9,5 @@
 1.12.23 commit: login_register.py, login.html and register.html file created for user register, login and logout functions. Accessing to pages without login restricted. users table created in database for users' registration informations.
 
 10.12.23 commit: orders.py, orders.html, orders.css created for orders page in site. Filter added to orders page.
+
+14.12.23 commit: profile.py, profile.html, profile.css created for profile page in site. Blob image added(not finished), users information can be altered now.

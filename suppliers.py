@@ -200,16 +200,19 @@ def index(db):
             temp_supplier.notes=request.form["notes"]
             updateId= request.form["updateId"]            
             update_record(cursor,updateId,temp_supplier)
+        now = datetime.now()
+        formatted_time = now.strftime('%Y-%m-%d %H:%M:%S')
+        cursor.execute("UPDATE TableLastUpdateInfo SET update_time=%s WHERE table_name='suppliers';",(formatted_time,))    
         db.commit()#commit for all operations        
         
     cursor.execute("SELECT * FROM suppliers;")
     records = cursor.fetchall()
    
-    cursor.execute("SELECT last_update FROM TableLastUpdateInfo;")
-    last_update_time=cursor.fetchall()
-    last_update_time=(last_update_time[0][0]+timedelta(hours=3)).strftime("%Y-%m-%d %H:%M:%S")#reaching timestamp information and adjust it to UTC+03:00 timezone
+    cursor.execute("SELECT update_time FROM TableLastUpdateInfo where table_name='suppliers';")
+    update_time=cursor.fetchall()
+    update_time=(update_time[0][0]).strftime("%Y-%m-%d %H:%M:%S")#reaching timestamp information and adjust it to UTC+03:00 timezone
 
     cursor.close()
     
 
-    return render_template('suppliers.html', records=records,last_update_time=last_update_time)
+    return render_template('suppliers.html', records=records,update_time=update_time)

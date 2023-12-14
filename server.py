@@ -1,12 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from flask_login import LoginManager, login_user, UserMixin,login_required,logout_user
+from flask_login import LoginManager, login_user, UserMixin,login_required,logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
-from login_register import login_page, register_page, validate_login
+from login_register import login_page, register_page, validate_login,User
 import mysql.connector
 import suppliers
 import customers
 import orders
+from profile import profile_page
 from employee import Employees
+import base64
+import binascii
 app = Flask(__name__)
 app.secret_key = 'MongoDB'
 
@@ -18,16 +21,17 @@ db = mysql.connector.connect(
     password="z2dz8C0kIuN3EZqEoi82",
     database="northwind"
 )
+
+
+
 @login_manager.user_loader
 def load_user(user_id):
-    # Assuming your 'users' table has an 'id' column
     cursor = db.cursor(dictionary=True)
     cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))
     user = cursor.fetchone()
 
     if user:
-        user_obj = UserMixin()
-        user_obj.id = user['id']
+        user_obj = User(id=user['id'], username=user['username'], password=user['password_hash'],status=user['status'], joined=user['joined'],profile_picture=['profile_picture'])
         return user_obj
     return None
     
@@ -46,6 +50,15 @@ def logout():
 
 @app.route('/')
 def home():
+    # cursor = db.cursor()
+    # cursor.execute("select * from TableLastUpdateInfo;")
+    # cursor.execute("CREATE TABLE TableLastUpdateInfo (table_name VARCHAR(255) NOT NULL,update_time TIMESTAMP NOT NULL,PRIMARY KEY (table_name));")
+    # cursor.execute("INSERT INTO TableLastUpdateInfo (table_name,update_time)VALUES ('suppliers',NOW());")
+    # asd=cursor.fetchall()
+    # print(asd)
+    # cursor.execute("CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY,username VARCHAR(50) NOT NULL UNIQUE,password_hash VARCHAR(100) NOT NULL,status VARCHAR(20) NOT NULL default 'user',joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP, profile_picture BLOB);")
+    # db.commit()
+   
     return render_template('base.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -55,6 +68,12 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     return register_page(db)
+
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    
+    return profile_page(db,current_user)    
     
 @app.route('/suppliers',methods=("GET","POST"))
 @login_required

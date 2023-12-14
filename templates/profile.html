@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/profile.css') }}">
+    <title>Profile</title>
+    <div class="profile-container">
+        <h2>Your Profile</h2>
+		
+        <!-- Profile picture display in a separate container -->
+        <div class="profile-picture-container">
+    <label for="current-profile-picture">Profile Picture:</label>
+<img id="current-profile-picture" src="data:image/jpeg;base64,{{ base64_image }}" alt="Profile Picture">
+</div>
+		
+        <div>
+            <!-- Profile picture upload -->
+            <form action="/profile" method="post" enctype="multipart/form-data">
+                <label for="profile-picture">Add new one</label>
+				<input type="hidden" value="2" name="operation">
+                <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
+                <!-- Add logic to handle file upload -->
+				
+                <button type="submit" class="btn btn-primary">Submit</button>
+				
+            </form>
+        </div>
+        <div class="profile-info">
+            <p><strong>Username:</strong>{{ current_user.username }}</p>
+            <p><strong>Status:</strong> {{ current_user.status }}</p>
+            <p><strong>Joined:</strong> {{ current_user.joined }}</p>
+
+            <!-- Display current password -->
+
+            
+            <div class="change-password-button">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#changePasswordModal">Change Password</button>
+            </div>
+        </div>
+		{% with messages = get_flashed_messages() %}
+    {% if messages %}
+			<div class="flash-messages">
+				{% for message in messages %}
+					<div class="alert alert-{{ message.category }}">
+						{{ message }}
+					</div>
+				{% endfor %}
+			</div>
+		{% endif %}
+	{% endwith %}
+    </div>
+	
+
+    <!-- Change Password Modal -->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="changePasswordModalLabel">Change Password</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/profile" method="post">
+                        <div class="form-group">
+                            <label for="oldPassword">Old Password:</label>
+                            <input type="password" id="oldPassword" name="oldPassword" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">New Password:</label>
+                            <input type="password" id="newPassword" name="newPassword" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password:</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
+                        </div>
+						<span id="updateIdInfo">
+						<input type="hidden" value="1" name="operation"><!--operation 1 change password -->
+						</span >
+                        <button type="submit" class="btn btn-primary">Change Password</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <!-- Footer -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.slim.min.js"></script>
+
+    <!-- Popper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+{% endblock %}

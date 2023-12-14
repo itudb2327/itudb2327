@@ -3,10 +3,18 @@ from flask import request, flash, render_template, redirect, url_for, session
 from flask_login import UserMixin, login_user
 import mysql.connector
 
-def add_user(db, username, password):
-    cursor = db.cursor()
+class User(UserMixin):
+    def __init__(self, id, username, password, status, joined,profile_picture):
+        self.id = id
+        self.username = username
+        self.password = password
+        self.status = status
+        self.joined = joined
+        self.profile_picture = profile_picture
+def add_user(db, username, password,status='user'):
     password_hash = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
-    cursor.execute('INSERT INTO users (username, password_hash) VALUES (%s, %s)', (username, password_hash))
+    cursor = db.cursor()
+    cursor.execute('INSERT INTO users (username, password_hash, status) VALUES (%s, %s, %s)', (username, password_hash, status))
     db.commit()
 
 def is_username_available(db, username):
@@ -20,7 +28,7 @@ def validate_login(db, username, password):
     user = cursor.fetchone()
 
     if user and check_password_hash(user['password_hash'], password):
-        return user
+        return User(id=user['id'], username=user['username'], status=user['status'], joined=user['joined'], profile_picture=user['profile_picture'])
     return None
 
 def login_page(db):
@@ -29,12 +37,9 @@ def login_page(db):
         password = request.form['password']
 
         if validate_user := validate_login(db, username, password):
-            user_obj = UserMixin()
-            user_obj.id = validate_user['id']
-            login_user(user_obj)
-            session['username'] = username
+            login_user(validate_user)
             flash('Login successful', 'success')
-            return redirect(url_for('home'))  # Assuming 'home' is the name of the endpoint for the home page
+            return redirect(url_for('/'))  
         else:
             flash('Invalid username or password', 'error')
 
