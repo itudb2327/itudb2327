@@ -86,28 +86,19 @@ def order():
     return orders.index(db)    
     
 @app.route("/employees", methods=("GET","POST"))
-#@login_required
+@login_required
 def employees_page():
-     employee_list=Employees.get_all_employees(db)
-     if request.method == "POST":
+    employee_list=Employees.get_all_employees(db)
+    if request.method == "POST":
         if("first_name" in request.form):
-            new_employee = Employees(request.form['first_name'], request.form['last_name'],request.form['job_title'],request.form['phone_number'], request.form['extra_notes'])
-            
-            Employees.add_employee(db,new_employee)
-            new_list = Employees.get_all_employees(db)
-            return render_template("employees.html", employee_list=new_list)
+            return Employees.add_employee(db)
         elif("search" in request.form):
-            employee_name =request.form['search']
-            employee_name = employee_name.upper()
-            filtered_employee_list = Employees.search_employee(employee_name, employee_list) 
-            return render_template("employees.html", employee_list=filtered_employee_list)
+            return Employees.search_employee(employee_list)      
         elif("deleteId" in request.form):
-            deletedEmployeeId = request.form['deleteId']
-            print("Id: ", deletedEmployeeId)
-            Employees.delete_employee(db, deletedEmployeeId)
-            new_list = Employees.get_all_employees(db)
-            return render_template("employees.html", employee_list=new_list)
-     else:
+            return Employees.delete_employee(db)            
+        elif("updateId" in request.form):
+            return Employees.update_employee(db)    
+    else:
         return render_template("employees.html", employee_list=employee_list)
 
 

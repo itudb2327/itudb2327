@@ -8,7 +8,7 @@
         
         <div class="col-md-auto">
           <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" >
-            Sort By
+            Fİlter By Job Title
           </button>
         </div>
         <div class="col-md-auto">
@@ -82,13 +82,13 @@
                   <strong>ID: </strong> {{employee_id}}<br>
                  <strong> Employee Name: </strong>{{employee.name}} {{employee.surname}}<br>
                   <strong> Job Title:</strong> {{employee.job_title}}<br>
-                  <strong>Phone Number: </strong>{{employee.business_phone}}<br>
-                  {% if employee.business_phone %}<br>
-                  <strong>Phone Number: </strong>{{employee.business_phone}}<br>
+                 
+                  {% if employee.phone_number %}<br>
+                  <strong>Phone Number: </strong>{{employee.phone_number}}<br>
                   {%endif%}
                   
-                  {% if employee.notes %}
-                  <strong>>Notes:</strong> {{employee.notes}}<br>
+                  {% if employee.note %}
+                  <strong>>Notes:</strong> {{employee.note}}<br>
                   {%endif%}
                 </div>
                 <div>
@@ -98,7 +98,7 @@
                 </div>
                 <div class="collapse" id="updateEmployeeCollapse">
                   <div class="container mt-3">
-                      <form method="post">
+                      <form method="POST">
                           <div class="mb-3">
                               <label for="firstName" class="form-label">First Name</label>
                               <input type="text" class="form-control" id="newFirstName" name="newFirst_name" required>
@@ -123,7 +123,7 @@
                               <label for="extraNotes" class="form-label">Extra Notes</label>
                               <textarea class="form-control" id="newExtraNotes" name="newExtra_notes" rows="3"></textarea>
                           </div>
-                
+                          <input type="hidden" id="updateId" name="updateId" value="{{employee_id}}">
                           <button type="submit" class="btn btn-success">Update Employee</button>
                           <button type="button" class="btn btn-secondary" onclick="closeUpdateEmployeeCollapse()">
                             Cancel

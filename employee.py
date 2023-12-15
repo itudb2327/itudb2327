@@ -17,23 +17,50 @@ class Employees:
             employee_list.append((employee_id, Employees(first_name,last_name, job_title, business_phone, notes)))
         cursor.close()
         return employee_list
-    def search_employee(name, employee_list):
+    def search_employee(employee_list):
+        employee_name =request.form['search']
+        employee_name = employee_name.upper()
         filtered_employee = []
         for employee_id, employee in employee_list:
             full_name = employee.name + ' ' + employee.surname
-            if name in full_name.upper(): 
+            if employee_name in full_name.upper(): 
                 filtered_employee.append((employee_id, employee))
-        return filtered_employee
-    def add_employee(db, new_employee):
+        return render_template("employees.html", employee_list=filtered_employee)
+        
+    def add_employee(db):
+        new_employee = Employees(request.form['first_name'], 
+                                 request.form['last_name'],
+                                 request.form['job_title'],
+                                 request.form['phone_number'],
+                                 request.form['extra_notes'])
         cursor= db.cursor()
         query= """ INSERT INTO employees (last_name, first_name, job_title, business_phone, notes)
           VALUES (%s, %s, %s, %s, %s) """
+        
         values= (new_employee.surname, new_employee.name, new_employee.job_title, new_employee.phone_number, new_employee.note)
         cursor.execute(query, values)
+        new_list = Employees.get_all_employees(db)
+        return render_template("employees.html", employee_list=new_list)
         
-    def delete_employee(db, id):
+    def delete_employee(db):
+        deletedEmployeeId = request.form['deleteId']
         cursor = db.cursor()
         
-        delete_query = f"DELETE FROM employees WHERE id = '{id}'"
+        delete_query = f"DELETE FROM employees WHERE id = '{deletedEmployeeId}'"
         cursor.execute(delete_query)
-        
+        new_list = Employees.get_all_employees(db)
+        return render_template("employees.html", employee_list=new_list)
+    def update_employee( db):
+        updatedEmployeeId = request.form['updateId']
+        new_employee = Employees(request.form['newFirst_name'], 
+                                 request.form['newLast_name'],
+                                 request.form['newJob_title'],
+                                 request.form['newPhone_number'],
+                                 request.form['newExtra_notes'])
+        cursor= db.cursor()
+        query= """ UPDATE employees SET last_name = %s, first_name=%s, job_title=%s, business_phone=%s, notes=%s
+         WHERE ID = %s """
+        values= (new_employee.surname, new_employee.name, new_employee.job_title, new_employee.phone_number, new_employee.note, updatedEmployeeId)
+        cursor.execute(query, values)
+        new_list = Employees.get_all_employees(db)
+        return render_template("employees.html", employee_list=new_list)
