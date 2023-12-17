@@ -153,38 +153,45 @@ th.sortable.asc::after {
         });
         updateProductCollapse.hide();
     }
-    $(document).ready(function() {
-        $('th.sortable').click(function() {
-          var table = $(this).parents('table').eq(0);
-          var rows = table.find('tr:gt(0)').toArray();
-          var isAscending = $(this).hasClass('asc');
-          // Remove the "asc" class from all headers
-          $('th.sortable').removeClass('asc');
-          if (isAscending) {
-            $(this).removeClass('asc');
-          } else {
-            $(this).addClass('asc');
-          }
-          rows.sort(comparator($(this).index()));
-          if (!isAscending) {
-            rows = rows.reverse();
-          }
-          for (var i = 0; i < rows.length; i++) {
-            table.append(rows[i]);
-          }
-        });
-
-        function comparator(index) {
-          return function(a, b) {
-            var valA = getCellValue(a, index),
-              valB = getCellValue(b, index);
-            return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB);
-          }
-        }
-
-        function getCellValue(row, index) {
-          return $(row).children('td').eq(index).text();
-        }
-      });
   </script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $('th.sortable').click(function() {
+      var table = $(this).parents('table').eq(0);
+      var rows = table.find('tr:gt(0)').toArray();
+      var isAscending = $(this).hasClass('asc');
+
+      // Remove the "asc" class from all headers
+      $('th.sortable').removeClass('asc');
+
+      if (!isAscending) {
+        $(this).addClass('asc');
+      }
+
+      rows.sort(comparator($(this).index()));
+      
+      if (!isAscending) {
+        rows = rows.reverse();
+      }
+
+      for (var i = 0; i < rows.length; i++) {
+        table.append(rows[i]);
+      }
+    });
+
+    function comparator(index) {
+      return function(a, b) {
+        var valA = getCellValue(a, index),
+            valB = getCellValue(b, index);
+        return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB);
+      }
+    }
+
+    function getCellValue(row, index) {
+      return $(row).children('td').eq(index).text();
+    }
+  });
+</script>
 {%endblock%}
