@@ -216,3 +216,12 @@ def index(db):
     
 
     return render_template('suppliers.html', records=records,update_time=update_time)
+def get_supplier_company(db):
+        cursor = db.cursor()
+        supplier_list = []
+        select_query = """ SELECT DISTINCT id, company FROM suppliers ORDER BY id """
+        cursor.execute(select_query)
+        for company, id in cursor:
+            supplier_list.append((company, id))
+        cursor.close()
+        return supplier_list

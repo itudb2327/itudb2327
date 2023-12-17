@@ -51,6 +51,8 @@ def logout():
 
 @app.route('/')
 def home():
+    # product_id_list = Products.get_id_list(db)
+    # product_profit_list = Products.get_profit_list(db)
     # cursor = db.cursor()
     # cursor.execute("select * from TableLastUpdateInfo;")
     # cursor.execute("CREATE TABLE TableLastUpdateInfo (table_name VARCHAR(255) NOT NULL,update_time TIMESTAMP NOT NULL,PRIMARY KEY (table_name));")
@@ -60,7 +62,7 @@ def home():
     # cursor.execute("CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY,username VARCHAR(50) NOT NULL UNIQUE,password_hash VARCHAR(100) NOT NULL,status VARCHAR(20) NOT NULL default 'user',joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP, profile_picture BLOB);")
     # db.commit()
    
-    return render_template('base.html')
+    return render_template('home.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -88,9 +90,23 @@ def order():
 @app.route('/products',methods=("GET","POST"))
 @login_required
 def product():
-    category_list= Products.get_all_categories(db)
-    product_list = Products.get_all_products(db)
-    return render_template("products.html", product_list=product_list, category_list=category_list)
+    if request.method=="POST":
+        print(request.form)
+        if "product_name" in request.form:
+            return Products.add_product(db)
+        elif "deleteId" in request.form:
+            return Products.delete_product(db)
+        elif "updateId" in request.form:
+            return Products.update_product(db)
+        elif "checkedCategory[]" in request.form:
+            return Products.filter_product_by_category(db)
+        elif "search" in request.form:
+            return Products.search_product(db)
+    else:
+        category_list= Products.get_all_categories(db)
+        product_list = Products.get_all_products(db)
+        company_list= suppliers.get_supplier_company(db)
+        return render_template("products.html", product_list=product_list, category_list=category_list, company_list=company_list)
 
 @app.route("/employees", methods=("GET","POST"))
 @login_required
