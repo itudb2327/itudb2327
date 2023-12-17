@@ -8,6 +8,7 @@ import customers
 import orders
 from profile import profile_page
 from employee import Employees
+from products import Products
 import base64
 import binascii
 app = Flask(__name__)
@@ -84,11 +85,18 @@ def supplier():
 @login_required
 def order():
     return orders.index(db)    
-    
+@app.route('/products',methods=("GET","POST"))
+@login_required
+def product():
+    category_list= Products.get_all_categories(db)
+    product_list = Products.get_all_products(db)
+    return render_template("products.html", product_list=product_list, category_list=category_list)
+
 @app.route("/employees", methods=("GET","POST"))
 @login_required
 def employees_page():
-    employee_list=Employees.get_all_employees(db)
+    
+    employee_list= Employees.get_all_employees(db)
     if request.method == "POST":
         if("first_name" in request.form):
             return Employees.add_employee(db)

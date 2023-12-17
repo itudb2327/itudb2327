@@ -39,6 +39,7 @@ class Employees:
         
         values= (new_employee.surname, new_employee.name, new_employee.job_title, new_employee.phone_number, new_employee.note)
         cursor.execute(query, values)
+        db.commit()
         new_list = Employees.get_all_employees(db)
         return render_template("employees.html", employee_list=new_list)
         
@@ -48,6 +49,7 @@ class Employees:
         
         delete_query = f"DELETE FROM employees WHERE id = '{deletedEmployeeId}'"
         cursor.execute(delete_query)
+        db.commit()
         new_list = Employees.get_all_employees(db)
         return render_template("employees.html", employee_list=new_list)
     def update_employee( db):
@@ -62,5 +64,6 @@ class Employees:
          WHERE ID = %s """
         values= (new_employee.surname, new_employee.name, new_employee.job_title, new_employee.phone_number, new_employee.note, updatedEmployeeId)
         cursor.execute(query, values)
+        db.commit()
         new_list = Employees.get_all_employees(db)
         return render_template("employees.html", employee_list=new_list)

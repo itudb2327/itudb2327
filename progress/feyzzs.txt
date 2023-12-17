@@ -11,3 +11,5 @@
 10.12.23 commit: Update and delete button are added in the employee page, delete function was created.
 
 15.12.23 commit: Update and Delete employee functions are fixed.
+
+17.12.23 commit: Product page created

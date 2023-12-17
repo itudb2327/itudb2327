@@ -1,0 +1,190 @@
+{% extends "base.html" %} 
+{% block page_content %}
+<style>
+  /* Style sortable table headers */
+th.sortable {
+    cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+th.sortable:hover::after {
+    content: " ▼"; /* Add down arrow on hover */
+}
+
+th.sortable.asc::after {
+    content: " ▲"; /* Add up arrow for ascending order */
+}
+</style>
+<div class="container" style="padding-top: 8%;">
+  <div class="row">
+    <div class="col-md-auto">
+      <form action="/Products" method="get">
+        <label for="sort">Sort by:</label>
+        <select name="sort_by" id="sort">
+          <option value="id">ID</option>
+          <option value="cost">Standard Cost</option>
+          <option value="price">List Price</option>
+        </select>
+        <input type="submit" class="btn btn-success" value="Sort" />
+      </form>
+    </div>
+    <div class="col-md-auto">
+      <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#newProductCollapse">New Product</button>
+    </div>
+    <div class="col-md-auto">
+      <div class="dropdown">
+        <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" >
+          Fİlter By Category
+        </button>
+        <ul class="dropdown-menu">
+          {% for category in category_list %}
+          <li > 
+            <div class="form-check" style="margin: 3%;">
+              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+              <label class="form-check-label" for="flexCheckDefault">
+                {{category[0]}}
+              </label>
+            </div>
+            
+          </li>
+          {%endfor%}
+          <li>
+            <button class="btn btn-primary" type="submit" style="margin: 5%;">Filter</button>
+          </li>
+        </ul>
+      </div>
+      
+
+    </div>
+    <div class="col-md-auto">
+      <form class="d-flex" method="post">
+        <input class="form-control me-2" name="search" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+
+   </div>
+    
+  </div>
+ 
+  <div class="collapse" id="newProductCollapse">
+    <div class="container mt-3">
+        <form method="post">
+            <div class="mb-3">
+                <label for="firstName" class="form-label">First Name</label>
+                <input type="text" class="form-control" id="firstName" name="first_name" required>
+            </div>
+  
+            <div class="mb-3">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="lastName" name="last_name" required>
+            </div>
+  
+            <div class="mb-3">
+                <label for="jobTitle" class="form-label">Job Title</label>
+                <input type="text" class="form-control" id="jobTitle" name="job_title" required>
+            </div>
+  
+            <div class="mb-3">
+                <label for="phoneNumber" class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" id="phoneNumber" name="phone_number" required>
+            </div>
+  
+            <div class="mb-3">
+                <label for="extraNotes" class="form-label">Extra Notes</label>
+                <textarea class="form-control" id="extraNotes" name="extra_notes" rows="3"></textarea>
+            </div>
+  
+            <button type="submit" class="btn btn-success">Create Product</button>
+            <button type="button" class="btn btn-secondary" onclick="closeNewProductCollapse()">
+              
+              Cancel
+          </button>
+        </form>
+    </div>
+</div>
+  <div class="mt-4">
+    <table id="sortable-table" class="table table-light table-striped table-hover">
+      <thead>
+        <tr>
+          <th class="sortable" scope="col">ID</th>
+          <th scope="col">Product Name</th>
+          <th scope="col">Product Code</th>
+          <th class="sortable" scope="col">Standard Cost</th>
+          <th class="sortable" scope="col">List Price</th>
+          <th scope="col">Quantity Per Unit</th>
+          <th scope="col">Supplier Id</th>
+          <th scope="col">Category</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        {% for product_id, product in product_list %}
+        <tr>
+          <td scope="row">{{ product_id }}</th>
+          <td>{{ product.product_name }}</td>
+          <td>{{ product.code }}</td>
+          <td>{{ product.cost }}</td>
+          <td>{{ product.list_price }}</td>
+          <td>{{ product.quantitiy_per_unit }}</td>
+          <td>{{ product.supplier_id }}</td>
+          <td>{{ product.category }}</td>
+          <td>
+            <button type="button" id="updateButton" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#updateProductCollapse">Update</button> 
+          </td>
+          <td>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" >Delete</button>
+          </td>
+          {%endfor%}
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <script>
+    function closeNewProductCollapse() {
+        var newProductCollapse = new bootstrap.Collapse(document.getElementById('newProductCollapse'), {
+            toggle: false
+        });
+        newProductCollapse.hide();
+    }
+    function closeUpdateProductCollapse() {
+        var updateProductCollapse = new bootstrap.Collapse(document.getElementById('updateProductCollapse'), {
+            toggle: false
+        });
+        updateProductCollapse.hide();
+    }
+    $(document).ready(function() {
+        $('th.sortable').click(function() {
+          var table = $(this).parents('table').eq(0);
+          var rows = table.find('tr:gt(0)').toArray();
+          var isAscending = $(this).hasClass('asc');
+          // Remove the "asc" class from all headers
+          $('th.sortable').removeClass('asc');
+          if (isAscending) {
+            $(this).removeClass('asc');
+          } else {
+            $(this).addClass('asc');
+          }
+          rows.sort(comparator($(this).index()));
+          if (!isAscending) {
+            rows = rows.reverse();
+          }
+          for (var i = 0; i < rows.length; i++) {
+            table.append(rows[i]);
+          }
+        });
+
+        function comparator(index) {
+          return function(a, b) {
+            var valA = getCellValue(a, index),
+              valB = getCellValue(b, index);
+            return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB);
+          }
+        }
+
+        function getCellValue(row, index) {
+          return $(row).children('td').eq(index).text();
+        }
+      });
+  </script>
+{%endblock%}
