@@ -44,4 +44,20 @@ th.sortable:hover::after {
 th.sortable.asc::after {
     content: " ▲"; /* Add up arrow for ascending order */
 }
+
+.button-container {
+    text-align: right; /* Align buttons to the right */
+    margin-top: 20px; /* Add top margin */
+}
+
+/* Style the buttons */
+.btn {
+    margin: 5px; /* Add margin to buttons */
+}
+
+/* Center-align h4 elements */
+h4 {
+    text-align: center;
+}
+
 /*--------------------------------------------------------*/

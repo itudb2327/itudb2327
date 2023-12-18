@@ -5,7 +5,7 @@ from login_register import login_page, register_page, validate_login,User
 import mysql.connector
 import suppliers
 import customers
-import orders
+import purchases
 from profile import profile_page
 from employee import Employees
 from products import Products
@@ -56,7 +56,7 @@ def home():
     # cursor = db.cursor()
     # cursor.execute("select * from TableLastUpdateInfo;")
     # cursor.execute("CREATE TABLE TableLastUpdateInfo (table_name VARCHAR(255) NOT NULL,update_time TIMESTAMP NOT NULL,PRIMARY KEY (table_name));")
-    # cursor.execute("UPDATE users SET status='admin' where username='admin';")
+    # cursor.execute("insert into TableLastUpdateInfo values('purchase_orders',CURRENT_TIMESTAMP() );")
     # asd=cursor.fetchall()
     # print(asd)
     # cursor.execute("CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY,username VARCHAR(50) NOT NULL UNIQUE,password_hash VARCHAR(100) NOT NULL,status VARCHAR(20) NOT NULL default 'user',joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP, profile_picture BLOB);")
@@ -81,12 +81,16 @@ def profile():
 @app.route('/suppliers',methods=("GET","POST"))
 @login_required
 def supplier():
-    return suppliers.index(db)
+    return suppliers.index(db,current_user)
     
-@app.route('/orders',methods=("GET","POST"))
+@app.route('/purchases',methods=("GET","POST"))
 @login_required
-def order():
-    return orders.index(db)    
+def purchase():  
+    if current_user.status=="admin":
+        return purchases.index(db)    
+    else:
+        return render_template('unauthorized.html')
+    
 @app.route('/products',methods=("GET","POST"))
 @login_required
 def product():

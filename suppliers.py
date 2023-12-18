@@ -25,26 +25,7 @@ class Supplier:
         self.web_page = web_page
         self.notes = notes
         self.attachments = attachments
-        
-    def print_info(self):
-        print(f"ID: {self.id}")
-        print(f"Company: {self.company}")
-        print(f"Last Name: {self.last_name}")
-        print(f"First Name: {self.first_name}")
-        print(f"Email Address: {self.email_address}")
-        print(f"Job Title: {self.job_title}")
-        print(f"Business Phone: {self.business_phone}")
-        print(f"Home Phone: {self.home_phone}")
-        print(f"Mobile Phone: {self.mobile_phone}")
-        print(f"Fax Number: {self.fax_number}")
-        print(f"Address: {self.address}")
-        print(f"City: {self.city}")
-        print(f"State/Province: {self.state_province}")
-        print(f"ZIP/Postal Code: {self.zip_postal_code}")
-        print(f"Country/Region: {self.country_region}")
-        print(f"Web Page: {self.web_page}")
-        print(f"Notes: {self.notes}")
-        print(f"Attachments: {self.attachments}")        
+            
         
 
 def create_record(cursor,temp_supplier):
@@ -149,7 +130,7 @@ def delete_record(cursor,updateId):
     #statement="INSERT INTO TableLastUpdateInfo VALUES('Suppliers',CURRENT_TIMESTAMP());"
     #cursor.execute(statement)
         
-def index(db):
+def index(db,current_user):
     cursor = db.cursor()
     if request.method =='POST':
         operation=request.form["operation"]
@@ -157,7 +138,7 @@ def index(db):
             temp_supplier=Supplier()
     
             #new record
-            temp_supplier.company=request.form.get("company")
+            temp_supplier.company=request.form["company"]
             temp_supplier.last_name=request.form["last_name"]
             temp_supplier.first_name=request.form["first_name"]
             temp_supplier.email_address=request.form["email_address"]
@@ -182,7 +163,7 @@ def index(db):
         elif operation=="2":#update
             temp_supplier=Supplier()
             #updated record
-            temp_supplier.company=request.form.get("company")
+            temp_supplier.company=request.form["company"]
             temp_supplier.last_name=request.form["last_name"]
             temp_supplier.first_name=request.form["first_name"]
             temp_supplier.email_address=request.form["email_address"]
@@ -213,15 +194,15 @@ def index(db):
     update_time=(update_time[0][0]).strftime("%Y-%m-%d %H:%M:%S")#reaching timestamp information and adjust it to UTC+03:00 timezone
 
     cursor.close()
-    
+    return render_template('suppliers.html', records=records,update_time=update_time,status=current_user.status)
 
-    return render_template('suppliers.html', records=records,update_time=update_time)
 def get_supplier_company(db):
-        cursor = db.cursor()
-        supplier_list = []
-        select_query = """ SELECT DISTINCT id, company FROM suppliers ORDER BY id """
-        cursor.execute(select_query)
-        for company, id in cursor:
-            supplier_list.append((company, id))
-        cursor.close()
-        return supplier_list
+    cursor = db.cursor()
+    supplier_list = []
+    select_query = """ SELECT DISTINCT id, company FROM suppliers ORDER BY id """
+    cursor.execute(select_query)
+    for company, id in cursor:
+        supplier_list.append((company, id))
+    cursor.close()
+    return supplier_list
+

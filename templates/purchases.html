@@ -1,93 +1,71 @@
 {% extends "base.html" %}
 {% block page_content %}
-<link rel="stylesheet" href="{{url_for('static',filename='styles/suppliers.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='styles/purchases.css')}}">
 
-    <!-- Main container -->
-    <div class="container" style="padding-top:8%;">
-      <h1>Supplier Records</h1>
-      <div class="table-container">
+<div class="container" style="padding-top:8%;">
+<form action="/purchases" method="post">
+    <!-- Create four buttons side by side -->
+    <button class="button {% if active_filter == '0' %}active{% endif %}" type="submit" name="filter" value="0">New Purchases</button><!--filter 0 new-->
+    <button class="button {% if active_filter == '1' %}active{% endif %}" type="submit" name="filter" value="1">Submitted Purchases</button><!--filter 1 submitted-->
+    <button class="button {% if active_filter == '2' %}active{% endif %}" type="submit" name="filter" value="2">Approved Purchases</button><!--filter 2 approved-->
+    <button class="button {% if active_filter == '3' %}active{% endif %}" type="submit" name="filter" value="3">Closed Purchases</button><!--filter 3 closed-->
+</form>
+<div class="table-container">
         <!-- Table container -->
-        <table class="table table-striped" id="supplierTable">
+        <table class="table table-striped" id="purchasesTable">
           <thead>
             <!-- Table headers with sorting functionality -->
             <tr>
-			{% if status == "admin" %}
               <th class="sortable">ID</th>
-			{% endif %}  
-              <th class="sortable">Company</th>
-              <th class="sortable">Last Name</th>
-              <th class="sortable">First Name</th>
-              <th class="sortable">Email Address</th>
-              <th class="sortable">Job Title</th>
-              <th class="sortable">Business Phone</th>
-			  {% if status == "admin" %}
-              <th class="sortable">Home Phone</th>
-              <th class="sortable">Mobile Phone</th>
-			  {% endif %}
-              <th class="sortable">Fax Number</th>
-			  {% if status == "admin" %}
-              <th class="sortable">Address</th>
-			  {% endif %}
-              <th class="sortable">City</th>
-              <th class="sortable">State/Province</th>
-			  {% if status == "admin" %}
-              <th class="sortable">Zip/Postal Code</th>
-			  {% endif %}
-              <th class="sortable">Country/Region</th>
-              <th class="sortable">Web Page</th>
-			  {% if status == "admin" %}
+              <th class="sortable">Supplier ID</th>
+              <th class="sortable">Creator</th>
+              <th class="sortable">Submission Date</th>
+              <th class="sortable">Creation Date</th>
+              <th class="sortable">Status</th>
+              <th class="sortable">Estimated Date</th>
+              <th class="sortable">Shipping Fee</th>
+              <th class="sortable">Taxes</th>
+              <th class="sortable">Payment Date</th>
+              <th class="sortable">Payment Method</th>
               <th class="sortable">Notes</th>
-              <th class="sortable">Attachments</th>
-			  {% endif %}
+              <th class="sortable">Approver</th>
+              <th class="sortable">Approvement Date</th>
+              <th class="sortable">Submitter</th>
             </tr>
           </thead>
           <tbody>
-            <!-- Display supplier records from db--> 
+            <!-- Display purchases records from db--> 
 			{% for record in records %} 
 			<tr>
-			{% if status == "admin" %}
               <td>{{ record[0] }}</td>
-			{% endif %}  
               <td>{{ record[1] }}</td>
               <td>{{ record[2] }}</td>
               <td>{{ record[3] }}</td>
               <td>{{ record[4] }}</td>
               <td>{{ record[5] }}</td>
               <td>{{ record[6] }}</td>
-			  {% if status == "admin" %}
               <td>{{ record[7] }}</td>
               <td>{{ record[8] }}</td>
-			  {% endif %}
               <td>{{ record[9] }}</td>
-			  {% if status == "admin" %}
               <td>{{ record[10] }}</td>
-			  {% endif %}
               <td>{{ record[11] }}</td>
               <td>{{ record[12] }}</td>
-			  {% if status == "admin" %}
               <td>{{ record[13] }}</td>
-			  {% endif %}
               <td>{{ record[14] }}</td>
-              <td>{{ record[15] }}</td>
-			  {% if status == "admin" %}
-              <td>{{ record[16] }}</td>
-              <td>{{ record[17] }}</td>
-			  {% endif %}
             </tr> {% endfor %}
           </tbody>
         </table>
       </div>
-	    <div class="record-count">
-			{% if status == "admin" %}
+	  <div class="record-count">
 			<p>Total Records: {{ records|length }} Last Update Time: {{ update_time }}</p>
-			{% endif %}
+			
 		</div>
-      <div class="button-container">
+	        <div class="button-container">
         <!-- Button container for update and add actions -->
-		{% if status == "admin" %}
+		
 		<button id="updateButton" class="btn btn-primary" data-toggle="modal" data-target="#updateModal">Update Record</button>
         <button id="addButton" class="btn btn-success" data-toggle="modal" data-target="#myModal">Add New Record</button>
-		{% endif %}
+		
       </div>
       <!-- Modal for adding new records -->
       <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -103,103 +81,92 @@
             <div class="modal-body">
 				<!-- Form takes input one by one -->
               <div class="modal-split">
-                <form action="/suppliers" method="post">
-                  <label for="company">Company:</label>
+                <form action="/purchases" method="post">
+                  <label for="supplier_id">Supplier ID:</label>
                   <br>
-                  <input type="text" id="company" name="company">
+                  <input type="text" id="supplier_id" name="supplier_id">
                   <br>
                 
               </div>
               <div class="modal-split">
-                  <label for="last_name">Last name:</label>
+                  <label for="created_by">Creator:</label>
                   <br>
-                  <input type="text" id="last_name" name="last_name">
-                  <br>
-              </div>
-              <div class="modal-split">
-                  <label for="first_name">First name:</label>
-                  <br>
-                  <input type="text" id="first_name" name="first_name">
+                  <input type="text" id="created_by" name="created_by">
                   <br>
               </div>
               <div class="modal-split">
-                  <label for="email_address">Email Adress:</label>
+                  <label for="submitted_date">Submission Date:</label>
                   <br>
-                  <input type="text" id="email_address" name="email_address">
-                  <br>
-              </div>
-              <div class="modal-split">
-                  <label for="job_title">Job Title:</label>
-                  <br>
-                  <input type="text" id="job_title" name="job_title">
+                  <input type="text" id="submitted_date" name="submitted_date">
                   <br>
               </div>
               <div class="modal-split">
-                  <label for="business_phone">Business Phone:</label>
+                  <label for="creation_date">Creation Date:</label>
                   <br>
-                  <input type="text" id="business_phone" name="business_phone">
+                  <input type="text" id="creation_date" name="creation_date">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="status_id">Status:</label>
+                  <br>
+                  <input type="text" id="status_id" name="status_id">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="expected_date">Estimated Date:</label>
+                  <br>
+                  <input type="text" id="expected_date" name="expected_date">
                   <br>
               </div>
 			  <div class="modal-split">
-                  <label for="home_phone">Home Phone:</label>
+                  <label for="shipping_fee">Shipping Fee:</label>
                   <br>
-                  <input type="text" id="home_phone" name="home_phone">
+                  <input type="text" id="shipping_fee" name="shipping_fee">
                   <br>
               </div>
 			  <div class="modal-split">
-                  <label for="mobile_phone">Mobile Phone:</label>
+                  <label for="taxes">Taxes:</label>
                   <br>
-                  <input type="text" id="mobile_phone" name="mobile_phone">
-                  <br>
-              </div>
-              <div class="modal-split">
-                  <label for="fax_number">Fax Number:</label>
-                  <br>
-                  <input type="text" id="fax_number" name="fax_number">
+                  <input type="text" id="taxes" name="taxes">
                   <br>
               </div>
               <div class="modal-split">
-                  <label for="address">Address:</label>
+                  <label for="payment_date">Payment Date:</label>
                   <br>
-                  <input type="text" id="address" name="address">
-                  <br>
-              </div>
-              <div class="modal-split">
-                  <label for="city">City:</label>
-                  <br>
-                  <input type="text" id="city" name="city">
+                  <input type="text" id="payment_date" name="payment_date">
                   <br>
               </div>
               <div class="modal-split">
-                  <label for="state_province">State:</label>
+                  <label for="payment_method">Payment Method:</label>
                   <br>
-                  <input type="text" id="state_province" name="state_province">
-                  <br>
-              </div>
-              <div class="modal-split">
-                  <label for="zip_postal_code">Zip/Postal Code:</label>
-                  <br>
-                  <input type="text" id="zip_postal_code" name="zip_postal_code">
+                  <input type="text" id="payment_method" name="payment_method">
                   <br>
               </div>
               <div class="modal-split">
-                  <label for="country_region">Country:</label>
+                  <label for="notes">Notes:</label>
                   <br>
-                  <input type="text" id="country_region" name="country_region">
-                  <br>
-              </div>
-              <div class="modal-split">
-                  <label for="web_page">Webpage:</label>
-                  <br>
-                  <input type="text" id="web_page" name="web_page">
+                  <input type="notes" id="notes" name="notes">
                   <br>
               </div>
               <div class="modal-split">
-                  <label for="notes">Any notes?</label>
+                  <label for="approved_by">Approver:</label>
                   <br>
-                  <input type="text" id="notes" name="notes">
+                  <input type="text" id="approved_by" name="approved_by">
                   <br>
               </div>
+              <div class="modal-split">
+                  <label for="approved_date">Approvement Date:</label>
+                  <br>
+                  <input type="text" id="approved_date" name="approved_date">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="submitted_by">Submitter:</label>
+                  <br>
+                  <input type="text" id="submitted_by" name="submitted_by">
+                  <br>
+              </div>
+              
 			  <input type="hidden" name="operation" value="0"><!--operation 0 create-->
 
                 </form>
@@ -220,7 +187,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form action="/suppliers" method="post">
+        <form action="/purchases" method="post">
 			<div class="form-group">
 				<label for="updateId">Select ID:</label>
 				<select id="updateId" name="updateId" class="form-control" onChange="document.querySelector('#updateIdInfo input').value = this.value" required>
@@ -259,7 +226,7 @@
       </div>
       <div class="modal-footer">
 			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-	    <form action="/suppliers" method="post">
+	    <form action="/purchases" method="post">
 			<span id="updateIdInfo">
 			<input type="hidden" value="1" name="updateId">
 			</span >
@@ -284,108 +251,94 @@
             <div class="modal-body">
 				<!-- Form takes input one by one -->
               <div class="modal-split">
-                <form action="/suppliers" method="post">
-                  <label for="company">Company:</label>
+                <form action="/purchases" method="post">
+                  <label for="supplier_id">Supplier ID:</label>
                   <br>
-                  <input type="text" id="company" name="company">
+                  <input type="text" id="supplier_id" name="supplier_id">
                   <br>
                 
               </div>
               <div class="modal-split">
-                  <label for="last_name">Last name:</label>
+                  <label for="created_by">Creator:</label>
                   <br>
-                  <input type="text" id="last_name" name="last_name">
-                  <br>
-              </div>
-              <div class="modal-split">
-                  <label for="first_name">First name:</label>
-                  <br>
-                  <input type="text" id="first_name" name="first_name">
+                  <input type="text" id="created_by" name="created_by">
                   <br>
               </div>
               <div class="modal-split">
-                  <label for="email_address">Email Adress:</label>
+                  <label for="submitted_date">Submission Date:</label>
                   <br>
-                  <input type="text" id="email_address" name="email_address">
-                  <br>
-              </div>
-              <div class="modal-split">
-                  <label for="job_title">Job Title:</label>
-                  <br>
-                  <input type="text" id="job_title" name="job_title">
+                  <input type="text" id="submitted_date" name="submitted_date">
                   <br>
               </div>
               <div class="modal-split">
-                  <label for="business_phone">Business Phone:</label>
+                  <label for="creation_date">Creation Date:</label>
                   <br>
-                  <input type="text" id="business_phone" name="business_phone">
+                  <input type="text" id="creation_date" name="creation_date">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="status_id">Status:</label>
+                  <br>
+                  <input type="text" id="status_id" name="status_id">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="expected_date">Estimated Date:</label>
+                  <br>
+                  <input type="text" id="expected_date" name="expected_date">
                   <br>
               </div>
 			  <div class="modal-split">
-                  <label for="home_phone">Home Phone:</label>
+                  <label for="shipping_fee">Shipping Fee:</label>
                   <br>
-                  <input type="text" id="home_phone" name="home_phone">
+                  <input type="text" id="shipping_fee" name="shipping_fee">
                   <br>
               </div>
 			  <div class="modal-split">
-                  <label for="mobile_phone">Mobile Phone:</label>
+                  <label for="taxes">Taxes:</label>
                   <br>
-                  <input type="text" id="mobile_phone" name="mobile_phone">
-                  <br>
-              </div>
-              <div class="modal-split">
-                  <label for="fax_number">Fax Number:</label>
-                  <br>
-                  <input type="text" id="fax_number" name="fax_number">
+                  <input type="text" id="taxes" name="taxes">
                   <br>
               </div>
               <div class="modal-split">
-                  <label for="address">Address:</label>
+                  <label for="payment_date">Payment Date:</label>
                   <br>
-                  <input type="text" id="address" name="address">
-                  <br>
-              </div>
-              <div class="modal-split">
-                  <label for="city">City:</label>
-                  <br>
-                  <input type="text" id="city" name="city">
+                  <input type="text" id="payment_date" name="payment_date">
                   <br>
               </div>
               <div class="modal-split">
-                  <label for="state_province">State:</label>
+                  <label for="payment_method">Payment Method:</label>
                   <br>
-                  <input type="text" id="state_province" name="state_province">
-                  <br>
-              </div>
-              <div class="modal-split">
-                  <label for="zip_postal_code">Zip/Postal Code:</label>
-                  <br>
-                  <input type="text" id="zip_postal_code" name="zip_postal_code">
+                  <input type="text" id="payment_method" name="payment_method">
                   <br>
               </div>
               <div class="modal-split">
-                  <label for="country_region">Country:</label>
+                  <label for="notes">Notes:</label>
                   <br>
-                  <input type="text" id="country_region" name="country_region">
-                  <br>
-              </div>
-              <div class="modal-split">
-                  <label for="web_page">Webpage:</label>
-                  <br>
-                  <input type="text" id="web_page" name="web_page">
+                  <input type="notes" id="city" name="notes">
                   <br>
               </div>
               <div class="modal-split">
-                  <label for="notes">Any notes?</label>
+                  <label for="approved_by">Approver:</label>
                   <br>
-                  <input type="text" id="notes" name="notes">
+                  <input type="text" id="approved_by" name="approved_by">
                   <br>
               </div>
-			  <input type="hidden" name="operation" value="2"><!--operation 2 update-->
-			  <span id="updateIdInfo">
-				<input type="hidden" value="1" name="updateId">
-			  </span >
-				<!-- <input> -->
+              <div class="modal-split">
+                  <label for="approved_date">Approvement Date:</label>
+                  <br>
+                  <input type="text" id="approved_date" name="approved_date">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="submitted_by">Submitter:</label>
+                  <br>
+                  <input type="text" id="submitted_by" name="submitted_by">
+                  <br>
+              </div>
+              
+			  <input type="hidden" name="operation" value="1"><!--operation 1 update-->
+
                 </form>
             </div>
             <div class="modal-footer">
@@ -395,10 +348,11 @@
         </div>
       </div>	  
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
       $(document).ready(function() {
         $('th.sortable').click(function() {
           var table = $(this).parents('table').eq(0);
@@ -433,7 +387,7 @@
         }
       });
     </script>
-    <script>
+	    <script>
       $(document).ready(function() {
         prep_modal();
       });
@@ -496,6 +450,5 @@
         return event.key != "Enter";
       });
     </script>
-	
-	
+
 {% endblock %}

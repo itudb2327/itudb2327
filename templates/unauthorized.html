@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block page_content %}
+    <title>Unauthorized Access</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='styles/unauthorized.css')}}">
+
+    <div>
+        <span class="glyphicon glyphicon-lock lock-icon" aria-hidden="true"></span>
+        <h1>Unauthorized Access</h1>
+        <p>You do not have permission to access this page.</p>
+        <a href="/" class="return-button">Return to Homepage</a>
+    </div>
+{% endblock %}
