@@ -134,15 +134,21 @@ def employees_page():
 #@login_required
 def customers_page():
     form = customers.CustomerForm()
-    if request.method == 'POST' and form.validate_on_submit():
+    if request.method == 'POST':
         if 'deleteCustomerId' in request.form:
             return customers.delete(db, form)
         elif 'newCustomerId' in request.form:
-            return customers.new(db, form)
+            if form.validate_on_submit():
+                return customers.new(db, form)
+            else:
+                return customers.index(db, form, 1, 0, "")
         elif 'updateCustomerId' in request.form:
-            return customers.update(db, form)
+            if form.validate_on_submit():
+                return customers.update(db, form)
+            else:
+                return customers.index(db, form, 0, 1, request.form.get('updateCustomerId'))
         
-    return customers.index(db, form)
+    return customers.index(db, form, 0, 0, "")
 
 if __name__ == '__main__':
     app.run(debug=True)

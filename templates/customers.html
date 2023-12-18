@@ -14,7 +14,7 @@
       <option value="city">City</option>
     </select>
     <input type="submit" class="btn btn-success" value="Sort" />
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newCustomerModal">New Customer</button>
+    <button type="button" id="newCustomerButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newCustomerModal">New Customer</button>
   </form>
   
   <div class="mt-4">
@@ -45,7 +45,7 @@
           <td>{{ customer.address }}</td>
           <td>{{ customer.city }}</td>
           <td>
-            <button type="button" id="updateButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateCustomerModal" onclick="setUpdateCustomer('{{ customer.id }}', '{{ customer.company }}', '{{ customer.last_name }}', '{{ customer.first_name }}', '{{ customer.job_title }}', '{{ customer.business_phone }}', '{{ customer.address }}', '{{ customer.city }}' )">Update</button>
+            <button type="button" id="updateButton_{{ customer.id }}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateCustomerModal" onclick="setUpdateCustomer('{{ customer.id }}', '{{ customer.company }}', '{{ customer.last_name }}', '{{ customer.first_name }}', '{{ customer.job_title }}', '{{ customer.business_phone }}', '{{ customer.address }}', '{{ customer.city }}' )">Update</button>
           </td>
           <td>
             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" onclick="setDeleteCustomerId('{{ customer.id }}')">Delete</button>
@@ -169,6 +169,23 @@
         document.getElementById('customerBussinessPhone').value = business_phone;
         document.getElementById('customerAddress').value = address;
         document.getElementById('customerCity').value = city;
+      }
+
+      window.onload = function(){
+        var x = '{{ new_not_valid }}';
+        if(x  == "1"){
+          var button = document.getElementById('newCustomerButton');
+          button.click();
+        }
+        var y = "{{ update_not_valid }}";
+        if(y == "1"){
+          var customer_id = "{{ update_button_id }}";
+          var button_id = "updateButton_" + customer_id.toString();
+          var button = document.getElementById(button_id);
+          button.click();
+        }
+        
+
       }
     </script>
 

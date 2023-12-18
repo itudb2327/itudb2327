@@ -24,7 +24,7 @@ class CustomerForm(FlaskForm):
     customerCity = StringField('City')
 
 
-def index(db, form):
+def index(db, form, new_not_valid, update_not_valid, update_button_id):
     cursor = db.cursor()
     customers_list = []
     sort_by = request.args.get('sort_by')
@@ -36,7 +36,7 @@ def index(db, form):
     for id, company, last_name, first_name, job_title, business_phone, address, city in cursor:
         customers_list.append(Customer(id, company, last_name, first_name, job_title, business_phone, address, city))
     cursor.close()
-    return render_template("customers.html", customers_list = customers_list, form = form)
+    return render_template("customers.html", customers_list = customers_list, form = form, new_not_valid = new_not_valid, update_not_valid = update_not_valid, update_button_id = update_button_id)
 
 def delete(db, form):
     cursor = db.cursor()
@@ -45,7 +45,7 @@ def delete(db, form):
     cursor.execute(delete_query)
     db.commit()
     flash('Customer deleted successfully', 'success')
-    return index(db, form)
+    return index(db, form, 0, 0, "")
 
 def new(db, form):
     cursor = db.cursor()
@@ -59,7 +59,7 @@ def new(db, form):
     insert_query = f"INSERT INTO customers(company, last_name, first_name, job_title, business_phone, address, city) VALUES ('{company}', '{last_name}', '{first_name}', '{job_title}', '{business_phone}', '{address}', '{city}')"
     cursor.execute(insert_query)
     db.commit()
-    return index(db, form)
+    return index(db, form, 0, 0, "")
 
 
 def update(db, form):
@@ -75,5 +75,5 @@ def update(db, form):
     update_query = f"UPDATE customers SET company = '{company}',last_name = '{last_name}', first_name = '{first_name}', job_title = '{job_title}', business_phone = '{business_phone}', address = '{address}', city = '{city}' WHERE id = {id}"
     cursor.execute(update_query)
     db.commit()
-    return index(db, form)
+    return index(db, form, 0, 0, "")
 

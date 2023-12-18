@@ -11,3 +11,5 @@
 4.12.23 commit: Added a modal for updating a customer record a form for collecting the data. Made update functionality to the table by an sql query.
 
 12.12.23 commit: Implemented application side validation and frontend form validation for customer attributes when updating and creating a customer.
+
+18.12.23 commit : Modal error displaying implemented in case of invalid forms. 
