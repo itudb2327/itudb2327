@@ -83,11 +83,16 @@
 			{% endif %}
 		</div>
       <div class="button-container">
+	  <div class="location-button">
+		<button id="location_btn" class="btn btn-info" data-toggle="modal" data-target="#locationModal" onclick="myFunction()">Find Nearest Supplier</button>      
+      </div>
+	  <div class="admin-buttons">
         <!-- Button container for update and add actions -->
 		{% if status == "admin" %}
 		<button id="updateButton" class="btn btn-primary" data-toggle="modal" data-target="#updateModal">Update Record</button>
         <button id="addButton" class="btn btn-success" data-toggle="modal" data-target="#myModal">Add New Record</button>
 		{% endif %}
+	  </div>
       </div>
       <!-- Modal for adding new records -->
       <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -210,6 +215,8 @@
           </div>
         </div>
       </div>
+	  
+	  
 <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -269,6 +276,33 @@
       </div>
     </div>
   </div>
+</div>
+<!-- modal for displaying geolocation information -->
+<div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="locationModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="locationModalLabel">Nearest Supplier</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+				{% if nearest_supplier == None %}
+				<p id="location_out">Wait a second.</p>
+				{% endif %}
+				{% if nearest_supplier != None %}
+				<p id="location_out">Nearest Supplier:</p>
+				{% endif %}
+				{% if nearest_supplier != None %}
+				<p>{{nearest_supplier}}</p>
+				{% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- Modal for updating value -->
       <div class="modal fade" id="changeRecordModal" tabindex="-1" role="dialog" aria-labelledby="changeRecordModalLabel">
@@ -496,6 +530,67 @@
         return event.key != "Enter";
       });
     </script>
-	
+	<script>
+		const x = document.getElementById("location_out");
+		
+		document.getElementById("location_btn").addEventListener("click", getLocation);
+		
+		function getLocation() {
+		  if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(showPosition);
+		  } else { 
+			x.innerHTML = "Geolocation is not supported by this browser.";
+		  }
+		}
+
+
+		function showPosition(position) {
+		  x.innerHTML = "Latitude: " + position.coords.latitude + 
+		  "<br>Longitude: " + position.coords.longitude;
+
+		  // Create a form dynamically
+		  const form = document.createElement("form");
+		  form.setAttribute("method", "post");
+		  form.setAttribute("action", "/suppliers"); 
+
+		  // Create input fields for latitude and longitude
+		  const latInput = document.createElement("input");
+		  latInput.setAttribute("type", "hidden");
+		  latInput.setAttribute("name", "latitude");
+		  latInput.setAttribute("value", position.coords.latitude);
+
+		  const lonInput = document.createElement("input");
+		  lonInput.setAttribute("type", "hidden");
+		  lonInput.setAttribute("name", "longitude");
+		  lonInput.setAttribute("value", position.coords.longitude);
+
+		  // Append input fields to the form
+		  form.appendChild(latInput);
+		  form.appendChild(lonInput);
+
+		  // Append the form to the document body and submit it
+		  document.body.appendChild(form);
+		  form.submit();
+		}
+	</script>
+<script>
+    window.onload = function() {
+        const x = document.getElementById("location_out");
+
+        // Assume nearest_supplier is a variable available in the template
+        var y = '{{ nearest_supplier }}'; // Wrap in quotes
+
+        console.log(y);
+
+        // Check if y is not an empty string
+        if (y !== 'None') {
+            // Add JavaScript code to show the modal
+            $(document).ready(function(){
+                $('#locationModal').modal('show');
+            });
+        }
+    };
+</script>
+
 	
 {% endblock %}

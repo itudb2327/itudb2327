@@ -38,7 +38,7 @@ def load_user(user_id):
     
 @login_manager.unauthorized_handler
 def unauthorized():
-    return redirect(url_for('login'))    
+    return redirect(url_for('login'))   
     
 @app.route('/logout')
 @login_required
@@ -51,18 +51,20 @@ def logout():
 
 @app.route('/')
 def home():
+    
     # product_id_list = Products.get_id_list(db)
     # product_profit_list = Products.get_profit_list(db)
     # cursor = db.cursor()
     # cursor.execute("select * from TableLastUpdateInfo;")
     # cursor.execute("CREATE TABLE TableLastUpdateInfo (table_name VARCHAR(255) NOT NULL,update_time TIMESTAMP NOT NULL,PRIMARY KEY (table_name));")
     # cursor.execute("insert into TableLastUpdateInfo values('purchase_orders',CURRENT_TIMESTAMP() );")
+    # cursor.execute("UPDATE suppliers SET zip_postal_code = 34467 where id=10;")
     # asd=cursor.fetchall()
     # print(asd)
     # cursor.execute("CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY,username VARCHAR(50) NOT NULL UNIQUE,password_hash VARCHAR(100) NOT NULL,status VARCHAR(20) NOT NULL default 'user',joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP, profile_picture BLOB);")
     # db.commit()
    
-    return render_template('home.html')
+    return render_template('home.html',logged=current_user.is_authenticated)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -128,7 +130,6 @@ def employees_page():
             return Employees.update_employee(db)    
     else:
         return render_template("employees.html", employee_list=employee_list)
-
 
 @app.route("/customers", methods=("GET","POST"))
 #@login_required

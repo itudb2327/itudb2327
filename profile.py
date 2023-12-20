@@ -51,7 +51,7 @@ def profile_page(db, current_user):
             profile_picture = request.files['profile_picture']
             update_pp(db,profile_picture,current_user)
         
-    return render_template("profile.html",base64_image=base64_image)
+    return render_template("/profile.html",base64_image=base64_image)
 
 if __name__ == '__main__':
     app.run(debug=True)

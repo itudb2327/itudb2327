@@ -28,6 +28,9 @@ th.sortable.asc::after {
 /*--------------------------------------------------------*/
 /* Style the button container */
 .button-container {
+	display: flex;
+	justify-content: space-between;
+
     text-align: right; /* Align buttons to the right */
     margin-top: 20px; /* Add top margin */
 }
@@ -40,4 +43,11 @@ th.sortable.asc::after {
 /* Center-align h4 elements */
 h4 {
     text-align: center;
+}
+
+.location-button {
+    order: -1; /* Move this div to the beginning of the flex container */
+}
+.admin-buttons {
+    display: flex;
 }

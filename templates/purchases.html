@@ -3,6 +3,36 @@
 <link rel="stylesheet" href="{{url_for('static',filename='styles/purchases.css')}}">
 
 <div class="container" style="padding-top:8%;">
+<div class="col-md-4">
+      <form class="d-flex align-items-center" method="post">
+  <p>Search for:</p>
+
+  <div class="form-check me-3">
+    <input class="form-check-input" type="radio" name="search_for" id="radio1" value="id" checked>
+    <label class="form-check-label" for="radio1">
+      ID
+    </label>
+  </div>
+
+  <div class="form-check me-3">
+    <input class="form-check-input" type="radio" name="search_for" id="radio2" value="supplier_id">
+    <label class="form-check-label" for="radio2">
+      Supplier
+    </label>
+  </div>
+
+  <div class="form-check me-3">
+    <input class="form-check-input" type="radio" name="search_for" id="radio3" value="created_by">
+    <label class="form-check-label" for="radio3">
+      Creator
+    </label>
+  </div>
+
+  <input class="form-control me-2 " name="querry" type="search" placeholder="Search a purchase" style="width:200px" aria-label="Search" required>
+  <button class="btn btn-outline-success" type="submit">Search</button>
+</form>
+
+   </div>
 <form action="/purchases" method="post">
     <!-- Create four buttons side by side -->
     <button class="button {% if active_filter == '0' %}active{% endif %}" type="submit" name="filter" value="0">New Purchases</button><!--filter 0 new-->
@@ -10,6 +40,7 @@
     <button class="button {% if active_filter == '2' %}active{% endif %}" type="submit" name="filter" value="2">Approved Purchases</button><!--filter 2 approved-->
     <button class="button {% if active_filter == '3' %}active{% endif %}" type="submit" name="filter" value="3">Closed Purchases</button><!--filter 3 closed-->
 </form>
+
 <div class="table-container">
         <!-- Table container -->
         <table class="table table-striped" id="purchasesTable">
@@ -38,8 +69,8 @@
 			{% for record in records %} 
 			<tr>
               <td>{{ record[0] }}</td>
-              <td>{{ record[1] }}</td>
-              <td>{{ record[2] }}</td>
+              <td><a href="/suppliers" style="color: Teal; text-decoration: none; ">{{ record[1] }}</a></td>
+			  <td><a href="/employees" style="color: DarkSlateBlue;text-decoration: none; ">{{ record[2] }}</a></td>
               <td>{{ record[3] }}</td>
               <td>{{ record[4] }}</td>
               <td>{{ record[5] }}</td>
@@ -252,7 +283,7 @@
 				<!-- Form takes input one by one -->
               <div class="modal-split">
                 <form action="/purchases" method="post">
-                  <label for="supplier_id">Supplier ID:</label>
+                  <label for="supplier_id">Supplier:</label>
                   <br>
                   <input type="text" id="supplier_id" name="supplier_id">
                   <br>
