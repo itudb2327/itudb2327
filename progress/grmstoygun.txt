@@ -13,3 +13,5 @@
 12.12.23 commit: Implemented application side validation and frontend form validation for customer attributes when updating and creating a customer.
 
 18.12.23 commit : Modal error displaying implemented in case of invalid forms. 
+
+21.12.23 commit: New filter accordion and filter options are introduced in customers page. These new options are handled with new SQL queries. customers.css is created. 
