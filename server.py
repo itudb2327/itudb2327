@@ -6,7 +6,7 @@ import mysql.connector
 import suppliers
 import customers
 import purchases
-from profile import profile_page
+from profiles import profile_page
 from employee import Employees
 from products import Products
 import base64
@@ -51,14 +51,12 @@ def logout():
 
 @app.route('/')
 def home():
-<<<<<<< Updated upstream
     
     # product_id_list = Products.get_id_list(db)
     # product_profit_list = Products.get_profit_list(db)
-=======
     product_id_list = Products.get_id_list(db)
     product_profit_list = Products.get_profit_list(db)
->>>>>>> Stashed changes
+
     # cursor = db.cursor()
     # cursor.execute("select * from TableLastUpdateInfo;")
     # cursor.execute("CREATE TABLE TableLastUpdateInfo (table_name VARCHAR(255) NOT NULL,update_time TIMESTAMP NOT NULL,PRIMARY KEY (table_name));")
@@ -69,11 +67,7 @@ def home():
     # cursor.execute("CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY,username VARCHAR(50) NOT NULL UNIQUE,password_hash VARCHAR(100) NOT NULL,status VARCHAR(20) NOT NULL default 'user',joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP, profile_picture BLOB);")
     # db.commit()
    
-<<<<<<< Updated upstream
-    return render_template('home.html',logged=current_user.is_authenticated)
-=======
-    return render_template('home.html', product_ids=product_id_list, profits=product_profit_list)
->>>>>>> Stashed changes
+    return render_template('home.html',logged=current_user.is_authenticated, product_ids=product_id_list, profits=product_profit_list)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
