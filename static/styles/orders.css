@@ -1,0 +1,26 @@
+.filter-group {
+    margin-bottom: 15px;
+  }
+
+  .filter-group label {
+    display: block;
+    margin-bottom: 5px;
+    margin-top: 5px;
+  }
+
+  .filter-group input,
+  .filter-group select {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+
+  .checkbox-group {
+    display: flex;
+    gap: 10px;
+  }
+
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+  }

@@ -1,0 +1,313 @@
+{% extends "base.html" %} 
+{% block page_content %}
+<link rel="stylesheet" href="{{url_for('static',filename='styles/orders.css')}}">
+<div class="container" style="padding-top: 8%;">
+  <div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" id="accordionButton" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Filters
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <form action="/orders" method="get" >
+            <div class="filter-group">
+            <label for="sort">Sort by:</label>
+            <select name="sort_by" id="sort">
+              <option value="id">ID</option>
+              <option value="customer_name">Customer Name</option>
+              <option value="order_date">Order Date</option>
+              <option value="ship_name">Ship Name</option>
+              <option value="ship_address">Ship Address</option>
+              <option value="ship_city">Ship City</option>
+              <option value="shipping_fee">Shipping Fee</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="search_customer_name">Search Customer Name:</label>
+            <input type="text" id="search_customer_name" name="search_customer_name" placeholder="Enter customer name">
+          </div>
+          <div class="filter-group">
+            <label>Number of Records:</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" name="records" value="10"> 10</label>
+              <label><input type="checkbox" name="records" value="20"> 20</label>
+              <label><input type="checkbox" name="records" value="30"> 30</label>
+              <label><input type="checkbox" name="records" value="40"> 40</label>
+            </div>
+          </div>
+          <div class="button-group">
+            <button type="submit" class="btn btn-success">Apply Filters</button>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <button type="button" id="newOrderButton" class="btn btn-primary mt-4" data-bs-toggle="modal" data-bs-target="#newOrderModal">New Order</button>
+  <div class="mt-4">
+    <table class="table table-light table-striped table-hover">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Customer Name</th>
+          <th scope="col">Order Date</th>
+          <th scope="col">Ship Name</th>
+          <th scope="col">Ship Address</th>
+          <th scope="col">Ship City</th>
+          <th scope="col">Shipping Fee</th>
+          <th scope="col">Update</th>
+          <th scope="col">Delete</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        {% for order in orders_list %}
+        <tr>
+          <th scope="row">{{ order.id }}</th>
+          <td>{{ order.customer_name }}</td>
+          <td>{{ order.order_date }}</td>
+          <td>{{ order.ship_name }}</td>
+          <td>{{ order.ship_address }}</td>
+          <td>{{ order.ship_city }}</td>
+          <td>{{ order.shipping_fee }}</td>
+          <td>
+            <button type="button" id="updateButton_{{ order.id }}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateOrderModal" onclick="setUpdateOrder('{{ order.id }}','{{ order.order_date }}', '{{ order.ship_name }}', '{{ order.ship_address }}', '{{ order.ship_city }}', '{{ order.shipping_fee }}')">Update</button>
+          </td>
+          <td>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" onclick="setDeleteOrderId('{{ order.id }}')">Delete</button>
+          </td>
+
+  </div>
+  <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+              </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this order?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form action="/orders" method="post" id="deleteForm">
+                  <input type="hidden" name="deleteOrderId" id="deleteOrderId" value="">
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="updateOrderModal" tabindex="-1" role="dialog" aria-labelledby="updateOrderModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="updateOrderModalLabel">Update Order</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="/orders" method="post" name="orderUpdate">
+              {{ form.hidden_tag() }}
+              <div class="mb-3">
+                <input type="hidden" class="form-control" name="updateOrderId" id="updateOrderId" value="">
+              </div>
+              <div class="mb-3">
+                <label for="updateOrderId" class="form-label">Id</label>
+                <input type="text" class="form-control" name="displayOrderId" id="displayOrderId" value="" disabled>
+              </div>
+              <div class="mb-3">
+                {{ form.orderCustomerName.label }}
+                {{ form.orderCustomerName(class="form-control") }}
+                {% if form.orderCustomerName.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.orderCustomerName.errors[0] }}
+                    </div>
+                {% endif %}
+            </div>
+        
+            <div class="mb-3">
+                <label for="orderOrderDate" class="form-label">{{ form.orderOrderDate.label }}</label>
+                <input type="datetime-local" class="form-control {{ 'is-invalid' if form.orderOrderDate.errors else '' }}" id="orderOrderDate" name="orderOrderDate" value="{{ form.orderOrderDate.data if form.orderOrderDate.data is not none else '' }}">
+                {% if form.orderOrderDate.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.orderOrderDate.errors[0] }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+              <label for="orderShipName" class="form-label">{{ form.orderShipName.label }}</label>
+              <input type="text" class="form-control {{ 'is-invalid' if form.orderShipName.errors else '' }}" id="orderShipName" name="orderShipName" value="{{ form.orderShipName.data if form.orderShipName.data is not none else '' }}">
+                {% if form.orderShipName.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.orderShipName.errors[0] }}
+                    </div>
+                {% endif %}
+            </div>
+        
+            <div class="mb-3">
+              <label for="orderShipAddress" class="form-label">{{ form.orderShipAddress.label }}</label>
+              <textarea class="form-control {{ 'is-invalid' if form.orderShipAddress.errors else '' }}" id="orderShipAddress" name="orderShipAddress" value="{{ form.orderShipAddress.data if form.orderShipAddress.data is not none else '' }}"></textarea>
+                {% if form.orderShipAddress.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.orderShipAddress.errors[0] }}
+                    </div>
+                {% endif %}
+            </div>
+        
+            <div class="mb-3">
+              <label for="orderShipCity" class="form-label">{{ form.orderShipCity.label }}</label>
+              <input type="text" class="form-control {{ 'is-invalid' if form.orderShipCity.errors else '' }}" id="orderShipCity" name="orderShipCity" value="{{ form.orderShipCity.data if form.orderShipCity.data is not none else '' }}">
+              {% if form.orderShipCity.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.orderShipCity.errors[0] }}
+                    </div>
+                {% endif %}
+            </div>
+        
+            <div class="mb-3">
+              <label for="orderShippingFee" class="form-label">{{ form.orderShippingFee.label }}</label>
+              <input type="number" step=".01" class="form-control {{ 'is-invalid' if form.orderShippingFee.errors else '' }}" id="orderShippingFee" name="orderShippingFee" value="{{ form.orderShippingFee.data if form.orderShippingFee.data is not none else '' }}">
+                {% if form.orderShippingFee.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.orderShippingFee.errors[0] }}
+                    </div>
+                {% endif %}
+            </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+          </div>
+      </div>
+  </div>
+</div>
+{% endfor %}
+</tr>
+</tbody>
+</table>
+<div class="modal fade" id="newOrderModal" tabindex="-1" role="dialog" aria-labelledby="newOrderModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="newOrderModalLabel">New Order</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="/orders" method="post" name="customerNew">
+              {{ form.hidden_tag() }}
+              <div class="mb-3">
+                <input type="hidden" class="form-control" name="newOrderId">
+              </div>
+              <div class="mb-3">
+                {{ form.orderCustomerName.label }}
+                {{ form.orderCustomerName(class="form-control") }}
+                {% if form.orderCustomerName.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.orderCustomerName.errors[0] }}
+                    </div>
+                {% endif %}
+            </div>
+        
+            <div class="mb-3">
+                <label for="orderOrderDate" class="form-label">{{ form.orderOrderDate.label }}</label>
+                <input type="datetime-local" class="form-control {{ 'is-invalid' if form.orderOrderDate.errors else '' }}" id="orderOrderDate" name="orderOrderDate" value="{{ form.orderOrderDate.data if form.orderOrderDate.data is not none else '' }}">
+                {% if form.orderOrderDate.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.orderOrderDate.errors[0] }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+              <label for="orderShipName" class="form-label">{{ form.orderShipName.label }}</label>
+              <input type="text" class="form-control {{ 'is-invalid' if form.orderShipName.errors else '' }}" id="orderShipName" name="orderShipName" value="{{ form.orderShipName.data if form.orderShipName.data is not none else '' }}">
+                {% if form.orderShipName.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.orderShipName.errors[0] }}
+                    </div>
+                {% endif %}
+            </div>
+        
+            <div class="mb-3">
+              <label for="orderShipAddress" class="form-label">{{ form.orderShipAddress.label }}</label>
+              <textarea class="form-control {{ 'is-invalid' if form.orderShipAddress.errors else '' }}" id="orderShipAddress" name="orderShipAddress" value="{{ form.orderShipAddress.data if form.orderShipAddress.data is not none else '' }}"></textarea>
+                {% if form.orderShipAddress.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.orderShipAddress.errors[0] }}
+                    </div>
+                {% endif %}
+            </div>
+        
+            <div class="mb-3">
+              <label for="orderShipCity" class="form-label">{{ form.orderShipCity.label }}</label>
+              <input type="text" class="form-control {{ 'is-invalid' if form.orderShipCity.errors else '' }}" id="orderShipCity" name="orderShipCity" value="{{ form.orderShipCity.data if form.orderShipCity.data is not none else '' }}">
+              {% if form.orderShipCity.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.orderShipCity.errors[0] }}
+                    </div>
+                {% endif %}
+            </div>
+        
+            <div class="mb-3">
+              <label for="orderShippingFee" class="form-label">{{ form.orderShippingFee.label }}</label>
+              <input type="number" step=".01" class="form-control {{ 'is-invalid' if form.orderShippingFee.errors else '' }}" id="orderShippingFee" name="orderShippingFee" value="{{ form.orderShippingFee.data if form.orderShippingFee.data is not none else '' }}">
+                {% if form.orderShippingFee.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.orderShippingFee.errors[0] }}
+                    </div>
+                {% endif %}
+            </div>
+            
+                </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary">Create</button>
+            </form>
+          </div>
+      </div>
+  </div>
+</div>
+</div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      function setDeleteOrderId(orderId) {
+        document.getElementById('deleteOrderId').value = orderId;
+      }
+
+      function setUpdateOrder(id, order_date, ship_name, ship_address, ship_city, shipping_fee){
+        document.getElementById('updateOrderId').value = id;
+        document.getElementById('displayOrderId').value = id;
+        document.getElementById('orderOrderDate').value = order_date;
+        document.getElementById('orderShipName').value = ship_name;
+        document.getElementById('orderShipAddress').value = ship_address;
+        document.getElementById('orderShipCity').value = ship_city;
+        document.getElementById('orderShippingFee').value = shipping_fee;
+      }
+
+      window.onload = function(){
+        var x = '{{ new_not_valid }}';
+        if(x  == "1"){
+          var button = document.getElementById('newOrderButton');
+          button.click();
+        }
+        var y = "{{ update_not_valid }}";
+        if(y == "1"){
+          var order_id = "{{ update_button_id }}";
+          var button_id = "updateButton_" + order_id.toString();
+          var button = document.getElementById(button_id);
+          button.click();
+        }
+      }
+    </script>
+
+{% endblock %}
