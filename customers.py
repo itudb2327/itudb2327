@@ -28,8 +28,10 @@ def index(db, form, new_not_valid, update_not_valid, update_button_id):
     cursor = db.cursor()
     customers_list = []
     sort_by = request.args.get('sort_by')
-    if sort_by:
-        db_query = f"SELECT id, company, last_name, first_name, job_title, business_phone, address, city FROM customers ORDER BY {sort_by}"
+    search_first_name = request.args.get('search_first_name')
+    records = request.args.get('records')
+    if sort_by or search_first_name or records:
+        db_query = handleFilters(sort_by, search_first_name, records)
     else:
         db_query = "SELECT id, company, last_name, first_name, job_title, business_phone, address, city FROM customers"
     cursor.execute(db_query)
@@ -37,6 +39,17 @@ def index(db, form, new_not_valid, update_not_valid, update_button_id):
         customers_list.append(Customer(id, company, last_name, first_name, job_title, business_phone, address, city))
     cursor.close()
     return render_template("customers.html", customers_list = customers_list, form = form, new_not_valid = new_not_valid, update_not_valid = update_not_valid, update_button_id = update_button_id)
+
+def handleFilters(sort_by, search_first_name, records):
+    if search_first_name:
+        db_query = f"SELECT id, company, last_name, first_name, job_title, business_phone, address, city FROM customers WHERE LOWER(first_name) = LOWER('{search_first_name}')"
+    else:
+        db_query = "SELECT id, company, last_name, first_name, job_title, business_phone, address, city FROM customers"
+        if sort_by:
+            db_query += f" ORDER BY {sort_by}"
+        if records:
+            db_query +=  f" LIMIT {records}"
+    return db_query
 
 def delete(db, form):
     cursor = db.cursor()

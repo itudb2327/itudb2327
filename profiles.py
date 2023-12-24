@@ -36,12 +36,9 @@ def update_password(db,old_password,new_password,confirm_password,current_user):
 def profile_page(db, current_user):
     cursor = db.cursor()
     cursor.execute("select profile_picture from users where id=%s;",(current_user.id,))
-    uploaded_img = cursor.fetchone()[0]
-    if(uploaded_img is not None):
-        encoded_base64 = base64.b64encode(uploaded_img).decode('utf-8')
-    else:
-        encoded_base64=None
-    image_data_url = f"data:image/jpg;base64,{encoded_base64}"
+    byte_pic=cursor.fetchall()
+    blob_data=byte_pic[0][0]
+    base64_image = base64.encodebytes(blob_data)
     
     if request.method == 'POST':
         operation =request.form['operation']
@@ -54,7 +51,7 @@ def profile_page(db, current_user):
             profile_picture = request.files['profile_picture']
             update_pp(db,profile_picture,current_user)
         
-    return render_template("/profile.html",user_image=image_data_url)
+    return render_template("/profile.html",base64_image=base64_image)
 
 if __name__ == '__main__':
     app.run(debug=True)

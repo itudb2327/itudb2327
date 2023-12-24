@@ -1,656 +1,485 @@
-{% extends "base.html" %} {% block page_content %}
-<!-- Include a stylesheet for the current page -->
+{% extends "base.html" %}
+{% block page_content %}
 <link rel="stylesheet" href="{{url_for('static',filename='styles/purchases.css')}}">
+
 <div class="container" style="padding-top:8%;">
-	<!-- Search form -->
-    <div class="col-md-4">
-        <form class="d-flex align-items-center" method="post">
-            <p>Search for:</p>
-			<!-- Radio buttons for search criteria -->
-            <div class="form-check me-3">
-                <input class="form-check-input" type="radio" name="search_for" id="radio1" value="id" checked>
-                <label class="form-check-label" for="radio1"> ID </label>
-            </div>
-            <div class="form-check me-3">
-                <input class="form-check-input" type="radio" name="search_for" id="radio2" value="supplier_id">
-                <label class="form-check-label" for="radio2"> Supplier </label>
-            </div>
-            <div class="form-check me-3">
-                <input class="form-check-input" type="radio" name="search_for" id="radio3" value="created_by">
-                <label class="form-check-label" for="radio3"> Creator </label>
-            </div>
-			 <!-- Input field for search query -->
-            <input class="form-control me-2 " name="querry" type="search" placeholder="Search a purchase" style="width:200px" aria-label="Search" required>
-            <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
-    </div>
-    <form action="/purchases" method="post">
-         <!-- Filter buttons form -->
-        <button class="button {% if active_filter == '0' %}active{% endif %}" type="submit" name="filter" value="0">New Purchases</button>
-        <!--filter 0 new-->
-        <button class="button {% if active_filter == '1' %}active{% endif %}" type="submit" name="filter" value="1">Submitted Purchases</button>
-        <!--filter 1 submitted-->
-        <button class="button {% if active_filter == '2' %}active{% endif %}" type="submit" name="filter" value="2">Approved Purchases</button>
-        <!--filter 2 approved-->
-        <button class="button {% if active_filter == '3' %}active{% endif %}" type="submit" name="filter" value="3">Closed Purchases</button>
-        <!--filter 3 closed-->
-    </form>
-    <div class="table-container">
+<div class="col-md-4">
+      <form class="d-flex align-items-center" method="post">
+  <p>Search for:</p>
+
+  <div class="form-check me-3">
+    <input class="form-check-input" type="radio" name="search_for" id="radio1" value="id" checked>
+    <label class="form-check-label" for="radio1">
+      ID
+    </label>
+  </div>
+
+  <div class="form-check me-3">
+    <input class="form-check-input" type="radio" name="search_for" id="radio2" value="supplier_id">
+    <label class="form-check-label" for="radio2">
+      Supplier
+    </label>
+  </div>
+
+  <div class="form-check me-3">
+    <input class="form-check-input" type="radio" name="search_for" id="radio3" value="created_by">
+    <label class="form-check-label" for="radio3">
+      Creator
+    </label>
+  </div>
+
+  <input class="form-control me-2 " name="querry" type="search" placeholder="Search a purchase" style="width:200px" aria-label="Search" required>
+  <button class="btn btn-outline-success" type="submit">Search</button>
+</form>
+
+   </div>
+<form action="/purchases" method="post">
+    <!-- Create four buttons side by side -->
+    <button class="button {% if active_filter == '0' %}active{% endif %}" type="submit" name="filter" value="0">New Purchases</button><!--filter 0 new-->
+    <button class="button {% if active_filter == '1' %}active{% endif %}" type="submit" name="filter" value="1">Submitted Purchases</button><!--filter 1 submitted-->
+    <button class="button {% if active_filter == '2' %}active{% endif %}" type="submit" name="filter" value="2">Approved Purchases</button><!--filter 2 approved-->
+    <button class="button {% if active_filter == '3' %}active{% endif %}" type="submit" name="filter" value="3">Closed Purchases</button><!--filter 3 closed-->
+</form>
+
+<div class="table-container">
         <!-- Table container -->
         <table class="table table-striped" id="purchasesTable">
-            <thead>
-                <!-- Table headers with sorting functionality -->
-                <tr>
-                    <th class="sortable">ID</th>
-                    <th class="sortable">Supplier</th>
-                    <th class="sortable">Creator</th>
-                    <th class="sortable">Submission Date</th>
-                    <th class="sortable">Creation Date</th>
-                    <th class="sortable">Estimated Date</th>
-                    <th class="sortable">Shipping Fee</th>
-                    <th class="sortable">Taxes</th>
-                    <th class="sortable">Payment Date</th>
-                    <th class="sortable">Payment Method</th>
-                    <th class="sortable">Notes</th>
-                    <th class="sortable">Approver</th>
-                    <th class="sortable">Approvement Date</th>
-                    <th class="sortable">Submitter</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Display purchases records from db--> 
-				{% for record in records %}
-				<tr>
-					<td>{{ record.id }}</td>
-					<td>
-						<a href="/suppliers" style="color: Teal; text-decoration: none;">{{ record.supplier_id }}</a>
-					</td>
-					<td>
-						<a href="/employees" style="color: DarkSlateBlue; text-decoration: none;">{{ record.created_by }}</a>
-					</td>
-					<td>{{ record.submitted_date }}</td>
-					<td>{{ record.creation_date }}</td>
-					<td>{{ record.expected_date }}</td>
-					<td>{{ record.shipping_fee }}</td>
-					<td>{{ record.taxes }}</td>
-					<td>{{ record.payment_date }}</td>
-					<td>{{ record.payment_method }}</td>
-					<td>{{ record.notes }}</td>
-					<td>
-						<a href="/employees" style="color: DarkSlateBlue; text-decoration: none;">{{ record.approved_by }}</a>
-					</td>
-					<td>{{ record.approved_date }}</td>
-					<td>
-						<a href="/employees" style="color: DarkSlateBlue; text-decoration: none;">{{ record.submitted_by }}</a>
-					</td>
-
-                </tr>
-				{% endfor %}
-            </tbody>
+          <thead>
+            <!-- Table headers with sorting functionality -->
+            <tr>
+              <th class="sortable">ID</th>
+              <th class="sortable">Supplier ID</th>
+              <th class="sortable">Creator</th>
+              <th class="sortable">Submission Date</th>
+              <th class="sortable">Creation Date</th>
+              <th class="sortable">Status</th>
+              <th class="sortable">Estimated Date</th>
+              <th class="sortable">Shipping Fee</th>
+              <th class="sortable">Taxes</th>
+              <th class="sortable">Payment Date</th>
+              <th class="sortable">Payment Method</th>
+              <th class="sortable">Notes</th>
+              <th class="sortable">Approver</th>
+              <th class="sortable">Approvement Date</th>
+              <th class="sortable">Submitter</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Display purchases records from db--> 
+			{% for record in records %} 
+			<tr>
+              <td>{{ record[0] }}</td>
+              <td><a href="/suppliers" style="color: Teal; text-decoration: none; ">{{ record[1] }}</a></td>
+			  <td><a href="/employees" style="color: DarkSlateBlue;text-decoration: none; ">{{ record[2] }}</a></td>
+              <td>{{ record[3] }}</td>
+              <td>{{ record[4] }}</td>
+              <td>{{ record[5] }}</td>
+              <td>{{ record[6] }}</td>
+              <td>{{ record[7] }}</td>
+              <td>{{ record[8] }}</td>
+              <td>{{ record[9] }}</td>
+              <td>{{ record[10] }}</td>
+              <td>{{ record[11] }}</td>
+              <td>{{ record[12] }}</td>
+              <td>{{ record[13] }}</td>
+              <td>{{ record[14] }}</td>
+            </tr> {% endfor %}
+          </tbody>
         </table>
-    </div>
-	<!-- Record count and last update time -->
-    <div class="record-count">
-        <p>Total Records: {{ records|length }} Last Update Time: {{ update_time }}</p>
-    </div>
-    <div class="button-container">
+      </div>
+	  <div class="record-count">
+			<p>Total Records: {{ records|length }} Last Update Time: {{ update_time }}</p>
+			
+		</div>
+	        <div class="button-container">
         <!-- Button container for update and add actions -->
-        <button id="updateButton" class="btn btn-primary" data-toggle="modal" data-target="#updateModal">Update Record</button>
+		
+		<button id="updateButton" class="btn btn-primary" data-toggle="modal" data-target="#updateModal">Update Record</button>
         <button id="addButton" class="btn btn-success" data-toggle="modal" data-target="#myModal">Add New Record</button>
-    </div>
-    <!-- Modal for adding new records -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		
+      </div>
+      <!-- Modal for adding new records -->
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">Enter new values</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Form takes input one by one -->
-                    <div class="modal-split">
-                        <form action="/purchases" method="post">
-                            <label for="supplier_id">Supplier:</label>
-                            <br>
-                            <select id="supplier_id" class="wide-select" name="supplier_id" required>
-							
-							{% for supplier in suppliers %}
-								<option value="{{ supplier[0] }}">{{ supplier[1] }}</option>
-							{% endfor %}
-						</select>
-                            <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="created_by">Creator:</label>
-                        <br>
-                        <select id="created_by" class="wide-select" name="created_by" required>
-							
-							{% for employee in employees %}
-								<option value="{{employee[0]}}">{{employee[1]}}</option>
-							{% endfor %}
-						</select>
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="submitted_date">Submission Date:</label>
-                        <br>
-                        <input type="datetime-local" id="submitted_date" name="submitted_date">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="creation_date">Creation Date:</label>
-                        <br>
-                        <input type="datetime-local" id="creation_date" name="creation_date">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="expected_date">Estimated Date:</label>
-                        <br>
-                        <input type="datetime-local" id="expected_date" name="expected_date">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="shipping_fee">Shipping Fee:</label>
-                        <br>
-                        <input type="text" id="shipping_fee" name="shipping_fee" required>
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="taxes">Taxes:</label>
-                        <br>
-                        <input type="text" id="taxes" name="taxes" required>
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="payment_date">Payment Date:</label>
-                        <br>
-                        <input type="datetime-local" id="payment_date" name="payment_date">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="payment_method">Payment Method:</label>
-                        <br>
-                        <input type="text" id="payment_method" name="payment_method">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="notes">Notes:</label>
-                        <br>
-                        <input type="notes" id="notes" name="notes">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="approved_by">Approver:</label>
-                        <br>
-                        <select id="approved_by" class="wide-select" name="approved_by" required>
-							
-							{% for employee in employees %}
-								<option value="{{employee[0]}}">{{employee[1]}}</option>
-							{% endfor %}
-						</select>
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="approved_date">Approvement Date:</label>
-                        <br>
-                        <input type="datetime-local" id="approved_date" name="approved_date">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="submitted_by">Submitter:</label>
-                        <br>
-                        <select id="submitted_by" class="wide-select" name="submitted_by" required>
-							
-							{% for employee in employees %}
-								<option value="{{employee[0]}}">{{employee[1]}}</option>
-							{% endfor %}
-						</select>
-                        <br>
-                    </div>
-                    <input type="hidden" name="status_id" value="0">
-					<!--status id 0 new record-->
-                    <input type="hidden" name="operation" value="0">
-                    <!--operation 0 create-->
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <!--Footer -->
-                </div>
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="myModalLabel">Enter new values</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
-        </div>
-    </div>
-	<!--Modal for selection of update operation-->
-    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="updateModalLabel">Update Record</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="/purchases" method="post">
-                        <div class="form-group">
-                            <label for="updateId">Select ID:</label>
-                            <select id="updateIdSelect" name="updateId" class="form-control" onChange="fillUpdateModalFields(this.value);documentdocument.getElementById('updateIdHidden_conf').value =  this.value;" required> 
-								{% for record in records %} 
-								<option value="{{ record.id }}">
-								{{ record.id }}
-								</option> 
-								{% endfor %} 
-							</select>
-                        </div>
-                        <button type="button" id="updateButton" data-toggle="modal" data-target="#changeRecordModal" class="btn btn-primary">Update</button>
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteConfirmModal">Delete</button>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <!-- Footer -->
-                </div>
+            <div class="modal-body">
+				<!-- Form takes input one by one -->
+              <div class="modal-split">
+                <form action="/purchases" method="post">
+                  <label for="supplier_id">Supplier ID:</label>
+                  <br>
+                  <input type="text" id="supplier_id" name="supplier_id">
+                  <br>
+                
+              </div>
+              <div class="modal-split">
+                  <label for="created_by">Creator:</label>
+                  <br>
+                  <input type="text" id="created_by" name="created_by">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="submitted_date">Submission Date:</label>
+                  <br>
+                  <input type="text" id="submitted_date" name="submitted_date">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="creation_date">Creation Date:</label>
+                  <br>
+                  <input type="text" id="creation_date" name="creation_date">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="status_id">Status:</label>
+                  <br>
+                  <input type="text" id="status_id" name="status_id">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="expected_date">Estimated Date:</label>
+                  <br>
+                  <input type="text" id="expected_date" name="expected_date">
+                  <br>
+              </div>
+			  <div class="modal-split">
+                  <label for="shipping_fee">Shipping Fee:</label>
+                  <br>
+                  <input type="text" id="shipping_fee" name="shipping_fee">
+                  <br>
+              </div>
+			  <div class="modal-split">
+                  <label for="taxes">Taxes:</label>
+                  <br>
+                  <input type="text" id="taxes" name="taxes">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="payment_date">Payment Date:</label>
+                  <br>
+                  <input type="text" id="payment_date" name="payment_date">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="payment_method">Payment Method:</label>
+                  <br>
+                  <input type="text" id="payment_method" name="payment_method">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="notes">Notes:</label>
+                  <br>
+                  <input type="notes" id="notes" name="notes">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="approved_by">Approver:</label>
+                  <br>
+                  <input type="text" id="approved_by" name="approved_by">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="approved_date">Approvement Date:</label>
+                  <br>
+                  <input type="text" id="approved_date" name="approved_date">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="submitted_by">Submitter:</label>
+                  <br>
+                  <input type="text" id="submitted_by" name="submitted_by">
+                  <br>
+              </div>
+              
+			  <input type="hidden" name="operation" value="0"><!--operation 0 create-->
+
+                </form>
             </div>
-        </div>
-    </div>
-    <!-- Add a confirmation modal for delete action -->
-    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-					
-                    <h4 class="modal-title" id="deleteConfirmModalLabel">Confirm Delete</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to delete this record?</p>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="confirmCheckbox">
-                        <label class="form-check-label" for="confirmCheckbox">Confirm deletion</label>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <form action="/purchases" method="post">
-                        <span id="updateIdInfo">
-                            <input type="hidden" id="updateIdHidden_conf" value="1" name="updateIdHidden_conf">
-                        </span>
-                        <input type="hidden" name="operation" value="1">
-                        <!--operation 1 delete-->
-                        <button type="submit" class="btn btn-danger" id="deleteButton">Delete</button>
-                    </form>
-                </div>
+            <div class="modal-footer">
+              <!--Footer -->
             </div>
+          </div>
         </div>
+      </div>
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="updateModalLabel">Update Record</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/purchases" method="post">
+			<div class="form-group">
+				<label for="updateId">Select ID:</label>
+				<select id="updateId" name="updateId" class="form-control" onChange="document.querySelector('#updateIdInfo input').value = this.value" required>
+					{% for record in records %}
+						<option value="{{ record[0] }}">{{ record[0] }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			
+			
+			<button type="button" id="updateButton" data-toggle="modal" data-target="#changeRecordModal" class="btn btn-primary">Update</button>
+			<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteConfirmModal">Delete</button>
+			
+		</form>
+         
+      </div>
+      <div class="modal-footer">
+        <!-- Footer -->
+      </div>
     </div>
-    <!-- Modal for updating value -->
-    <div class="modal fade" id="changeRecordModal" tabindex="-1" role="dialog" aria-labelledby="changeRecordModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">Enter new values</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Form takes input one by one -->
-                    <div class="modal-split">
-                        <form action="/purchases" method="post">
-                            <label for="u_supplier_id">Supplier:</label>
-                            <br>
-                            <select id="u_supplier_id" class="wide-select" name="u_supplier_id" required>
-							
-							{% for supplier in suppliers %}
-								<option value="{{ supplier[0] }}">{{ supplier[1] }}</option>
-							{% endfor %}
-						</select>
-                            <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="u_created_by">Creator:</label>
-                        <br>
-                        <select id="u_created_by" class="wide-select" name="u_created_by" required>
-							
-							{% for employee in employees %}
-								<option value="{{employee[0]}}">{{employee[1]}}</option>
-							{% endfor %}
-						</select>
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="u_submitted_date">Submission Date:</label>
-                        <br>
-                        <input type="datetime-local" id="u_submitted_date" name="u_submitted_date">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="u_creation_date">Creation Date:</label>
-                        <br>
-                        <input type="datetime-local" id="u_creation_date" name="u_creation_date">
-                        <br>
-                    </div>
-                    
-                    <div class="modal-split">
-                        <label for="u_expected_date">Estimated Date:</label>
-                        <br>
-                        <input type="text" id="u_expected_date" name="u_expected_date">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="u_shipping_fee">Shipping Fee:</label>
-                        <br>
-                        <input type="text" id="u_shipping_fee" name="u_shipping_fee" required>
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="u_taxes">Taxes:</label>
-                        <br>
-                        <input type="text" id="u_taxes" name="u_taxes" required>
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="u_payment_date">Payment Date:</label>
-                        <br>
-                        <input type="datetime-local" id="u_payment_date" name="u_payment_date">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="u_payment_method">Payment Method:</label>
-                        <br>
-                        <input type="text" id="u_payment_method" name="u_payment_method">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="u_notes">Notes:</label>
-                        <br>
-                        <input type="textarea" id="u_notes" name="u_notes">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="u_approved_by">Approver:</label>
-                        <br>
-                        <select id="u_approved_by" class="wide-select" name="u_approved_by" required>
-							
-							{% for employee in employees %}
-								<option value="{{employee[0]}}">{{employee[1]}}</option>
-							{% endfor %}
-						</select>
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="u_approved_date">Approvement Date:</label>
-                        <br>
-                        <input type="datetime-local" id="u_approved_date" name="u_approved_date">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="u_submitted_by">Submitter:</label>
-                        <br>
-                        <select id="u_submitted_by" class="wide-select" name="u_submitted_by" required>
-							
-							{% for employee in employees %}
-								<option value="{{employee[0]}}">{{employee[1]}}</option>
-							{% endfor %}
-						</select>
-                        <br>
-                    </div>
-					<div class="modal-split">
-                        <label for="u_status_id">Status:</label>
-                        <p>(New:0, Submitted:1, Approved:2, Closed:3)</p>
-                        <br>
-                        <input type="number" min="0" max="3" id="u_status_id" name="u_status_id" required>
-                        <br>
-                    </div>
-                    <input type="hidden" name="operation" value="2">
-                    <!--operation 2 update-->
-					<span id="updateIdInfo">
-                        <input type="hidden" value="2" name="updateIdHidden" id="updateIdHidden">
-                    </span>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <!--Footer -->
-                </div>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
+
+<!-- Add a confirmation modal for delete action -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="deleteConfirmModalLabel">Confirm Delete</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this record?</p>
+      </div>
+      <div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+	    <form action="/purchases" method="post">
+			<span id="updateIdInfo">
+			<input type="hidden" value="1" name="updateId">
+			</span >
+			<input type="hidden" name="operation" value="1"><!--operation 1 delete-->
+        <button type="submit" class="btn btn-danger" >Delete</button>
+		</form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal for updating value -->
+      <div class="modal fade" id="changeRecordModal" tabindex="-1" role="dialog" aria-labelledby="changeRecordModalLabel">
+	  
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="myModalLabel">Enter new values</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+				<!-- Form takes input one by one -->
+              <div class="modal-split">
+                <form action="/purchases" method="post">
+                  <label for="supplier_id">Supplier:</label>
+                  <br>
+                  <input type="text" id="supplier_id" name="supplier_id">
+                  <br>
+                
+              </div>
+              <div class="modal-split">
+                  <label for="created_by">Creator:</label>
+                  <br>
+                  <input type="text" id="created_by" name="created_by">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="submitted_date">Submission Date:</label>
+                  <br>
+                  <input type="text" id="submitted_date" name="submitted_date">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="creation_date">Creation Date:</label>
+                  <br>
+                  <input type="text" id="creation_date" name="creation_date">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="status_id">Status:</label>
+                  <br>
+                  <input type="text" id="status_id" name="status_id">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="expected_date">Estimated Date:</label>
+                  <br>
+                  <input type="text" id="expected_date" name="expected_date">
+                  <br>
+              </div>
+			  <div class="modal-split">
+                  <label for="shipping_fee">Shipping Fee:</label>
+                  <br>
+                  <input type="text" id="shipping_fee" name="shipping_fee">
+                  <br>
+              </div>
+			  <div class="modal-split">
+                  <label for="taxes">Taxes:</label>
+                  <br>
+                  <input type="text" id="taxes" name="taxes">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="payment_date">Payment Date:</label>
+                  <br>
+                  <input type="text" id="payment_date" name="payment_date">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="payment_method">Payment Method:</label>
+                  <br>
+                  <input type="text" id="payment_method" name="payment_method">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="notes">Notes:</label>
+                  <br>
+                  <input type="notes" id="city" name="notes">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="approved_by">Approver:</label>
+                  <br>
+                  <input type="text" id="approved_by" name="approved_by">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="approved_date">Approvement Date:</label>
+                  <br>
+                  <input type="text" id="approved_date" name="approved_date">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="submitted_by">Submitter:</label>
+                  <br>
+                  <input type="text" id="submitted_by" name="submitted_by">
+                  <br>
+              </div>
+              
+			  <input type="hidden" name="operation" value="1"><!--operation 1 update-->
+
+                </form>
+            </div>
+            <div class="modal-footer">
+              <!--Footer -->
+            </div>
+          </div>
+        </div>
+      </div>	  
+    </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-
-$(document).ready(function() {
-    
-    // Click event handler for sortable table headers
-    $('th.sortable').click(function() {
-        // Get the parent table and its rows
-        var table = $(this).parents('table').eq(0);
-        var rows = table.find('tr:gt(0)').toArray();
-        var isAscending = $(this).hasClass('asc');
-        
-        // Remove the "asc" class from all headers
-        $('th.sortable').removeClass('asc');
-        
-        // Toggle the "asc" class on the clicked header
-        if (isAscending) {
+      $(document).ready(function() {
+        $('th.sortable').click(function() {
+          var table = $(this).parents('table').eq(0);
+          var rows = table.find('tr:gt(0)').toArray();
+          var isAscending = $(this).hasClass('asc');
+          // Remove the "asc" class from all headers
+          $('th.sortable').removeClass('asc');
+          if (isAscending) {
             $(this).removeClass('asc');
-        } else {
+          } else {
             $(this).addClass('asc');
-        }
-        
-        // Sort the rows using the comparator function
-        rows.sort(comparator($(this).index()));
-        
-        // Reverse the order if not in ascending order
-        if (!isAscending) {
+          }
+          rows.sort(comparator($(this).index()));
+          if (!isAscending) {
             rows = rows.reverse();
-        }
-        
-        // Append the sorted rows back to the table
-        for (var i = 0; i < rows.length; i++) {
+          }
+          for (var i = 0; i < rows.length; i++) {
             table.append(rows[i]);
-        }
-    });
+          }
+        });
 
-    // Comparator function for sorting rows based on a given column index
-    function comparator(index) {
-        return function(a, b) {
-            // Get the cell values for comparison
+        function comparator(index) {
+          return function(a, b) {
             var valA = getCellValue(a, index),
-                valB = getCellValue(b, index);
-            
-            // Numeric or string comparison based on cell values
+              valB = getCellValue(b, index);
             return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB);
+          }
         }
-    }
 
-    // Get the text content of a specific cell in a row
-    function getCellValue(row, index) {
-        return $(row).children('td').eq(index).text();
-    }
-});
+        function getCellValue(row, index) {
+          return $(row).children('td').eq(index).text();
+        }
+      });
+    </script>
+	    <script>
+      $(document).ready(function() {
+        prep_modal();
+      });
 
-
-
-
-</script>
-<!--modal for handle multipage forms-->
-<script>
-  
-$(document).ready(function() {
-    // Call the prep_modal 
-    prep_modal();
-});
-
-// Function to prepare the modal
-function prep_modal() {
-    // Get the business phone input element
-    var shipping_fee = document.getElementById('shipping_fee');
-    var taxes = document.getElementById('taxes');
-	
-	var u_shipping_fee = document.getElementById('u_shipping_fee');
-    var u_taxes = document.getElementById('u_taxes');
-
-    // Iterate over each modal in the document
-    $(".modal").each(function() {
-        // Store the current modal element
-        var element = this;
-
-        // Find the pages within the current modal
-        var pages = $(this).find('.modal-split');
-
-        // Check if there are pages in the modal
-        if (pages.length != 0) {
-            // Hide all pages and show the first page
+      function prep_modal() {
+        $(".modal").each(function() {
+          var element = this;
+          var pages = $(this).find('.modal-split');
+          if (pages.length != 0) {
             pages.hide();
             pages.eq(0).show();
-
-            // Create 'Back' and 'Next' buttons dynamically
             var b_button = document.createElement("button");
             b_button.setAttribute("type", "button");
             b_button.setAttribute("class", "btn btn-primary");
             b_button.setAttribute("style", "display: none;");
             b_button.innerHTML = "Back";
-
-            
             var n_button = document.createElement("button");
             n_button.setAttribute("type", "button");
             n_button.setAttribute("class", "btn btn-primary");
             n_button.innerHTML = "Next";
-
-            // Append buttons to the modal footer
             $(this).find('.modal-footer').append(b_button).append(n_button);
-
-            // Variable to track the current page
             var page_track = 0;
-
-            // Event handler for the 'Next' button click
             $(n_button).click(function() {
-                this.blur();
-                // Show the 'Back' button if on the first page
-                if (page_track == 0) {
-                    $(b_button).show();
-                }
-                // Change "Next" button to "Submit" on the second-to-last page
-                if (page_track == pages.length - 2) {
-                    $(n_button).text("Submit");
-                }
-                // Submit the form on the last page
-                if (page_track == pages.length - 1) {
-                    console.log($(element).find("form").serialize());
-                    $(element).find("form").submit();
-                }
-                // Move to the next page if not on the last page
-                if (page_track < pages.length - 1) {
-                    // Check validity of phone input
-                    if (page_track == 5 && !(shipping_fee.checkValidity()||u_shipping_fee.checkValidity())) {
-                        alert("Input field can't be null!");
-                    } 
-					else if(page_track == 6 && !(taxes.checkValidity()||u_taxes.checkValidity())){
-						alert("Input field can't be null!");
-					}
-					
-					else {
-                        page_track++;
-                        pages.hide();
-                        pages.eq(page_track).show();
-                    }
-                }
+              this.blur();
+              if (page_track == 0) {
+                $(b_button).show();
+              }
+              if (page_track == pages.length - 2) {
+                $(n_button).text("Submit");
+              }
+              if (page_track == pages.length - 1) {
+                console.log($(element).find("form").serialize());
+                $(element).find("form").submit();
+              }
+              if (page_track < pages.length - 1) {
+                page_track++;
+                pages.hide();
+                pages.eq(page_track).show();
+              }
             });
-
-            // Event handler for the 'Back' button click
             $(b_button).click(function() {
-                // Hide the 'Back' button on the second page
-                if (page_track == 1) {
-                    $(b_button).hide();
-                }
-
-                // Change 'Next' button text to 'Next' on the last page
-                if (page_track == pages.length - 1) {
-                    $(n_button).text("Next");
-                }
-
-                // Move to the previous page if not on the first page
-                if (page_track > 0) {
-                    page_track--;
-                    pages.hide();
-                    pages.eq(page_track).show();
-                }
+              if (page_track == 1) {
+                $(b_button).hide();
+              }
+              if (page_track == pages.length - 1) {
+                $(n_button).text("Next");
+              }
+              if (page_track > 0) {
+                page_track--;
+                pages.hide();
+                pages.eq(page_track).show();
+              }
             });
-        }
-    });
-}
-
-</script>
-<!--confirm functionality-->
-<script>
-    $(document).ready(function() {
-        var confirmCheckbox = $('#confirmCheckbox');
-        var deleteButton = $('#deleteButton'); // Add an ID to the Delete button
-        // Initially disable the Delete button
-        deleteButton.prop('disabled', true);
-        // Enable/disable the Delete button based on checkbox state
-        confirmCheckbox.change(function() {
-            deleteButton.prop('disabled', !confirmCheckbox.prop('checked'));
+          }
         });
-    });
-</script> 
+      }
+    </script>
+    <script>
+      $(document).on("keydown", "form", function(event) {
+        return event.key != "Enter";
+      });
+    </script>
 
-<script>
-	
-	 var records = [
-        {% for record in records %}
-            {
-                "id": {{ record.id }},
-                "supplier_id": "{{ record.supplier_id }}",
-                "created_by": "{{ record.created_by }}",
-                "submitted_date": "{{ record.submitted_date }}",
-                "creation_date": "{{ record.creation_date }}",
-                "status_id": "{{ record.status_id }}",
-                "expected_date": "{{ record.expected_date }}",
-                "shipping_fee": "{{ record.shipping_fee }}",
-                "taxes": "{{ record.taxes }}",
-                "payment_date": "{{ record.payment_date }}",
-                "payment_method": "{{ record.payment_method }}",
-                "notes": "{{ record.notes }}",
-                "approved_by": "{{ record.approved_by }}",
-                "approved_date": "{{ record.approved_date }}",
-                "submitted_by": "{{ record.submitted_by }}"
-                // ... add other fields
-            },
-        {% endfor %}
-    ];
-    function fillUpdateModalFields(selectElement) {
-		
-		console.log('Function called');
-        // Get the selected UpdateId
-        var selectedUpdateId = selectElement;
-
-        // Find the corresponding record in the records array
-        var selectedPurchase = records.find(record => record.id == selectedUpdateId);
-
-        // Fill the input fields in the update modal with the corresponding values
-		console.log(selectedPurchase.company)
-        $('#u_supplier_id').val(selectedPurchase.supplier_id);
-        $('#u_created_by').val(selectedPurchase.created_by);
-        $('#u_submitted_date').val(selectedPurchase.submitted_date);
-        $('#u_creation_date').val(selectedPurchase.creation_date);
-        $('#u_status_id').val(selectedPurchase.status_id);
-        $('#u_expected_date').val(selectedPurchase.expected_date);
-        $('#u_shipping_fee').val(selectedPurchase.shipping_fee);
-        $('#u_taxes').val(selectedPurchase.taxes);
-        $('#u_payment_date').val(selectedPurchase.payment_date);
-        $('#u_payment_method').val(selectedPurchase.payment_method);
-        $('#u_notes').val(selectedPurchase.notes);
-        $('#u_approved_by').val(selectedPurchase.approved_by);
-        $('#u_approved_date').val(selectedPurchase.approved_date);
-        $('#u_submitted_by').val(selectedPurchase.submitted_by);
-    }
-</script>	
-	
 {% endblock %}

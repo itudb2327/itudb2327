@@ -15,5 +15,3 @@
 18.12.23 commit: unauthorized.html and unauthorized.css created for restirted accesses. Status logic added for authorized users. Orders page turned into purchases page since there is another orders table. CRUD operations added to Purchases page (old orders page). 
 
 20.12.23 commit:login/logout bar improved, search bar and joined tables added to purchase page, base.html fixed
-
-20.12.23 commit:Current values displays in upload records, profile picture encoding fixed, foreign keyed table values are fetched and added with select input

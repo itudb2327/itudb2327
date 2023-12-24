@@ -17,7 +17,9 @@ class Employees:
             employee_list.append((employee_id, Employees(first_name,last_name, job_title, business_phone, notes)))
         cursor.close()
         return employee_list
-    def search_employee(employee_list):
+    def search_employee(db):
+        employee_list= Employees.get_all_employees(db)
+        job_list = Employees.get_all_jobtitle(db)
         employee_name =request.form['search']
         employee_name = employee_name.upper()
         filtered_employee = []
@@ -25,9 +27,10 @@ class Employees:
             full_name = employee.name + ' ' + employee.surname
             if employee_name in full_name.upper(): 
                 filtered_employee.append((employee_id, employee))
-        return render_template("employees.html", employee_list=filtered_employee)
+        return render_template("employees.html", employee_list=filtered_employee, jobs =job_list)
         
     def add_employee(db):
+        job_list = Employees.get_all_jobtitle(db)
         new_employee = Employees(request.form['first_name'], 
                                  request.form['last_name'],
                                  request.form['job_title'],
@@ -41,9 +44,10 @@ class Employees:
         cursor.execute(query, values)
         db.commit()
         new_list = Employees.get_all_employees(db)
-        return render_template("employees.html", employee_list=new_list)
+        return render_template("employees.html", employee_list=new_list, jobs =job_list)
         
     def delete_employee(db):
+        job_list = Employees.get_all_jobtitle(db)
         deletedEmployeeId = request.form['deleteId']
         cursor = db.cursor()
         
@@ -51,8 +55,9 @@ class Employees:
         cursor.execute(delete_query)
         db.commit()
         new_list = Employees.get_all_employees(db)
-        return render_template("employees.html", employee_list=new_list)
+        return render_template("employees.html", employee_list=new_list, jobs =job_list)
     def update_employee( db):
+        job_list = Employees.get_all_jobtitle(db)
         updatedEmployeeId = request.form['updateId']
         new_employee = Employees(request.form['newFirst_name'], 
                                  request.form['newLast_name'],
@@ -66,4 +71,15 @@ class Employees:
         cursor.execute(query, values)
         db.commit()
         new_list = Employees.get_all_employees(db)
-        return render_template("employees.html", employee_list=new_list)
+        return render_template("employees.html", employee_list=new_list, jobs =job_list)
+    
+    def get_all_jobtitle(db):
+        jobtitle_list = []
+        cursor = db.cursor()
+        select_query = """ SELECT DISTINCT job_title FROM employees """
+        cursor.execute(select_query)
+        for job in cursor:
+            jobtitle_list.append(job)
+        cursor.close()
+        return jobtitle_list
+    

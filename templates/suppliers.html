@@ -1,598 +1,596 @@
-{% extends "base.html" %} {% block page_content %}
+{% extends "base.html" %}
+{% block page_content %}
 <link rel="stylesheet" href="{{url_for('static',filename='styles/suppliers.css')}}">
-<!-- Main container -->
-<div class="container" style="padding-top:8%;">
-    <h1>Supplier Records</h1>
-    <div class="table-container">
+
+    <!-- Main container -->
+    <div class="container" style="padding-top:8%;">
+      <h1>Supplier Records</h1>
+      <div class="table-container">
         <!-- Table container -->
         <table class="table table-striped" id="supplierTable">
-            <thead>
-                <!-- Table headers with sorting functionality -->
-                <tr> 
-					{% if status == "admin" %} 
-					<th class="sortable">ID</th> 
-					{% endif %} <th class="sortable">Company</th>
-                    <th class="sortable">Last Name</th>
-                    <th class="sortable">First Name</th>
-                    <th class="sortable">Email Address</th>
-                    <th class="sortable">Job Title</th>
-                    <th class="sortable">Business Phone</th> 
-					{% if status == "admin" %} 
-					<th class="sortable">Address</th>
-                    <th class="sortable">Zip/Postal Code</th>
-                    <th class="sortable">Notes</th> {% endif %}
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Display supplier records from db--> 
-				{% for record in records %}
-				<tr>
-					{% if status == "admin" %}
-						<td>{{ record.id }}</td>
-					{% endif %}
-					<td>{{ record.company }}</td>
-					<td>{{ record.last_name }}</td>
-					<td>{{ record.first_name }}</td>
-					<td>{{ record.email_address }}</td>
-					<td>{{ record.job_title }}</td>
-					<td>{{ record.business_phone }}</td>
-					{% if status == "admin" %}
-						<td>{{ record.address }}</td>
-						<td>{{ record.zip_postal_code }}</td>
-						<td>{{ record.notes }}</td>
-					{% endif %}
-				</tr>
-			{% endfor %}
-            </tbody>
+          <thead>
+            <!-- Table headers with sorting functionality -->
+            <tr>
+			{% if status == "admin" %}
+              <th class="sortable">ID</th>
+			{% endif %}  
+              <th class="sortable">Company</th>
+              <th class="sortable">Last Name</th>
+              <th class="sortable">First Name</th>
+              <th class="sortable">Email Address</th>
+              <th class="sortable">Job Title</th>
+              <th class="sortable">Business Phone</th>
+			  {% if status == "admin" %}
+              <th class="sortable">Home Phone</th>
+              <th class="sortable">Mobile Phone</th>
+			  {% endif %}
+              <th class="sortable">Fax Number</th>
+			  {% if status == "admin" %}
+              <th class="sortable">Address</th>
+			  {% endif %}
+              <th class="sortable">City</th>
+              <th class="sortable">State/Province</th>
+			  {% if status == "admin" %}
+              <th class="sortable">Zip/Postal Code</th>
+			  {% endif %}
+              <th class="sortable">Country/Region</th>
+              <th class="sortable">Web Page</th>
+			  {% if status == "admin" %}
+              <th class="sortable">Notes</th>
+              <th class="sortable">Attachments</th>
+			  {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Display supplier records from db--> 
+			{% for record in records %} 
+			<tr>
+			{% if status == "admin" %}
+              <td>{{ record[0] }}</td>
+			{% endif %}  
+              <td>{{ record[1] }}</td>
+              <td>{{ record[2] }}</td>
+              <td>{{ record[3] }}</td>
+              <td>{{ record[4] }}</td>
+              <td>{{ record[5] }}</td>
+              <td>{{ record[6] }}</td>
+			  {% if status == "admin" %}
+              <td>{{ record[7] }}</td>
+              <td>{{ record[8] }}</td>
+			  {% endif %}
+              <td>{{ record[9] }}</td>
+			  {% if status == "admin" %}
+              <td>{{ record[10] }}</td>
+			  {% endif %}
+              <td>{{ record[11] }}</td>
+              <td>{{ record[12] }}</td>
+			  {% if status == "admin" %}
+              <td>{{ record[13] }}</td>
+			  {% endif %}
+              <td>{{ record[14] }}</td>
+              <td>{{ record[15] }}</td>
+			  {% if status == "admin" %}
+              <td>{{ record[16] }}</td>
+              <td>{{ record[17] }}</td>
+			  {% endif %}
+            </tr> {% endfor %}
+          </tbody>
         </table>
-    </div>
-    <div class="record-count"> {% if status == "admin" %} <p>Total Records: {{ records|length }} Last Update Time: {{ update_time }}</p> {% endif %} </div>
-    <div class="button-container">
-        <div class="location-button">
-            <button id="location_btn" class="btn btn-info" data-toggle="modal" data-target="#locationModal" onclick="myFunction()">Find Nearest Supplier</button>
-        </div>
-        <div class="admin-buttons">
-            <!-- Button container for update and add actions --> {% if status == "admin" %} <button id="updateButton" class="btn btn-primary" data-toggle="modal" data-target="#updateModal">Update Record</button>
-            <button id="addButton" class="btn btn-success" data-toggle="modal" data-target="#myModal">Add New Record</button> {% endif %}
-        </div>
-    </div>
-    <!-- Modal for adding new records -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      </div>
+	    <div class="record-count">
+			{% if status == "admin" %}
+			<p>Total Records: {{ records|length }} Last Update Time: {{ update_time }}</p>
+			{% endif %}
+		</div>
+      <div class="button-container">
+	  <div class="location-button">
+		<button id="location_btn" class="btn btn-info" data-toggle="modal" data-target="#locationModal" onclick="myFunction()">Find Nearest Supplier</button>      
+      </div>
+	  <div class="admin-buttons">
+        <!-- Button container for update and add actions -->
+		{% if status == "admin" %}
+		<button id="updateButton" class="btn btn-primary" data-toggle="modal" data-target="#updateModal">Update Record</button>
+        <button id="addButton" class="btn btn-success" data-toggle="modal" data-target="#myModal">Add New Record</button>
+		{% endif %}
+	  </div>
+      </div>
+      <!-- Modal for adding new records -->
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">Enter new values</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Form takes input one by one -->
-                    <div class="modal-split">
-                        <form action="/suppliers" method="post">
-                            <label for="company">Company:</label>
-                            <br>
-                            <input type="text" id="company" name="company">
-                            <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="last_name">Last name:</label>
-                        <br>
-                        <input type="text" id="last_name" name="last_name">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="first_name">First name:</label>
-                        <br>
-                        <input type="text" id="first_name" name="first_name">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="email_address">Email Adress:</label>
-                        <br>
-                        <input type="text" id="email_address" name="email_address">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="job_title">Job Title:</label>
-                        <br>
-                        <input type="text" id="job_title" name="job_title">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="business_phone">Business Phone (XXX-XXX-XXXX):</label>
-                        <br>
-                        <input type="text" id="business_phone" pattern="\d{3}-\d{3}-\d{4}" name="business_phone">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="address">Address:</label>
-                        <br>
-                        <input type="text" id="address" name="address">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="zip_postal_code">Zip/Postal Code:</label>
-                        <br>
-                        <input type="text" id="zip_postal_code" name="zip_postal_code">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="notes">Any notes?</label>
-                        <br>
-                        <input type="text" id="notes" name="notes">
-                        <br>
-                    </div>
-                    <input type="hidden" name="operation" value="0">
-                    <!--operation 0 create-->
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <!--Footer -->
-                </div>
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="myModalLabel">Enter new values</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
-        </div>
-    </div>
-    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="updateModalLabel">Update Record</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="/suppliers" method="post">
-                        <div class="form-group">
-                            <label for="updateId">Select ID:</label>
-							
-                            <select id="updateIdSelect" name="updateId" class="form-control" onChange="fillUpdateModalFields(this.value);document.getElementById('updateIdHidden').value =  this.value;document.getElementById('updateIdHidden_conf').value =  this.value;"  required> 
-								{% for record in records %} 
-								<option value="{{ record.id }}">{{ record.id }}</option> 
-								{% endfor %} 
-							</select>
-                        </div>
-                        <button type="button" id="updateButton" data-toggle="modal" data-target="#changeRecordModal" class="btn btn-primary">Update</button>
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteConfirmModal">Delete</button>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <!-- Footer -->
-                </div>
+            <div class="modal-body">
+				<!-- Form takes input one by one -->
+              <div class="modal-split">
+                <form action="/suppliers" method="post">
+                  <label for="company">Company:</label>
+                  <br>
+                  <input type="text" id="company" name="company">
+                  <br>
+                
+              </div>
+              <div class="modal-split">
+                  <label for="last_name">Last name:</label>
+                  <br>
+                  <input type="text" id="last_name" name="last_name">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="first_name">First name:</label>
+                  <br>
+                  <input type="text" id="first_name" name="first_name">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="email_address">Email Adress:</label>
+                  <br>
+                  <input type="text" id="email_address" name="email_address">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="job_title">Job Title:</label>
+                  <br>
+                  <input type="text" id="job_title" name="job_title">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="business_phone">Business Phone:</label>
+                  <br>
+                  <input type="text" id="business_phone" name="business_phone">
+                  <br>
+              </div>
+			  <div class="modal-split">
+                  <label for="home_phone">Home Phone:</label>
+                  <br>
+                  <input type="text" id="home_phone" name="home_phone">
+                  <br>
+              </div>
+			  <div class="modal-split">
+                  <label for="mobile_phone">Mobile Phone:</label>
+                  <br>
+                  <input type="text" id="mobile_phone" name="mobile_phone">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="fax_number">Fax Number:</label>
+                  <br>
+                  <input type="text" id="fax_number" name="fax_number">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="address">Address:</label>
+                  <br>
+                  <input type="text" id="address" name="address">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="city">City:</label>
+                  <br>
+                  <input type="text" id="city" name="city">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="state_province">State:</label>
+                  <br>
+                  <input type="text" id="state_province" name="state_province">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="zip_postal_code">Zip/Postal Code:</label>
+                  <br>
+                  <input type="text" id="zip_postal_code" name="zip_postal_code">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="country_region">Country:</label>
+                  <br>
+                  <input type="text" id="country_region" name="country_region">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="web_page">Webpage:</label>
+                  <br>
+                  <input type="text" id="web_page" name="web_page">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="notes">Any notes?</label>
+                  <br>
+                  <input type="text" id="notes" name="notes">
+                  <br>
+              </div>
+			  <input type="hidden" name="operation" value="0"><!--operation 0 create-->
+
+                </form>
             </div>
-        </div>
-    </div>
-    <!-- Add a confirmation modal for delete action -->
-    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="deleteConfirmModalLabel">Confirm Delete</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to delete this record?</p>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="confirmCheckbox">
-                        <label class="form-check-label" for="confirmCheckbox">Confirm deletion</label>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <form action="/suppliers" method="post">
-                        <span id="updateIdInfo">
-                            <input type="hidden" name="updateIdHidden_conf" value='2' id="updateIdHidden_conf">
-                        </span>
-                        <input type="hidden" name="operation" value="1">
-                        <!--operation 1 delete-->
-                        <button type="submit" class="btn btn-danger" id="deleteButton">Delete</button>
-                    </form>
-                </div>
+            <div class="modal-footer">
+              <!--Footer -->
             </div>
+          </div>
         </div>
+      </div>
+	  
+	  
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="updateModalLabel">Update Record</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/suppliers" method="post">
+			<div class="form-group">
+				<label for="updateId">Select ID:</label>
+				<select id="updateId" name="updateId" class="form-control" onChange="document.querySelector('#updateIdInfo input').value = this.value" required>
+					{% for record in records %}
+						<option value="{{ record[0] }}">{{ record[0] }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			
+			
+			<button type="button" id="updateButton" data-toggle="modal" data-target="#changeRecordModal" class="btn btn-primary">Update</button>
+			<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteConfirmModal">Delete</button>
+			
+		</form>
+         
+      </div>
+      <div class="modal-footer">
+        <!-- Footer -->
+      </div>
     </div>
-    <!-- modal for displaying geolocation information -->
-    <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="locationModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="locationModalLabel">Nearest Supplier</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body"> 
-					{% if nearest_supplier == None %} 
-					<p id="location_out">Wait a second.</p> 
-					{% endif %} 
-					{% if nearest_supplier != None %} 
-					<p id="location_out">Nearest Supplier:</p> 
-					{% endif %} 
-					{% if nearest_supplier != None %} 
-					<p>{{nearest_supplier}}</p> 
-					{% endif %} 
-				</div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+  </div>
+</div>
+
+<!-- Add a confirmation modal for delete action -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="deleteConfirmModalLabel">Confirm Delete</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this record?</p>
+      </div>
+      <div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+	    <form action="/suppliers" method="post">
+			<span id="updateIdInfo">
+			<input type="hidden" value="1" name="updateId">
+			</span >
+			<input type="hidden" name="operation" value="1"><!--operation 1 delete-->
+        <button type="submit" class="btn btn-danger" >Delete</button>
+		</form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal for displaying geolocation information -->
+<div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="locationModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="locationModalLabel">Nearest Supplier</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-        </div>
-    </div>
-    <!-- Modal for updating value -->
-    <div class="modal fade" id="changeRecordModal" tabindex="-1" role="dialog" aria-labelledby="changeRecordModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">Enter new values</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Form takes input one by one -->
-                    <div class="modal-split">
-                        <form action="/suppliers" method="post">
-                            <label for="u_company">Company:</label>
-                            <br>
-                            <input type="text" id="u_company" name="u_company">
-                            <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="u_last_name">Last name:</label>
-                        <br>
-                        <input type="text" id="u_last_name" name="u_last_name">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="u_first_name">First name:</label>
-                        <br>
-                        <input type="text" id="u_first_name" name="u_first_name">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="u_email_address">Email Adress:</label>
-                        <br>
-                        <input type="text" id="u_email_address" name="u_email_address">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="u_job_title">Job Title:</label>
-                        <br>
-                        <input type="text" id="u_job_title" name="u_job_title">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="u_business_phone">Business Phone (XXX-XXX-XXXX):</label>
-                        <br>
-                        <input type="text" id="u_business_phone" pattern="\d{3}-\d{3}-\d{4}" name="u_business_phone">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="u_address">Address:</label>
-                        <br>
-                        <input type="text" id="u_address" name="u_address">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="u_zip_postal_code">Zip/Postal Code:</label>
-                        <br>
-                        <input type="text" id="u_zip_postal_code" name="u_zip_postal_code">
-                        <br>
-                    </div>
-                    <div class="modal-split">
-                        <label for="u_notes">Any notes?</label>
-                        <br>
-                        <input type="textarea" id="u_notes" name="u_notes">
-                        <br>
-                    </div>
-                    <input type="hidden" name="operation" value="2">
-                    <!--operation 2 update-->
-                    <span id="updateIdInfo">
-                        <input type="hidden" value="2" name="updateIdHidden" id="updateIdHidden">
-                    </span>
-                    <!-- <input> -->
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <!--Footer -->
-                </div>
+            <div class="modal-body">
+				{% if nearest_supplier == None %}
+				<p id="location_out">Wait a second.</p>
+				{% endif %}
+				{% if nearest_supplier != None %}
+				<p id="location_out">Nearest Supplier:</p>
+				{% endif %}
+				{% if nearest_supplier != None %}
+				<p>{{nearest_supplier}}</p>
+				{% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
-
-</div>
-
-</div>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-					
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script>
-
-$(document).ready(function() {
-    
-    // Click event handler for sortable table headers
-    $('th.sortable').click(function() {
-        // Get the parent table and its rows
-        var table = $(this).parents('table').eq(0);
-        var rows = table.find('tr:gt(0)').toArray();
-        var isAscending = $(this).hasClass('asc');
-        
-        // Remove the "asc" class from all headers
-        $('th.sortable').removeClass('asc');
-        
-        // Toggle the "asc" class on the clicked header
-        if (isAscending) {
+<!-- Modal for updating value -->
+      <div class="modal fade" id="changeRecordModal" tabindex="-1" role="dialog" aria-labelledby="changeRecordModalLabel">
+	  
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="myModalLabel">Enter new values</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+				<!-- Form takes input one by one -->
+              <div class="modal-split">
+                <form action="/suppliers" method="post">
+                  <label for="company">Company:</label>
+                  <br>
+                  <input type="text" id="company" name="company">
+                  <br>
+                
+              </div>
+              <div class="modal-split">
+                  <label for="last_name">Last name:</label>
+                  <br>
+                  <input type="text" id="last_name" name="last_name">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="first_name">First name:</label>
+                  <br>
+                  <input type="text" id="first_name" name="first_name">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="email_address">Email Adress:</label>
+                  <br>
+                  <input type="text" id="email_address" name="email_address">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="job_title">Job Title:</label>
+                  <br>
+                  <input type="text" id="job_title" name="job_title">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="business_phone">Business Phone:</label>
+                  <br>
+                  <input type="text" id="business_phone" name="business_phone">
+                  <br>
+              </div>
+			  <div class="modal-split">
+                  <label for="home_phone">Home Phone:</label>
+                  <br>
+                  <input type="text" id="home_phone" name="home_phone">
+                  <br>
+              </div>
+			  <div class="modal-split">
+                  <label for="mobile_phone">Mobile Phone:</label>
+                  <br>
+                  <input type="text" id="mobile_phone" name="mobile_phone">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="fax_number">Fax Number:</label>
+                  <br>
+                  <input type="text" id="fax_number" name="fax_number">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="address">Address:</label>
+                  <br>
+                  <input type="text" id="address" name="address">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="city">City:</label>
+                  <br>
+                  <input type="text" id="city" name="city">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="state_province">State:</label>
+                  <br>
+                  <input type="text" id="state_province" name="state_province">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="zip_postal_code">Zip/Postal Code:</label>
+                  <br>
+                  <input type="text" id="zip_postal_code" name="zip_postal_code">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="country_region">Country:</label>
+                  <br>
+                  <input type="text" id="country_region" name="country_region">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="web_page">Webpage:</label>
+                  <br>
+                  <input type="text" id="web_page" name="web_page">
+                  <br>
+              </div>
+              <div class="modal-split">
+                  <label for="notes">Any notes?</label>
+                  <br>
+                  <input type="text" id="notes" name="notes">
+                  <br>
+              </div>
+			  <input type="hidden" name="operation" value="2"><!--operation 2 update-->
+			  <span id="updateIdInfo">
+				<input type="hidden" value="1" name="updateId">
+			  </span >
+				<!-- <input> -->
+                </form>
+            </div>
+            <div class="modal-footer">
+              <!--Footer -->
+            </div>
+          </div>
+        </div>
+      </div>	  
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        $('th.sortable').click(function() {
+          var table = $(this).parents('table').eq(0);
+          var rows = table.find('tr:gt(0)').toArray();
+          var isAscending = $(this).hasClass('asc');
+          // Remove the "asc" class from all headers
+          $('th.sortable').removeClass('asc');
+          if (isAscending) {
             $(this).removeClass('asc');
-        } else {
+          } else {
             $(this).addClass('asc');
-        }
-        
-        // Sort the rows using the comparator function
-        rows.sort(comparator($(this).index()));
-        
-        // Reverse the order if not in ascending order
-        if (!isAscending) {
+          }
+          rows.sort(comparator($(this).index()));
+          if (!isAscending) {
             rows = rows.reverse();
-        }
-        
-        // Append the sorted rows back to the table
-        for (var i = 0; i < rows.length; i++) {
+          }
+          for (var i = 0; i < rows.length; i++) {
             table.append(rows[i]);
-        }
-    });
+          }
+        });
 
-    // Comparator function for sorting rows based on a given column index
-    function comparator(index) {
-        return function(a, b) {
-            // Get the cell values for comparison
+        function comparator(index) {
+          return function(a, b) {
             var valA = getCellValue(a, index),
-                valB = getCellValue(b, index);
-            
-            // Numeric or string comparison based on cell values
+              valB = getCellValue(b, index);
             return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB);
+          }
         }
-    }
 
-    // Get the text content of a specific cell in a row
-    function getCellValue(row, index) {
-        return $(row).children('td').eq(index).text();
-    }
-});
+        function getCellValue(row, index) {
+          return $(row).children('td').eq(index).text();
+        }
+      });
+    </script>
+    <script>
+      $(document).ready(function() {
+        prep_modal();
+      });
 
-</script>
-<!--modal for handle multipage forms-->
-<script>
-  
-$(document).ready(function() {
-    // Call the prep_modal 
-    prep_modal();
-});
-
-// Function to prepare the modal
-function prep_modal() {
-    // Get the business phone input element
-    var phoneInput = document.getElementById('business_phone');
-
-    // Iterate over each modal in the document
-    $(".modal").each(function() {
-        // Store the current modal element
-        var element = this;
-
-        // Find the pages within the current modal
-        var pages = $(this).find('.modal-split');
-
-        // Check if there are pages in the modal
-        if (pages.length != 0) {
-            // Hide all pages and show the first page
+      function prep_modal() {
+        $(".modal").each(function() {
+          var element = this;
+          var pages = $(this).find('.modal-split');
+          if (pages.length != 0) {
             pages.hide();
             pages.eq(0).show();
-
-            // Create 'Back' and 'Next' buttons dynamically
             var b_button = document.createElement("button");
             b_button.setAttribute("type", "button");
             b_button.setAttribute("class", "btn btn-primary");
             b_button.setAttribute("style", "display: none;");
             b_button.innerHTML = "Back";
-
-            
             var n_button = document.createElement("button");
             n_button.setAttribute("type", "button");
             n_button.setAttribute("class", "btn btn-primary");
             n_button.innerHTML = "Next";
-
-            // Append buttons to the modal footer
             $(this).find('.modal-footer').append(b_button).append(n_button);
-
-            // Variable to track the current page
             var page_track = 0;
-
-            // Event handler for the 'Next' button click
             $(n_button).click(function() {
-                this.blur();
-                // Show the 'Back' button if on the first page
-                if (page_track == 0) {
-                    $(b_button).show();
-                }
-                // Change "Next" button to "Submit" on the second-to-last page
-                if (page_track == pages.length - 2) {
-                    $(n_button).text("Submit");
-                }
-                // Submit the form on the last page
-                if (page_track == pages.length - 1) {
-                    console.log($(element).find("form").serialize());
-                    $(element).find("form").submit();
-                }
-                // Move to the next page if not on the last page
-                if (page_track < pages.length - 1) {
-                    // Check validity of phone input
-                    if (page_track == 5 && !phoneInput.checkValidity()) {
-                        alert('Input field is not proper!');
-                    } else {
-                        page_track++;
-                        pages.hide();
-                        pages.eq(page_track).show();
-                    }
-                }
+              this.blur();
+              if (page_track == 0) {
+                $(b_button).show();
+              }
+              if (page_track == pages.length - 2) {
+                $(n_button).text("Submit");
+              }
+              if (page_track == pages.length - 1) {
+                console.log($(element).find("form").serialize());
+                $(element).find("form").submit();
+              }
+              if (page_track < pages.length - 1) {
+                page_track++;
+                pages.hide();
+                pages.eq(page_track).show();
+              }
             });
-
-            // Event handler for the 'Back' button click
             $(b_button).click(function() {
-                // Hide the 'Back' button on the second page
-                if (page_track == 1) {
-                    $(b_button).hide();
-                }
-
-                // Change 'Next' button text to 'Next' on the last page
-                if (page_track == pages.length - 1) {
-                    $(n_button).text("Next");
-                }
-
-                // Move to the previous page if not on the first page
-                if (page_track > 0) {
-                    page_track--;
-                    pages.hide();
-                    pages.eq(page_track).show();
-                }
+              if (page_track == 1) {
+                $(b_button).hide();
+              }
+              if (page_track == pages.length - 1) {
+                $(n_button).text("Next");
+              }
+              if (page_track > 0) {
+                page_track--;
+                pages.hide();
+                pages.eq(page_track).show();
+              }
             });
-        }
-    });
-}
-
-</script>
-<script>
-    $(document).on("keydown", "form", function(event) {
+          }
+        });
+      }
+    </script>
+    <script>
+      $(document).on("keydown", "form", function(event) {
         return event.key != "Enter";
-    });
-</script>
-<!--To get locatiın by lat and long and display nearest supplier-->
-<script>
-// Get elements by their IDs
-const x = document.getElementById("location_out");
-document.getElementById("location_btn").addEventListener("click", getLocation);
+      });
+    </script>
+	<script>
+		const x = document.getElementById("location_out");
+		
+		document.getElementById("location_btn").addEventListener("click", getLocation);
+		
+		function getLocation() {
+		  if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(showPosition);
+		  } else { 
+			x.innerHTML = "Geolocation is not supported by this browser.";
+		  }
+		}
 
-// Function to get user's geolocation
-function getLocation() {
-    // Check if the browser supports geolocation
-    if (navigator.geolocation) {
-        // If supported, get the current position
-        navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-        // If geolocation is not supported, display an error message
-        x.innerHTML = "Geolocation is not supported by this browser.";
-    }
-}
 
-// Function to display the user's position
-function showPosition(position) {
-    // Display the latitude and longitude
-    x.innerHTML = "You are here. <br> Latitude: " + position.coords.latitude +
-                   " <br> Longitude: " + position.coords.longitude + 
-                   " <br> Finding nearest supplier to your location.";
+		function showPosition(position) {
+		  x.innerHTML = "Latitude: " + position.coords.latitude + 
+		  "<br>Longitude: " + position.coords.longitude;
 
-    // Create a form dynamically
-    const form = document.createElement("form");
-    form.setAttribute("method", "post");
-    form.setAttribute("action", "/suppliers");
+		  // Create a form dynamically
+		  const form = document.createElement("form");
+		  form.setAttribute("method", "post");
+		  form.setAttribute("action", "/suppliers"); 
 
-    // Create input fields for latitude and longitude
-    const latInput = document.createElement("input");
-    latInput.setAttribute("type", "hidden");
-    latInput.setAttribute("name", "latitude");
-    latInput.setAttribute("value", position.coords.latitude);
+		  // Create input fields for latitude and longitude
+		  const latInput = document.createElement("input");
+		  latInput.setAttribute("type", "hidden");
+		  latInput.setAttribute("name", "latitude");
+		  latInput.setAttribute("value", position.coords.latitude);
 
-    const lonInput = document.createElement("input");
-    lonInput.setAttribute("type", "hidden");
-    lonInput.setAttribute("name", "longitude");
-    lonInput.setAttribute("value", position.coords.longitude);
+		  const lonInput = document.createElement("input");
+		  lonInput.setAttribute("type", "hidden");
+		  lonInput.setAttribute("name", "longitude");
+		  lonInput.setAttribute("value", position.coords.longitude);
 
-    // Append input fields to the form
-    form.appendChild(latInput);
-    form.appendChild(lonInput);
+		  // Append input fields to the form
+		  form.appendChild(latInput);
+		  form.appendChild(lonInput);
 
-    // Append the form to the document body and submit it
-    document.body.appendChild(form);
-    form.submit();
-}
-
-</script>
-<!--To directly open location modal-->
+		  // Append the form to the document body and submit it
+		  document.body.appendChild(form);
+		  form.submit();
+		}
+	</script>
 <script>
     window.onload = function() {
         const x = document.getElementById("location_out");
+
         // Assume nearest_supplier is a variable available in the template
         var y = '{{ nearest_supplier }}'; // Wrap in quotes
+
         console.log(y);
+
         // Check if y is not an empty string
         if (y !== 'None') {
             // Add JavaScript code to show the modal
-            $(document).ready(function() {
+            $(document).ready(function(){
                 $('#locationModal').modal('show');
             });
         }
     };
 </script>
-<!--confirm functionality-->
-<script>
-    $(document).ready(function() {
-        var confirmCheckbox = $('#confirmCheckbox');
-        var deleteButton = $('#deleteButton'); // Add an ID to the Delete button
-        // Initially disable the Delete button
-        deleteButton.prop('disabled', true);
-        // Enable/disable the Delete button based on checkbox state
-        confirmCheckbox.change(function() {
-            deleteButton.prop('disabled', !confirmCheckbox.prop('checked'));
-        });
-    });
-</script>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-	
-	 var records = [
-        {% for record in records %}
-            {
-                "id": {{ record.id }},
-                "company": "{{ record.company }}",
-                "last_name": "{{ record.last_name }}",
-                "first_name": "{{ record.first_name }}",
-				"email_address": "{{ record.email_address }}",
-                "job_title": "{{ record.job_title }}",
-                "business_phone": "{{ record.business_phone }}",
-                "address": "{{ record.address }}",
-                "zip_postal_code": "{{ record.zip_postal_code }}",
-                "notes": "{{ record.notes }}"
-                // ... add other fields
-            },
-        {% endfor %}
-    ];
-    function fillUpdateModalFields(selectElement) {
-		
-		console.log('Function called');
-        // Get the selected UpdateId
-        var selectedUpdateId = selectElement;
 
-        // Find the corresponding record in the records array
-        var selectedRecord = records.find(record => record.id == selectedUpdateId);
-
-        // Fill the input fields in the update modal with the corresponding values
-		console.log(selectedRecord.company)
-        $('#u_company').val(selectedRecord.company);
-        $('#u_last_name').val(selectedRecord.last_name);
-        $('#u_first_name').val(selectedRecord.first_name);
-		$('#u_email_address').val(selectedRecord.email_address);
-        $('#u_job_title').val(selectedRecord.job_title);
-        $('#u_business_phone').val(selectedRecord.business_phone);
-        $('#u_address').val(selectedRecord.address);
-        $('#u_zip_postal_code').val(selectedRecord.zip_postal_code);
-        $('#u_notes').val(selectedRecord.notes);
-    }
-</script>	
 	
 {% endblock %}
-
-

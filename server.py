@@ -6,6 +6,7 @@ import mysql.connector
 import suppliers
 import customers
 import purchases
+import orders
 from profiles import profile_page
 from employee import Employees
 from products import Products
@@ -47,81 +48,27 @@ def logout():
     flash('You have been logged out', 'success')
     return redirect(url_for('home'))  # Redirect to the home page after logout
     
-app.config['MAX_CONTENT_LENGTH'] = 65  * 1024  # 65 KB (BLOB)
+
 
 @app.route('/')
 def home():
     
     # product_id_list = Products.get_id_list(db)
     # product_profit_list = Products.get_profit_list(db)
-    # cursor = db.cursor()
-    # update_statements = [
-    # "UPDATE suppliers SET business_phone='555-123-4567' WHERE id = 1;",
-    # "UPDATE suppliers SET business_phone='555-987-6543' WHERE id = 2;",
-    # "UPDATE suppliers SET business_phone='555-456-7890' WHERE id = 3;",
-    # "UPDATE suppliers SET business_phone='555-234-5678' WHERE id = 4;",
-    # "UPDATE suppliers SET business_phone='555-876-5432' WHERE id = 5;",
-    # "UPDATE suppliers SET business_phone='555-345-6789' WHERE id = 6;",
-    # "UPDATE suppliers SET business_phone='555-789-0123' WHERE id = 7;",
-    # "UPDATE suppliers SET business_phone='555-567-8901' WHERE id = 8;",
-    # "UPDATE suppliers SET business_phone='555-210-9876' WHERE id = 9;",
-    # "UPDATE suppliers SET business_phone='555-678-9012' WHERE id = 10;"
-# ]
+    product_id_list = Products.get_id_list(db)
+    product_profit_list = Products.get_profit_list(db)
 
-    # cursor.execute("UPDATE suppliers SET business_phone=000")
-    # Execute the multiple SQL statements
-    # for statement in update_statements:
-        # cursor.execute(statement)    
-        # cursor.execute("CREATE TABLE TableLastUpdateInfo (table_name VARCHAR(255) NOT NULL,update_time TIMESTAMP NOT NULL,PRIMARY KEY (table_name));")
+    # cursor = db.cursor()
+    # cursor.execute("select * from TableLastUpdateInfo;")
+    # cursor.execute("CREATE TABLE TableLastUpdateInfo (table_name VARCHAR(255) NOT NULL,update_time TIMESTAMP NOT NULL,PRIMARY KEY (table_name));")
     # cursor.execute("insert into TableLastUpdateInfo values('purchase_orders',CURRENT_TIMESTAMP() );")
-    # cursor.execute("ALTER TABLE purchase_orders ADD CONSTRAINT fk_purchase_orders_suppliers1 FOREIGN KEY (supplier_id) REFERENCES suppliers(id) ON DELETE SET NULL ON UPDATE CASCADE;")
+    # cursor.execute("UPDATE suppliers SET zip_postal_code = 34467 where id=10;")
     # asd=cursor.fetchall()
     # print(asd)
     # cursor.execute("CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY,username VARCHAR(50) NOT NULL UNIQUE,password_hash VARCHAR(100) NOT NULL,status VARCHAR(20) NOT NULL default 'user',joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP, profile_picture BLOB);")
     # db.commit()
    
-   
-   
-    cursor=db.cursor()
-    cursor.execute("""SELECT 
-    suppliers.company,
-    TotalProducts.ProductCount,
-    purchase_orders.id,
-    employees.first_name,
-    employees.last_name
-    FROM 
-        suppliers
-    JOIN (
-        SELECT 
-            products.supplier_ids,
-            COUNT(*) AS ProductCount
-        FROM 
-            products
-        GROUP BY 
-            products.supplier_ids
-    ) AS TotalProducts ON suppliers.id = TotalProducts.supplier_ids
-    JOIN (
-        SELECT 
-            purchase_orders.supplier_id,
-            purchase_orders.id,
-            purchase_orders.created_by
-        FROM 
-            purchase_orders
-        WHERE 
-            purchase_orders.shipping_fee = (
-                SELECT 
-                    MAX(shipping_fee)
-                FROM 
-                    purchase_orders
-            )
-    ) AS purchase_orders ON suppliers.id = purchase_orders.supplier_id
-    JOIN employees ON purchase_orders.created_by = employees.id;
-    """)
-    
-    emp_of_month=cursor.fetchall()
-    cursor.close()
-    # print(row)
-    return render_template('home.html',logged=current_user.is_authenticated,emp_of_month=emp_of_month)
+    return render_template('home.html',logged=current_user.is_authenticated, product_ids=product_id_list, profits=product_profit_list)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -154,7 +101,7 @@ def purchase():
 @login_required
 def product():
     if request.method=="POST":
-        # print(request.form)
+        print(request.form)
         if "product_name" in request.form:
             return Products.add_product(db)
         elif "deleteId" in request.form:
@@ -174,19 +121,19 @@ def product():
 @app.route("/employees", methods=("GET","POST"))
 @login_required
 def employees_page():
-    
+    jobs = Employees. get_all_jobtitle(db)
     employee_list= Employees.get_all_employees(db)
     if request.method == "POST":
         if("first_name" in request.form):
             return Employees.add_employee(db)
         elif("search" in request.form):
-            return Employees.search_employee(employee_list)      
+            return Employees.search_employee(db)      
         elif("deleteId" in request.form):
             return Employees.delete_employee(db)            
         elif("updateId" in request.form):
             return Employees.update_employee(db)    
     else:
-        return render_template("employees.html", employee_list=employee_list)
+        return render_template("employees.html", employee_list=employee_list, jobs=jobs)
 
 @app.route("/customers", methods=("GET","POST"))
 #@login_required
@@ -207,6 +154,27 @@ def customers_page():
                 return customers.index(db, form, 0, 1, request.form.get('updateCustomerId'))
         
     return customers.index(db, form, 0, 0, "")
+
+@app.route("/orders", methods=("GET","POST"))
+#@login_required
+def orders_page():
+    form = orders.OrdersForm()
+    form = orders.fillCustomerOptions(db, form)
+    if request.method == 'POST':
+        if 'deleteOrderId' in request.form:
+            return orders.delete(db, form)
+        elif 'newOrderId' in request.form:
+            if form.validate_on_submit():
+                return orders.new(db, form)
+            else:
+                return orders.index(db, form, 1, 0, "")
+        elif 'updateOrderId' in request.form:
+            if form.validate_on_submit():
+                return orders.update(db, form)
+            else:
+                return orders.index(db, form, 0, 1, request.form.get('updateOrderId'))
+        
+    return orders.index(db, form, 0, 0, "")
 
 if __name__ == '__main__':
     app.run(debug=True)
