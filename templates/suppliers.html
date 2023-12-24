@@ -48,12 +48,21 @@
     </div>
     <div class="record-count"> {% if status == "admin" %} <p>Total Records: {{ records|length }} Last Update Time: {{ update_time }}</p> {% endif %} </div>
     <div class="button-container">
-        <div class="location-button">
+        <div class="location-buttond d-flex">
+			<form action="/suppliers" method="post">
+				<!-- Your form elements go here -->
+				<button id="profit_btn" class="btn btn-warning">Most Profitable Suppliers</button>
+				<input type="hidden" id="profit_call" name="profit_call" value="1">
+			</form>
             <button id="location_btn" class="btn btn-info" data-toggle="modal" data-target="#locationModal" onclick="myFunction()">Find Nearest Supplier</button>
+						
         </div>
         <div class="admin-buttons">
-            <!-- Button container for update and add actions --> {% if status == "admin" %} <button id="updateButton" class="btn btn-primary" data-toggle="modal" data-target="#updateModal">Update Record</button>
-            <button id="addButton" class="btn btn-success" data-toggle="modal" data-target="#myModal">Add New Record</button> {% endif %}
+            <!-- Button container for update and add actions --> 
+			{% if status == "admin" %} 
+			<button id="updateButton" class="btn btn-primary" data-toggle="modal" data-target="#updateModal">Update Record</button>
+            <button id="addButton" class="btn btn-success" data-toggle="modal" data-target="#myModal">Add New Record</button>
+			{% endif %}
         </div>
     </div>
     <!-- Modal for adding new records -->
@@ -102,7 +111,7 @@
                     <div class="modal-split">
                         <label for="business_phone">Business Phone (XXX-XXX-XXXX):</label>
                         <br>
-                        <input type="text" id="business_phone" pattern="\d{3}-\d{3}-\d{4}" name="business_phone">
+                        <input type="text" id="business_phone" pattern="\d{3}-\d{3}-\d{4}" name="business_phone" required>
                         <br>
                     </div>
                     <div class="modal-split">
@@ -267,7 +276,7 @@
                     <div class="modal-split">
                         <label for="u_business_phone">Business Phone (XXX-XXX-XXXX):</label>
                         <br>
-                        <input type="text" id="u_business_phone" pattern="\d{3}-\d{3}-\d{4}" name="u_business_phone">
+                        <input type="text" id="u_business_phone" pattern="\d{3}-\d{3}-\d{4}" name="u_business_phone" required>
                         <br>
                     </div>
                     <div class="modal-split">
@@ -302,6 +311,54 @@
             </div>
         </div>
     </div>
+	
+	
+		<!--Modal for most profitable supplier-->
+	<div class="modal" id="profitModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Supplier Data</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal Body - Table -->
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Supplier Company</th>
+                                <th>Average Payment Amount</th>
+                                <th>Average Payment Percantage</th>
+                            </tr>
+                        </thead>
+                        <tbody
+							{% if most_profit!=None %}
+                            {% for row in most_profit %}
+                                <tr>
+                                    <td>{{ row[0] }}</td>
+                                    <td>{{ row[1] }}</td>
+                                    <td>{{ row[2] }}</td>
+                                </tr>
+                            {% endfor %}
+							{% endif %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+	
+	
+	
 </div>
 
 </div>
@@ -378,6 +435,7 @@ $(document).ready(function() {
 function prep_modal() {
     // Get the business phone input element
     var phoneInput = document.getElementById('business_phone');
+	var u_phoneInput = document.getElementById('u_business_phone');
 
     // Iterate over each modal in the document
     $(".modal").each(function() {
@@ -431,7 +489,7 @@ function prep_modal() {
                 // Move to the next page if not on the last page
                 if (page_track < pages.length - 1) {
                     // Check validity of phone input
-                    if (page_track == 5 && !phoneInput.checkValidity()) {
+                    if (page_track == 5 && !(phoneInput.checkValidity()||u_phoneInput.checkValidity())) {
                         alert('Input field is not proper!');
                     } else {
                         page_track++;
@@ -522,20 +580,30 @@ function showPosition(position) {
 
 </script>
 <!--To directly open location modal-->
+
+
 <script>
-    window.onload = function() {
-        const x = document.getElementById("location_out");
-        // Assume nearest_supplier is a variable available in the template
-        var y = '{{ nearest_supplier }}'; // Wrap in quotes
-        console.log(y);
-        // Check if y is not an empty string
-        if (y !== 'None') {
-            // Add JavaScript code to show the modal
-            $(document).ready(function() {
-                $('#locationModal').modal('show');
-            });
-        }
-    };
+    
+     $(document).ready(function() {
+    // Assume nearest_supplier and most_profit are variables available in the template
+    var y = '{{ nearest_supplier }}'; // Wrap in quotes
+    var x = '{{ most_profit }}';
+    console.log(x);
+
+    // Check if y is not an empty string
+    if (y !== 'None') {
+        $('#locationModal').on('shown.bs.modal', function () {
+            // Additional code if needed
+        }).modal('show');
+    } else if (x !== 'None') {
+        $('#profitModal').on('shown.bs.modal', function () {
+            // Additional code if needed
+        }).modal('show');
+    }
+});
+
+
+   
 </script>
 <!--confirm functionality-->
 <script>

@@ -114,7 +114,8 @@ def delete_record(cursor,updateId):
 def index(db,current_user):
     cursor = db.cursor()
     nearest_supplier=None
-    # print(request.form.keys())
+    most_profit=None
+    print(request.form.keys())
     if request.method =='POST':
         if 'operation' in request.form:
             operation=request.form["operation"]
@@ -162,18 +163,67 @@ def index(db,current_user):
             long=request.form["longitude"]
             target_coord=(float(lat),float(long))
             nearest_supplier=find_nearest_supplier(db,target_coord)[0][0]
+        elif 'profit_call' in request.form: 
+            most_profit=profit(cursor)
             
     cursor.execute("SELECT * FROM suppliers;")
     records = cursor.fetchall()
     records=list_to_object(records)
-    # print(records)
+    print(most_profit)
    
    
     update_time=display_last_update(cursor)
 
 
         
-    return render_template('suppliers.html', records=records,update_time=update_time,status=current_user.status,nearest_supplier=nearest_supplier,current_supplier=None)
+    return render_template('suppliers.html', records=records,update_time=update_time,status=current_user.status,nearest_supplier=nearest_supplier,current_supplier=None,most_profit=most_profit)
+
+def profit(cursor):
+
+    cursor.execute("""
+       WITH SupplierPaymentAverage AS (
+    SELECT
+        P.supplier_id,
+        AVG(P.payment_amount) AS AvgPaymentAmount,
+		MAX(P.payment_amount)     AS MaxAmount
+    FROM
+        purchase_orders P
+    WHERE
+        P.status_id = '2'
+    GROUP BY
+        P.supplier_id
+),
+OverallPaymentAverage AS (
+    SELECT
+        AVG(P.payment_amount) AS OverallAvgPayment
+    FROM
+        purchase_orders P
+    WHERE
+        P.status_id = '2'
+)
+
+SELECT
+    S.company,
+    P.AvgPaymentAmount,
+    ((P.AvgPaymentAmount-O.OverallAvgPayment)/O.OverallAvgPayment)*100 as sd,
+    P.MaxAmount
+    
+FROM
+    suppliers S
+JOIN
+    SupplierPaymentAverage P ON S.id = P.supplier_id
+JOIN
+    OverallPaymentAverage O ON 1=1
+WHERE
+    P.AvgPaymentAmount > O.OverallAvgPayment
+ORDER BY
+    P.AvgPaymentAmount DESC;
+
+
+    """)
+
+    profit=cursor.fetchall()
+    return profit
 
 def get_supplier_company(db):
     cursor = db.cursor()

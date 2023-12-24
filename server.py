@@ -19,13 +19,11 @@ app.secret_key = 'MongoDB'
 login_manager = LoginManager(app)
 
 db = mysql.connector.connect(
-    host="northwind.cfl4fp0ymkxx.eu-north-1.rds.amazonaws.com",
-    user="admin",
-    password="z2dz8C0kIuN3EZqEoi82",
-    database="northwind"
+    host="localhost",
+    user="root",  # root in default
+    password= "11223310aA.", # your mySQL password written in maskPassword.py file!
+    database="northwind"  #the database created in mySQL and it is in use (mySQL is UP!)
 )
-
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -54,36 +52,6 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 65 KB (BLOB)
 @app.route('/')
 def home():
     
-    # product_id_list = Products.get_id_list(db)
-    # product_profit_list = Products.get_profit_list(db)
-    # cursor = db.cursor()
-    # update_statements = [
-    # "UPDATE suppliers SET business_phone='555-123-4567' WHERE id = 1;",
-    # "UPDATE suppliers SET business_phone='555-987-6543' WHERE id = 2;",
-    # "UPDATE suppliers SET business_phone='555-456-7890' WHERE id = 3;",
-    # "UPDATE suppliers SET business_phone='555-234-5678' WHERE id = 4;",
-    # "UPDATE suppliers SET business_phone='555-876-5432' WHERE id = 5;",
-    # "UPDATE suppliers SET business_phone='555-345-6789' WHERE id = 6;",
-    # "UPDATE suppliers SET business_phone='555-789-0123' WHERE id = 7;",
-    # "UPDATE suppliers SET business_phone='555-567-8901' WHERE id = 8;",
-    # "UPDATE suppliers SET business_phone='555-210-9876' WHERE id = 9;",
-    # "UPDATE suppliers SET business_phone='555-678-9012' WHERE id = 10;"
-# ]
-
-    # cursor.execute("UPDATE suppliers SET business_phone=000")
-    # Execute the multiple SQL statements
-    # for statement in update_statements:
-        # cursor.execute(statement)    
-        # cursor.execute("CREATE TABLE TableLastUpdateInfo (table_name VARCHAR(255) NOT NULL,update_time TIMESTAMP NOT NULL,PRIMARY KEY (table_name));")
-    # cursor.execute("insert into TableLastUpdateInfo values('purchase_orders',CURRENT_TIMESTAMP() );")
-    # cursor.execute("ALTER TABLE purchase_orders ADD CONSTRAINT fk_purchase_orders_suppliers1 FOREIGN KEY (supplier_id) REFERENCES suppliers(id) ON DELETE SET NULL ON UPDATE CASCADE;")
-    # asd=cursor.fetchall()
-    # print(asd)
-    # cursor.execute("CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY,username VARCHAR(50) NOT NULL UNIQUE,password_hash VARCHAR(100) NOT NULL,status VARCHAR(20) NOT NULL default 'user',joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP, profile_picture BLOB);")
-    # db.commit()
-   
-   
-   
     cursor=db.cursor()
     cursor.execute("""SELECT 
     suppliers.company,
@@ -120,10 +88,13 @@ def home():
     JOIN employees ON purchase_orders.created_by = employees.id;
     """)
     
+                
     emp_of_month=cursor.fetchall()
     cursor.close()
     # print(row)
-    return render_template('home.html',logged=current_user.is_authenticated,emp_of_month=emp_of_month)
+    product_id_list = Products.get_id_list(db)
+    product_profit_list = Products.get_profit_list(db)
+    return render_template('home.html',logged=current_user.is_authenticated,emp_of_month=emp_of_month, product_ids=product_id_list, profits=product_profit_list)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -155,6 +126,7 @@ def purchase():
 @app.route('/products',methods=("GET","POST"))
 @login_required
 def product():
+
     if request.method=="POST":
         # print(request.form)
         if "product_name" in request.form:
@@ -176,19 +148,8 @@ def product():
 @app.route("/employees", methods=("GET","POST"))
 @login_required
 def employees_page():
+    return Employees.index(db)
     
-    employee_list= Employees.get_all_employees(db)
-    if request.method == "POST":
-        if("first_name" in request.form):
-            return Employees.add_employee(db)
-        elif("search" in request.form):
-            return Employees.search_employee(employee_list)      
-        elif("deleteId" in request.form):
-            return Employees.delete_employee(db)            
-        elif("updateId" in request.form):
-            return Employees.update_employee(db)    
-    else:
-        return render_template("employees.html", employee_list=employee_list)
 
 @app.route("/customers", methods=("GET","POST"))
 #@login_required

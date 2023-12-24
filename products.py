@@ -39,13 +39,14 @@ class Products:
         select_query = """ SELECT DISTINCT category FROM products """
         cursor.execute(select_query)
         for category in cursor:
-            category_list.append(category)
+            if(category[0]!=""):
+                category_list.append(category)
         cursor.close()
         return category_list
     def get_id_list(db):
         cursor = db.cursor()
         id_list = []
-        select_query = """ SELECT id FROM products ORDER BY (list_price - standard_cost) desc LIMIT 5 """
+        select_query = """ SELECT product_name FROM products ORDER BY (list_price - standard_cost) desc LIMIT 5 """
         cursor.execute(select_query)
         for id in cursor:
             id_list.append(id)
@@ -80,9 +81,7 @@ class Products:
                                         request.form['list_price'],
                                         request.form['quantitiy_per_unit'],
                                         request.form['selected_category'])
-        print("Form Data:")
-        for key, value in request.form.items():
-            print(f"{key}: {value}")
+        
         cursor= db.cursor()
         query= """ INSERT INTO products (product_code, product_name , supplier_ids, standard_cost, list_price, quantity_per_unit, category)
           VALUES (%s, %s, %s, %s, %s, %s, %s) """
@@ -98,6 +97,7 @@ class Products:
         
     def delete_product(db):
         deletedproductId = request.form['deleteId']
+        print("DELETE:", deletedproductId)
         cursor = db.cursor()
         
         delete_query = f"DELETE FROM products WHERE id = '{deletedproductId}'"
