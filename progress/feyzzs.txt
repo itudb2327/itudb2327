@@ -15,3 +15,5 @@
 17.12.23 commit: Product page created
 
 18.12.23 commit: Product functions created
+
+24.12.23 commit: phone number validation added, and some bugs fixed
