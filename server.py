@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, send_file
 from flask_login import LoginManager, login_user, UserMixin,login_required,logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from login_register import login_page, register_page, validate_login,User
@@ -12,6 +12,7 @@ from employee import Employees
 from products import Products
 import base64
 import binascii
+from io import BytesIO
 app = Flask(__name__)
 app.secret_key = 'MongoDB'
 
@@ -48,7 +49,7 @@ def logout():
     flash('You have been logged out', 'success')
     return redirect(url_for('home'))  # Redirect to the home page after logout
     
-app.config['MAX_CONTENT_LENGTH'] = 65  * 1024  # 65 KB (BLOB)
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 65 KB (BLOB)
 
 @app.route('/')
 def home():
@@ -229,6 +230,26 @@ def orders_page():
                 return orders.index(db, form, 0, 1, request.form.get('updateOrderId'))
 
     return orders.index(db, form, 0, 0, "")
+
+@app.route('/upload_audio', methods=['POST'])
+def upload_audio():
+    cursor = db.cursor()
+    audio_file = request.files['audio_file']
+    audio_blob = audio_file.read()
+    query = "UPDATE music SET audio_blob = (%s) WHERE id = 1"
+    cursor.execute(query, (audio_blob,))
+    db.commit()
+    return home()
+
+@app.route('/get_audio')
+def get_audio():
+    cursor = db.cursor()
+    cursor.execute("SELECT audio_blob FROM music WHERE id = 1")
+    audio_blob = cursor.fetchone()[0]
+    if audio_blob:
+        return send_file(BytesIO(audio_blob), mimetype='audio/mpeg', as_attachment=True, download_name='audio.mp3')
+    else:
+        return "Audio not found", 404
 
 if __name__ == '__main__':
     app.run(debug=True)

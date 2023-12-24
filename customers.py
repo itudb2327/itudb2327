@@ -57,7 +57,6 @@ def delete(db, form):
     delete_query = f"DELETE FROM customers WHERE id = '{id}'"
     cursor.execute(delete_query)
     db.commit()
-    flash('Customer deleted successfully', 'success')
     return index(db, form, 0, 0, "")
 
 def new(db, form):
