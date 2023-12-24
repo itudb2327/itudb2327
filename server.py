@@ -51,9 +51,17 @@ app.config['MAX_CONTENT_LENGTH'] = 65  * 1024  # 65 KB (BLOB)
 @app.route('/')
 def home():
     
-    product_id_list = Products.get_id_list(db)
-    product_profit_list = Products.get_profit_list(db)
+    
     # cursor = db.cursor()
+    # query = """  DROP TABLE IF EXISTS `northwind`.`invoices`;
+    #         DROP TABLE IF EXISTS `northwind`.`inventory_transaction_types`;
+    #         DROP TABLE IF EXISTS `northwind`.`inventory_transactions`;
+    #         DROP TABLE IF EXISTS `northwind`.`purchase_order_details`;
+    #         DROP TABLE IF EXISTS `northwind`.`order_details`;
+    #         DROP TABLE IF EXISTS `employee_privileges`;"""
+          
+            
+    # cursor.execute(query)
     # cursor.execute("select * from TableLastUpdateInfo;")
     # cursor.execute("CREATE TABLE TableLastUpdateInfo (table_name VARCHAR(255) NOT NULL,update_time TIMESTAMP NOT NULL,PRIMARY KEY (table_name));")
     # cursor.execute("insert into TableLastUpdateInfo values('purchase_orders',CURRENT_TIMESTAMP() );")
@@ -98,9 +106,12 @@ def home():
     JOIN employees ON purchase_orders.created_by = employees.id;
     """)
     
+                
     emp_of_month=cursor.fetchall()
     cursor.close()
     # print(row)
+    product_id_list = Products.get_id_list(db)
+    product_profit_list = Products.get_profit_list(db)
     return render_template('home.html',logged=current_user.is_authenticated,emp_of_month=emp_of_month, product_ids=product_id_list, profits=product_profit_list)
 
 @app.route('/login', methods=['GET', 'POST'])

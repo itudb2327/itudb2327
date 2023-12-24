@@ -158,7 +158,7 @@ th.sortable.asc::after {
             <button type="button" id="updateButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateProductModal{{product_id}}">Update</button> 
           </td>
           <td>
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" >Delete</button>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal{{product_id}}" >Delete</button>
           </td>
           <div class="modal fade" id="updateProductModal{{product_id}}">
             
@@ -247,7 +247,7 @@ th.sortable.asc::after {
           </div>
           
           
-          <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal fade" id="deleteConfirmationModal{{product_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">

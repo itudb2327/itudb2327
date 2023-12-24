@@ -8,7 +8,7 @@
         
         <div class="col-md-auto">
           <div class="dropdown">
-            <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" >
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" >
               Fİlter By Job Title
             </button>
             <form method="post">
@@ -50,9 +50,9 @@
           <!-- New Employee button -->
           <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#newEmployeeCollapse" aria-expanded="false" >New Employee</button>
         </div>
-        <div class="col-md-auto">
+        <div class="col-md-4">
           <form class="d-flex" method="post">
-            <input class="form-control me-2" name="search" type="search" placeholder="Search" aria-label="Search">
+            <input class="form-control me-2" name="search" type="search" placeholder="Search by Name and Surname" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
     
@@ -98,15 +98,15 @@
               document.addEventListener('DOMContentLoaded', function () {
                   var updatePhoneNumber = document.getElementById("phoneNumber")
                   var form = document.getElementById("newEmployeeForm")
-                  var phoneNumber = updatePhoneNumber.value.replace(/\D/g, '');
-                  console.log(phoneNumber)
+                  
+                  
                   var phoneNumberError = document.getElementById('phoneNumberError');
 
                   
 
                   form.addEventListener('submit', (e)=>{
-                    
-                    if (/^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/.test(phoneNumber)){
+                    var phoneNumber = updatePhoneNumber.value.replace(/\D/g, '');
+                    if (/^(?:(?:\+\d{1,2})?[\s.-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/.test(phoneNumber)){
                       phoneNumberError.textContent = ''
                     }
                     else{
@@ -160,28 +160,28 @@
                   <div class="container mt-3">
                       <form id="updateForm{{employee_id}}" method="POST">
                           <div class="mb-3">
-                              <label for="firstName" class="form-label">First Name</label>
+                              <label for="newFirstName{{employee_id}}" class="form-label">First Name</label>
                               <input type="text" class="form-control" id="newFirstName{{employee_id}}" name="newFirst_name" value="{{employee.name}}" required>
                           </div>
                 
                           <div class="mb-3">
-                              <label for="lastName" class="form-label">Last Name</label>
+                              <label for="newLastName{{employee_id}}" class="form-label">Last Name</label>
                               <input type="text" class="form-control" id="newLastName{{employee_id}}" name="newLast_name" value="{{employee.surname}}" required>
                           </div>
                 
                           <div class="mb-3">
-                              <label for="jobTitle" class="form-label">Job Title</label>
+                              <label for="newJobTitle{{employee_id}}" class="form-label">Job Title</label>
                               <input type="text" class="form-control" id="newJobTitle{{employee_id}}" name="newJob_title" value="{{employee.job_title}}" required>
                           </div>
                 
                           <div class="mb-3">
-                              <label for="phoneNumber" class="form-label">Phone Number</label>
+                              <label for="newphoneNumber{{employee_id}}" class="form-label">Phone Number</label>
                               <input type="tel" class="form-control" id="newPhoneNumber{{employee_id}}" name="newPhone_number" value="{{employee.phone_number}}" required>
                               <span id="phoneNumberError{{employee_id}}" class="error-message" style="color: red ; font-size: 12px;"></span>
                           </div>
                 
                           <div class="mb-3">
-                              <label for="extraNotes" class="form-label">Extra Notes</label>
+                              <label for="newExtraNotes{{employee_id}}" class="form-label">Extra Notes</label>
                               <textarea class="form-control" id="newExtraNotes{{employee_id}}"  name="newExtra_notes" rows="3">{{employee.note}}</textarea>
                           </div>
                           <input type="hidden" id="updateId" name="updateId" value="{{employee_id}}">
@@ -194,22 +194,16 @@
                         document.addEventListener('DOMContentLoaded', function () {
                             var updatePhoneNumber = document.getElementById("newPhoneNumber{{employee_id}}")
                             var form = document.getElementById("updateForm{{employee_id}}")
-                            var phoneNumber = updatePhoneNumber.value.replace(/\D/g, '');
-                            console.log(phoneNumber)
-                            var phoneNumberError = document.getElementById('phoneNumberError{{employee_id}}');
-
                             
-
+                            var phoneNumberError = document.getElementById('phoneNumberError{{employee_id}}');
                             form.addEventListener('submit', (e)=>{
-                              
-                              if (/^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/.test(phoneNumber)){
+                              var phoneNumber = updatePhoneNumber.value.replace(/\D/g, '');
+                              if (/^(?:(?:\+\d{1,2})?[\s.-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/.test(phoneNumber)){
                                 phoneNumberError.textContent = ''
                               }
                               else{
                                 e.preventDefault()
                                 phoneNumberError.textContent = 'Please enter a valid 10-digit phone number.'
-                                
-                                
                               }
                             })
                         });

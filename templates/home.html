@@ -7,7 +7,7 @@
         different sections of the database.
     </p>
 </section>
-<div class="container mt-5">
+<div class="container mt-5" style="padding-bottom: 15px;">
     <!-- Button to trigger the modal -->
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
         Employee Of The Month
@@ -63,10 +63,12 @@
 <div class="row" style="padding-left: 50px; padding-right: 50px;">
     <div class="col-6">
         <div class="card shadow mb-4">
-            <h5 class="title" style="text-align: center; margin: 2%;">Product Chart</h5>
-         <div  style="margin: 3%;">
-            <canvas id="myChart"></canvas>
-         </div>   
+            <a href="/products">
+                <h5 class="title" style="text-align: center; margin: 2%;">Products Profit Chart</h5>
+                <div  style="margin: 3%;">
+                   <canvas id="myChart"></canvas>
+                </div>
+            </a>
         </div>
     </div>
 </div>
@@ -83,21 +85,21 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-     
-        var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
-        var yValues = [55, 49, 44, 24, 15];
-        var barColors = ["red", "green","blue","orange","brown"];
+       
+        var productIds = {{ product_ids | tojson | safe }};
+        var profits = {{ profits | tojson | safe }};
+        var barColors = ["red", "green", "blue", "orange", "brown"];
 
         new Chart("myChart", {
-        type: "bar",
-        data: {
-            labels: xValues,
-            datasets: [{
-            backgroundColor: barColors,
-            data: yValues
-            }]
-        },
-        
+            type: "bar",
+            data: {
+                labels: productIds,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: profits,
+                    label: 'Profit'
+                }]
+            },
         });
     });
 </script>

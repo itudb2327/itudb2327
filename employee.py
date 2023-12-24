@@ -37,7 +37,8 @@ class Employees:
             employee_list.append((employee_id, Employees(first_name,last_name, job_title, business_phone, notes)))
         cursor.close()
         return employee_list
-    def search_employee(employee_list):
+    def search_employee(db):
+        employee_list = Employees.get_all_employees(db)
         job_list = Employees.get_all_jobtitle(db)
         employee_name =request.form['search']
         employee_name = employee_name.upper()
