@@ -17,3 +17,5 @@
 21.12.23 commit: New filter accordion and filter options are introduced in customers page. These new options are handled with new SQL queries. customers.css is created. 
 
 23.12.23 commit: CRUD operations for Orders table implemented with orders.py, displayed in orders.html and orders.css and handled order requests in server.py.
+
+25.12.23 commit: Implemented mp3 file uploading in the home page. Created a table to store this file and function to read the longblob object when requested.

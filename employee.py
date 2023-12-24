@@ -103,15 +103,24 @@ class Employees:
         return jobtitle_list
     def get_filtered_job(db):
         selected_job = request.form.get('choosenJob')
-        print(selected_job)
-        employee_list = Employees.get_all_employees(db)
         job_list = Employees.get_all_jobtitle(db)
-        if(selected_job == "all"):
+        if(selected_job=='all'):
+            employee_list = Employees.get_all_employees(db)
             return render_template("employees.html", employee_list=employee_list, jobs =job_list)
         filtered_employees = []
-        for employee_id, employee in employee_list:
-            if(employee.job_title == selected_job):
-                filtered_employees.append((employee_id, employee))
+        values = []
+        values.append(selected_job)
+        cursor = db.cursor()
+        query= """
+                SELECT id, first_name, last_name, job_title, business_phone, notes FROM employees WHERE job_title=%s;
+                """
+        
+        cursor.execute(query, values)
+        
+        for employee_id, first_name, last_name, job_title, business_phone, notes in cursor:
+            filtered_employees.append((employee_id, Employees(first_name,last_name, job_title, business_phone, notes)))
+        cursor.close()
+
         
         return render_template("employees.html", employee_list=filtered_employees, jobs =job_list)
     
