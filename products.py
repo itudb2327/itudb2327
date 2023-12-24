@@ -45,7 +45,7 @@ class Products:
     def get_id_list(db):
         cursor = db.cursor()
         id_list = []
-        select_query = """ SELECT product_name FROM products ORDER BY (list_price - standard_cost) desc LIMIT 5 """
+        select_query = """ SELECT id FROM products ORDER BY (list_price - standard_cost) desc LIMIT 5 """
         cursor.execute(select_query)
         for id in cursor:
             id_list.append(id)

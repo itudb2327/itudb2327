@@ -7,32 +7,10 @@
       <div class="row">
         
         <div class="col-md-auto">
-          <div class="dropdown">
-            <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" >
-              Fİlter By Job Title
-            </button>
-            <form method="post">
-            <ul class="dropdown-menu">
-              {% for category in jobs %}
-              <li > 
-                <div class="form-check" style="margin: 3%;">
-                  <input class="form-check-input" type="radio" value="{{category[0]}}" id="filterCategory{{category}}" name="checkedCategory[]">
-                  <label class="form-check-label" for="filterCategory">
-                    {{category[0]}}
-                  </label>
-                </div>
-                
-              </li>
-              {%endfor%}
-              <li>
-                <button class="btn btn-primary" type="submit" style="margin: 5%;">Filter</button>
-              </li>
-            </ul>
-          </form>
-          </div>
-        
+          <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" >
+            Fİlter By Job Title
+          </button>
         </div>
-        
         <div class="col-md-auto">
           <!-- New Employee button -->
           <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#newEmployeeCollapse" aria-expanded="false" >New Employee</button>

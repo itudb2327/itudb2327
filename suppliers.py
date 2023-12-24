@@ -3,10 +3,8 @@ from flask import Flask, render_template, request,redirect,session
 import time
 from datetime import datetime, timedelta
 class Supplier:
-    def __init__(self, id=None, company=None, last_name=None, first_name=None, email_address=None, job_title=None,
-                 business_phone=None, home_phone=None, mobile_phone=None, fax_number=None, address=None,
-                 city=None, state_province=None, zip_postal_code=None, country_region=None, web_page=None,
-                 notes=None, attachments=None):
+    def __init__(self, id=None, company=None, last_name=None, first_name=None, email_address=None,
+                        job_title=None,business_phone=None, address=None,zip_postal_code=None, notes=None):
         self.id = id
         self.company = company
         self.last_name = last_name
@@ -14,19 +12,29 @@ class Supplier:
         self.email_address = email_address
         self.job_title = job_title
         self.business_phone = business_phone
-        self.home_phone = home_phone
-        self.mobile_phone = mobile_phone
-        self.fax_number = fax_number
         self.address = address
-        self.city = city
-        self.state_province = state_province
         self.zip_postal_code = zip_postal_code
-        self.country_region = country_region
-        self.web_page = web_page
         self.notes = notes
-        self.attachments = attachments
             
         
+
+def list_to_object(records):
+    supplier_list=[]
+    for record in records:
+        supplier = Supplier(
+            id=record[0],
+            company=record[1],
+            last_name=record[2],
+            first_name=record[3],
+            email_address=record[4],
+            job_title=record[5],
+            business_phone=record[6],
+            address=record[7],
+            zip_postal_code=record[8],
+            notes=record[9]
+        )
+        supplier_list.append(supplier)
+    return supplier_list
 
 def create_record(cursor,temp_supplier):
     
@@ -38,19 +46,12 @@ def create_record(cursor,temp_supplier):
             first_name,
             email_address,
             job_title,
-            home_phone,
             business_phone,
-            mobile_phone,
-            fax_number,
             address,
-            city,
-            state_province,
             zip_postal_code,
-            country_region,
-            web_page,
             notes
         ) VALUES (
-            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+            %s, %s, %s, %s, %s, %s, %s, %s, %s
         )
       """
 
@@ -61,16 +62,9 @@ def create_record(cursor,temp_supplier):
         temp_supplier.first_name,
         temp_supplier.email_address,
         temp_supplier.job_title,
-        temp_supplier.home_phone,
         temp_supplier.business_phone,
-        temp_supplier.mobile_phone,
-        temp_supplier.fax_number,
         temp_supplier.address,
-        temp_supplier.city,
-        temp_supplier.state_province,
         temp_supplier.zip_postal_code,
-        temp_supplier.country_region,
-        temp_supplier.web_page,
         temp_supplier.notes
     )   
     cursor.execute(statement, values)
@@ -78,6 +72,7 @@ def create_record(cursor,temp_supplier):
     return redirect("suppliers")
     
 def update_record(cursor,updateId,temp_supplier):
+    print(updateId)
     statement = """
         UPDATE suppliers SET
             company=%s,
@@ -85,16 +80,9 @@ def update_record(cursor,updateId,temp_supplier):
             first_name=%s,
             email_address=%s,
             job_title=%s,
-            home_phone=%s,
             business_phone=%s,
-            mobile_phone=%s,
-            fax_number=%s,
             address=%s,
-            city=%s,
-            state_province=%s,
             zip_postal_code=%s,
-            country_region=%s,
-            web_page=%s,
             notes=%s
 
         WHERE ID=%s;
@@ -107,16 +95,9 @@ def update_record(cursor,updateId,temp_supplier):
         temp_supplier.first_name,
         temp_supplier.email_address,
         temp_supplier.job_title,
-        temp_supplier.home_phone,
         temp_supplier.business_phone,
-        temp_supplier.mobile_phone,
-        temp_supplier.fax_number,
         temp_supplier.address,
-        temp_supplier.city,
-        temp_supplier.state_province,
         temp_supplier.zip_postal_code,
-        temp_supplier.country_region,
-        temp_supplier.web_page,
         temp_supplier.notes
     )   
     cursor.execute(statement, list(values)+[updateId])
@@ -133,55 +114,44 @@ def delete_record(cursor,updateId):
 def index(db,current_user):
     cursor = db.cursor()
     nearest_supplier=None
+    # print(request.form.keys())
     if request.method =='POST':
         if 'operation' in request.form:
             operation=request.form["operation"]
+            print(operation)
             if operation == "0":#add new record
                 temp_supplier=Supplier()
-        
+                
                 #new record
-                temp_supplier.company=request.form["company"]
-                temp_supplier.last_name=request.form["last_name"]
-                temp_supplier.first_name=request.form["first_name"]
-                temp_supplier.email_address=request.form["email_address"]
-                temp_supplier.job_title=request.form["job_title"]
-                temp_supplier.home_phone=request.form["home_phone"]
-                temp_supplier.business_phone=request.form["business_phone"]
-                temp_supplier.mobile_phone=request.form["mobile_phone"]
-                temp_supplier.fax_number=request.form["fax_number"]
-                temp_supplier.address=request.form["address"]
-                temp_supplier.city=request.form["city"]
-                temp_supplier.state_province=request.form["state_province"]
-                temp_supplier.zip_postal_code=request.form["zip_postal_code"]
-                temp_supplier.country_region=request.form["country_region"]
-                temp_supplier.web_page=request.form["web_page"]
-                temp_supplier.notes=request.form["notes"]
+                temp_supplier.company=request.form["company"] if request.form["company"] else None
+                temp_supplier.last_name=request.form["last_name"] if request.form["last_name"] else None
+                temp_supplier.first_name=request.form["first_name"] if request.form["first_name"] else None
+                temp_supplier.email_address=request.form["email_address"] if request.form["email_address"] else None
+                temp_supplier.job_title=request.form["job_title"] if request.form["job_title"] else None
+                temp_supplier.business_phone=request.form["business_phone"] if request.form["business_phone"] else None
+                temp_supplier.address=request.form["address"] if request.form["address"] else None
+                temp_supplier.zip_postal_code=request.form["zip_postal_code"] if request.form["zip_postal_code"] else None
+                temp_supplier.notes=request.form["notes"] if request.form["notes"] else None
                 
                 create_record(cursor,temp_supplier)
             
             elif operation=="1":#delete
-                updateId= request.form["updateId"]
+                updateId= request.form["updateIdHidden_conf"]
                 delete_record(cursor,updateId)
             elif operation=="2":#update
                 temp_supplier=Supplier()
+                
                 #updated record
-                temp_supplier.company=request.form["company"]
-                temp_supplier.last_name=request.form["last_name"]
-                temp_supplier.first_name=request.form["first_name"]
-                temp_supplier.email_address=request.form["email_address"]
-                temp_supplier.job_title=request.form["job_title"]
-                temp_supplier.home_phone=request.form["home_phone"]
-                temp_supplier.business_phone=request.form["business_phone"]
-                temp_supplier.mobile_phone=request.form["mobile_phone"]
-                temp_supplier.fax_number=request.form["fax_number"]
-                temp_supplier.address=request.form["address"]
-                temp_supplier.city=request.form["city"]
-                temp_supplier.state_province=request.form["state_province"]
-                temp_supplier.zip_postal_code=request.form["zip_postal_code"]
-                temp_supplier.country_region=request.form["country_region"]
-                temp_supplier.web_page=request.form["web_page"]
-                temp_supplier.notes=request.form["notes"]
-                updateId= request.form["updateId"]            
+                temp_supplier.company=request.form["u_company"]
+                temp_supplier.last_name=request.form["u_last_name"]
+                temp_supplier.first_name=request.form["u_first_name"]
+                temp_supplier.email_address=request.form["u_email_address"]
+                temp_supplier.job_title=request.form["u_job_title"]
+                temp_supplier.business_phone=request.form["u_business_phone"]
+                temp_supplier.address=request.form["u_address"]
+                temp_supplier.zip_postal_code=request.form["u_zip_postal_code"]
+                temp_supplier.notes=request.form["u_notes"]
+                updateId= request.form["updateIdHidden"]          
                 update_record(cursor,updateId,temp_supplier)
             now = datetime.now()
             formatted_time = now.strftime('%Y-%m-%d %H:%M:%S')
@@ -195,10 +165,15 @@ def index(db,current_user):
             
     cursor.execute("SELECT * FROM suppliers;")
     records = cursor.fetchall()
+    records=list_to_object(records)
+    # print(records)
+   
    
     update_time=display_last_update(cursor)
 
-    return render_template('suppliers.html', records=records,update_time=update_time,status=current_user.status,nearest_supplier=nearest_supplier)
+
+        
+    return render_template('suppliers.html', records=records,update_time=update_time,status=current_user.status,nearest_supplier=nearest_supplier,current_supplier=None)
 
 def get_supplier_company(db):
     cursor = db.cursor()
