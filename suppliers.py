@@ -2,6 +2,10 @@ import mysql.connector
 from flask import Flask, render_template, request,redirect,session
 import time
 from datetime import datetime, timedelta
+import math
+from geopy.geocoders import Nominatim
+
+# Define the 'Supplier' class to represent supplier objects
 class Supplier:
     def __init__(self, id=None, company=None, last_name=None, first_name=None, email_address=None,
                         job_title=None,business_phone=None, address=None,zip_postal_code=None, notes=None):
@@ -17,7 +21,7 @@ class Supplier:
         self.notes = notes
             
         
-
+# Function to convert a list of records to a list of 'Supplier' objects
 def list_to_object(records):
     supplier_list=[]
     for record in records:
@@ -35,7 +39,7 @@ def list_to_object(records):
         )
         supplier_list.append(supplier)
     return supplier_list
-
+# Function to create a new supplier record in the database
 def create_record(cursor,temp_supplier):
     
 
@@ -70,7 +74,7 @@ def create_record(cursor,temp_supplier):
     cursor.execute(statement, values)
 
     return redirect("suppliers")
-    
+# Function to update an existing supplier record in the database
 def update_record(cursor,updateId,temp_supplier):
     print(updateId)
     statement = """
@@ -103,14 +107,15 @@ def update_record(cursor,updateId,temp_supplier):
     cursor.execute(statement, list(values)+[updateId])
     
     return redirect("suppliers")
-    
+# Function to delete a supplier record from the database    
 def delete_record(cursor,updateId):
     statement ="DELETE FROM suppliers WHERE ID=%s;"   
     cursor.execute(statement, (updateId,))
 
     #statement="INSERT INTO TableLastUpdateInfo VALUES('Suppliers',CURRENT_TIMESTAMP());"
     #cursor.execute(statement)
-        
+
+# Main function to handle requests and render the suppliers page        
 def index(db,current_user):
     cursor = db.cursor()
     nearest_supplier=None
@@ -156,13 +161,16 @@ def index(db,current_user):
                 update_record(cursor,updateId,temp_supplier)
             now = datetime.now()
             formatted_time = now.strftime('%Y-%m-%d %H:%M:%S')
+             # Update the last update time in the database
             cursor.execute("UPDATE TableLastUpdateInfo SET update_time=%s WHERE table_name='suppliers';",(formatted_time,))    
             db.commit()#commit for all operations        
+        # Check for latitude and longitude submission  
         elif 'latitude' in request.form:
             lat=request.form["latitude"]
             long=request.form["longitude"]
             target_coord=(float(lat),float(long))
             nearest_supplier=find_nearest_supplier(db,target_coord)[0][0]
+         # Check for profit calculation submission    
         elif 'profit_call' in request.form: 
             most_profit=profit(cursor)
             
@@ -173,11 +181,9 @@ def index(db,current_user):
    
    
     update_time=display_last_update(cursor)
-
-
         
     return render_template('suppliers.html', records=records,update_time=update_time,status=current_user.status,nearest_supplier=nearest_supplier,current_supplier=None,most_profit=most_profit)
-
+# Function to calculate the most profitable suppliers
 def profit(cursor):
 
     cursor.execute("""
@@ -224,7 +230,7 @@ ORDER BY
 
     profit=cursor.fetchall()
     return profit
-
+# Function to retrieve a list of supplier companies from the database
 def get_supplier_company(db):
     cursor = db.cursor()
     supplier_list = []
@@ -235,8 +241,9 @@ def get_supplier_company(db):
     cursor.close()
     return supplier_list
 
-import math
 
+
+# Function to calculate the Haversine distance between two sets of latitude and longitude coordinates
 def haversine(lat1, lon1, lat2, lon2):
     # Radius of the Earth in miles
     R = 3958.8
@@ -257,7 +264,7 @@ def haversine(lat1, lon1, lat2, lon2):
     return distance
 
     
-    
+# Function to find the nearest supplier based on target coordinates
 def find_nearest_supplier(db,target_coords):
     zipcodes_with_coords = {}
     select_query="SELECT zip_postal_code from suppliers;"
@@ -265,7 +272,7 @@ def find_nearest_supplier(db,target_coords):
     cursor.execute(select_query)
     zipcodes=cursor.fetchall()
     cursor.close()
-    
+    # Retrieve coordinates for each zip code
     for zipcode in zipcodes:
         coords = get_lat_lon(zipcode)
         if coords:
@@ -273,7 +280,7 @@ def find_nearest_supplier(db,target_coords):
      
     min_distance = float('inf')
     nearest_zipcode = None
-
+    # Calculate distance for each zip code and find the nearest one
     for zipcode, coords in zipcodes_with_coords.items():
         distance = haversine(target_coords[0], target_coords[1], coords[0], coords[1])
         if distance < min_distance:
@@ -282,15 +289,15 @@ def find_nearest_supplier(db,target_coords):
     
     select_query="SELECT company from suppliers WHERE zip_postal_code=%s;"
     cursor = db.cursor()
-    
+     # Retrieve the company name of the nearest supplier
     cursor.execute(select_query,nearest_zipcode)
     nearest_supplier=cursor.fetchall()
     cursor.close()
     return nearest_supplier  
     
     
-from geopy.geocoders import Nominatim
 
+# Function to retrieve latitude and longitude coordinates for a given zip code using geocoding
 def get_lat_lon(zipcode):
     geolocator = Nominatim(user_agent="suppliers")
     location = geolocator.geocode(zipcode)
@@ -300,7 +307,7 @@ def get_lat_lon(zipcode):
     else:
         return None
 
-
+# Function to display the last update time for the purchase orders table
 def display_last_update(cursor):
         cursor.execute("SELECT update_time FROM TableLastUpdateInfo where table_name='purchase_orders';")
         update_time=cursor.fetchall()

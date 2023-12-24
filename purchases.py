@@ -3,12 +3,14 @@ from flask import Flask, render_template, request,redirect,session,redirect
 import re
 from employee import Employees
 from datetime import datetime, timedelta
+# Define the 'Purchase' class to represent purchase order objects
 class Purchase:
+    # Constructor to initialize attributes
     def __init__(self, id=None, supplier_id=None, created_by=None, submitted_date=None,
                  creation_date=None, status_id=None, expected_date=None, shipping_fee=None,
                  taxes=None, payment_date=None, payment_method=None, notes=None,
                  approved_by=None, approved_date=None, submitted_by=None):
-        
+        # Initialize attributes with provided values
         self.id = id
         self.supplier_id = supplier_id
         self.created_by = created_by
@@ -25,28 +27,35 @@ class Purchase:
         self.approved_date = approved_date
         self.submitted_by = submitted_by
 
-
+# Function to retrieve a list of all employees from the database
 def get_all_employees(db):
+    # Create a cursor for database operations
     cursor = db.cursor()
     employee_list = []
+     # Execute SQL query 
     select_query=" SELECT id,last_name FROM employees ;"
     cursor.execute(select_query)
+    # Fetch results and append to the 'employee_list'
     for id, last_name in cursor:
         employee_list.append((id,last_name))
     cursor.close()
     return employee_list
-
+# Function to retrieve a list of all suppliers from the database
 def get_all_suppliers(db):
+     # Create a cursor for database operations
     cursor = db.cursor()
     supplier_list = []
+    # Execute SQL query to select supplier IDs and company names
     select_query=" SELECT id,company FROM suppliers ;"
     cursor.execute(select_query)
+    # Fetch results and append to the 'supplier_list'
     for id, last_name in cursor:
         supplier_list.append((id,last_name))
     cursor.close()
     return supplier_list
-
+# Function to retrieve purchase order records based on a specified status
 def return_record(cursor,active_filter):
+     # Execute SQL query to select purchase order information with joins
     cursor.execute("""SELECT    purchase.id,
                                 suppliers.company,
                                 creator.last_name,
@@ -69,6 +78,7 @@ def return_record(cursor,active_filter):
                                 INNER JOIN employees AS submitter ON purchase.submitted_by=submitter.id 
                                 WHERE status_id=%s;""",(active_filter,))
     records = []
+    # Fetch results and create 'Purchase' objects to append to 'records'
     for row in cursor.fetchall():
         purchase = Purchase(
             id=row[0],
@@ -91,8 +101,9 @@ def return_record(cursor,active_filter):
     # print(records)    
     return records
 
-
+# Function to create a new purchase order record in the database
 def create_record(cursor, temp_purchase):
+ # SQL statement to insert a new record into the 'purchase_orders' table
     statement = """
         INSERT INTO purchase_orders (
             supplier_id,
@@ -134,7 +145,7 @@ def create_record(cursor, temp_purchase):
     cursor.execute(statement, values)
 
     return redirect("purchases")
-
+# Function to retrieve all purchase orders from the database
 def get_all_purchases(db):
     cursor = db.cursor()
     active_filter = session.get('active_filter')
@@ -144,8 +155,9 @@ def get_all_purchases(db):
     cursor.close()
     return results,active_filter
 
-
+# Function to update an existing purchase order record in the database
 def update_record(cursor, updateId, temp_purchase):
+    # SQL statement to update a record in the 'purchase_orders' table
     statement = """
         UPDATE purchase_orders SET
             supplier_id=%s,
@@ -190,11 +202,12 @@ def update_record(cursor, updateId, temp_purchase):
 
 
 
-
+# Function to delete a purchase order record from the database
 def delete_record(cursor,updateId):
     statement ="DELETE FROM purchase_orders WHERE ID=%s;"   
     cursor.execute(statement, (updateId,))
-
+    
+# Main function to handle requests and render the purchase orders page
 def index(db):
     
     cursor = db.cursor()
@@ -202,21 +215,25 @@ def index(db):
     records=[]
     # print(operation)
     print(request.form.keys())
-    
+     # Check for form submission and perform corresponding actions
     if request.method =='POST':
+        # Check for a search query in the form
         if 'querry' in request.form:
             search_for=request.form['search_for']
             querry =request.form['querry']
             records,active_filter=search_record(db,search_for,querry)
+        # Check for a filter selection in the form    
         if 'filter' in request.form:
             if 'filter' in request.form:
                 filter = request.form["filter"]
                 # Set the active_filter in the session
                 session['active_filter'] = filter
-            records = return_record(cursor,filter)  
+            records = return_record(cursor,filter)
+        # Check for an operation (add, delete, update) in the form
         if 'operation' in request.form:
             operation=request.form["operation"]
-            print(operation)
+            # print(operation)
+             # Perform corresponding operation based on the operation value
             if operation == "0":  # add new record
                 temp_purchase = Purchase(
                     supplier_id=request.form["supplier_id"] if request.form["supplier_id"] else None,
@@ -234,11 +251,12 @@ def index(db):
                     approved_date=request.form["approved_date"] if request.form["approved_date"] else None,
                     submitted_by=request.form["submitted_by"] if request.form["submitted_by"] else None
                 )
-
+                # Call the create_record function to add a new record
                 create_record(cursor, temp_purchase)
 
             elif operation == "1":  # delete
                 updateId = request.form["updateIdHidden_conf"]
+                # Call the delete_record function to delete a record
                 delete_record(cursor, updateId)
 
             elif operation == "2":  # update
@@ -259,25 +277,30 @@ def index(db):
                     submitted_by=request.form["u_submitted_by"]
                 )
                 updateId = request.form["updateIdHidden"]
+                # Call the update_record function to update a record
                 update_record(cursor, updateId, temp_purchase)
+            # Get the current timestamp    
             now = datetime.now()
             formatted_time = now.strftime('%Y-%m-%d %H:%M:%S')
+            # Update the last update time in the database
             cursor.execute("UPDATE TableLastUpdateInfo SET update_time=%s WHERE table_name='purchase_orders';",(formatted_time,))
+            # Commit the changes to the database
             db.commit()#commit for all filters  
-    
+    # Retrieve the last update time for display
     update_time=display_last_update(cursor)
-    
+    # Retrieve the list of suppliers and employees for dropdowns
     suppliers=get_all_suppliers(db)
-    
+
     employees=get_all_employees(db)
-    
-    
+   
     
     cursor.close()
+    # Retrieve the active filter from the session
     active_filter=session['active_filter'] 
-    print(employees)
+    # print(employees)
+    # Render the 'purchases.html' template with the necessary data
     return render_template('purchases.html',records=records,update_time=update_time,active_filter=active_filter,suppliers=suppliers,employees=employees)
-
+# Function to search for purchase order records based on a query
 def search_record(db,search_for,querry):
     
     purchase_list,active_filter = get_all_purchases(db)
@@ -285,6 +308,7 @@ def search_record(db,search_for,querry):
     filtered_products=[]
     querry = querry.lower()
     filtered_list = []
+    # Iterate through purchase orders and filter based on the query 
     for purchase in purchase_list:
             
         searched_item = getattr(purchase, search_for, None)
@@ -299,7 +323,7 @@ def search_record(db,search_for,querry):
     
     return filtered_products,active_filter
 
-
+# Function to display the last update time for the purchase orders table
 def display_last_update(cursor):
         cursor.execute("SELECT update_time FROM TableLastUpdateInfo where table_name='purchase_orders';")
         update_time=cursor.fetchall()

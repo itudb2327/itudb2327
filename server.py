@@ -17,11 +17,12 @@ app.secret_key = 'MongoDB'
 
 login_manager = LoginManager(app)
 
+
 db = mysql.connector.connect(
-    host="localhost",
-    user="root",  # root in default
-    password= "11223310aA.", # your mySQL password written in maskPassword.py file!
-    database="northwind"  #the database created in mySQL and it is in use (mySQL is UP!)
+    host="northwind.cfl4fp0ymkxx.eu-north-1.rds.amazonaws.com",
+    user="admin",
+    password="z2dz8C0kIuN3EZqEoi82",
+    database="northwind"
 )
 
 @login_manager.user_loader
