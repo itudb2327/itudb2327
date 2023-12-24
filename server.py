@@ -83,46 +83,10 @@ def home():
    
    
    
-    cursor=db.cursor()
-    cursor.execute("""SELECT 
-    suppliers.company,
-    TotalProducts.ProductCount,
-    purchase_orders.id,
-    employees.first_name,
-    employees.last_name
-    FROM 
-        suppliers
-    JOIN (
-        SELECT 
-            products.supplier_ids,
-            COUNT(*) AS ProductCount
-        FROM 
-            products
-        GROUP BY 
-            products.supplier_ids
-    ) AS TotalProducts ON suppliers.id = TotalProducts.supplier_ids
-    JOIN (
-        SELECT 
-            purchase_orders.supplier_id,
-            purchase_orders.id,
-            purchase_orders.created_by
-        FROM 
-            purchase_orders
-        WHERE 
-            purchase_orders.shipping_fee = (
-                SELECT 
-                    MAX(shipping_fee)
-                FROM 
-                    purchase_orders
-            )
-    ) AS purchase_orders ON suppliers.id = purchase_orders.supplier_id
-    JOIN employees ON purchase_orders.created_by = employees.id;
-    """)
+
     
-    emp_of_month=cursor.fetchall()
-    cursor.close()
-    # print(row)
-    return render_template('home.html',logged=current_user.is_authenticated,emp_of_month=emp_of_month)
+    
+    return render_template('home.html',logged=current_user.is_authenticated)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

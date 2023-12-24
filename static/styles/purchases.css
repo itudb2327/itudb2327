@@ -46,10 +46,12 @@ th.sortable.asc::after {
 }
 
 .button-container {
+	display: flex;
+	justify-content: space-between;
+
     text-align: right; /* Align buttons to the right */
     margin-top: 20px; /* Add top margin */
 }
-
 /* Style the buttons */
 .btn {
     margin: 5px; /* Add margin to buttons */
@@ -64,4 +66,8 @@ h4 {
     .wide-select {
         width: 100%; /* Set the width as per your requirement */
     }
+.profit-button {
+    order: -1; /
+}	
+	
 /*--------------------------------------------------------*/
