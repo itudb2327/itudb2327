@@ -1,21 +1,53 @@
 {% extends "base.html" %} 
 {% block page_content %}
+<link rel="stylesheet" href="{{url_for('static',filename='styles/customers.css')}}">
 <div class="container" style="padding-top: 8%;">
-  <form action="/customers" method="get">
-    <label for="sort">Sort by:</label>
-    <select name="sort_by" id="sort">
-      <option value="id">ID</option>
-      <option value="company">Company</option>
-      <option value="first_name">First Name</option>
-      <option value="last_name">Last Name</option>
-      <option value="job_title">Job Title</option>
-      <option value="business_phone">Business Phone</option>
-      <option value="address">Address</option>
-      <option value="city">City</option>
-    </select>
-    <input type="submit" class="btn btn-success" value="Sort" />
-    <button type="button" id="newCustomerButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newCustomerModal">New Customer</button>
-  </form>
+  <div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" id="accordionButton" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Filters
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <form action="/customers" method="get" >
+            <div class="filter-group">
+            <label for="sort">Sort by:</label>
+            <select name="sort_by" id="sort">
+              <option value="id">ID</option>
+              <option value="company">Company</option>
+              <option value="first_name">First Name</option>
+              <option value="last_name">Last Name</option>
+              <option value="job_title">Job Title</option>
+              <option value="business_phone">Business Phone</option>
+              <option value="address">Address</option>
+              <option value="city">City</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="search_first_name">Search First Name:</label>
+            <input type="text" id="search_first_name" name="search_first_name" placeholder="Enter first name">
+          </div>
+          <div class="filter-group">
+            <label>Number of Records:</label>
+            <div class="radio-group">
+              <label><input type="radio" name="records" value="5"> 5</label>
+              <label><input type="radio" name="records" value="10"> 10</label>
+              <label><input type="radio" name="records" value="15"> 15</label>
+              <label><input type="radio" name="records" value="25"> 25</label>
+            </div>
+          </div>
+          <div class="button-group">
+            <button type="submit" class="btn btn-success">Apply Filters</button>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" id="newCustomerButton" class="btn btn-primary mt-4" data-bs-toggle="modal" data-bs-target="#newCustomerModal">New Customer</button>
   
   <div class="mt-4">
     <table class="table table-light table-striped table-hover">
@@ -153,7 +185,7 @@
 </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
       function setDeleteCustomerId(customerId) {
         document.getElementById('deleteCustomerId').value = customerId;
@@ -184,8 +216,6 @@
           var button = document.getElementById(button_id);
           button.click();
         }
-        
-
       }
     </script>
 

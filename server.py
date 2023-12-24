@@ -6,6 +6,7 @@ import mysql.connector
 import suppliers
 import customers
 import purchases
+import orders
 from profiles import profile_page
 from employee import Employees
 from products import Products
@@ -207,6 +208,27 @@ def customers_page():
                 return customers.index(db, form, 0, 1, request.form.get('updateCustomerId'))
         
     return customers.index(db, form, 0, 0, "")
+
+@app.route("/orders", methods=("GET","POST"))
+#@login_required
+def orders_page():
+    form = orders.OrdersForm()
+    form = orders.fillCustomerOptions(db, form)
+    if request.method == 'POST':
+        if 'deleteOrderId' in request.form:
+            return orders.delete(db, form)
+        elif 'newOrderId' in request.form:
+            if form.validate_on_submit():
+                return orders.new(db, form)
+            else:
+                return orders.index(db, form, 1, 0, "")
+        elif 'updateOrderId' in request.form:
+            if form.validate_on_submit():
+                return orders.update(db, form)
+            else:
+                return orders.index(db, form, 0, 1, request.form.get('updateOrderId'))
+
+    return orders.index(db, form, 0, 0, "")
 
 if __name__ == '__main__':
     app.run(debug=True)
