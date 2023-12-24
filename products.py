@@ -39,7 +39,8 @@ class Products:
         select_query = """ SELECT DISTINCT category FROM products """
         cursor.execute(select_query)
         for category in cursor:
-            category_list.append(category)
+            if(category[0]!=""):
+                category_list.append(category)
         cursor.close()
         return category_list
     def get_id_list(db):
@@ -80,9 +81,7 @@ class Products:
                                         request.form['list_price'],
                                         request.form['quantitiy_per_unit'],
                                         request.form['selected_category'])
-        print("Form Data:")
-        for key, value in request.form.items():
-            print(f"{key}: {value}")
+        
         cursor= db.cursor()
         query= """ INSERT INTO products (product_code, product_name , supplier_ids, standard_cost, list_price, quantity_per_unit, category)
           VALUES (%s, %s, %s, %s, %s, %s, %s) """

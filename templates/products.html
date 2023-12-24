@@ -80,7 +80,7 @@ th.sortable.asc::after {
             </div>
   
             <div class="mb-3">
-                <label for="quantitiy_per_unit" class="form-label">Extra Notes</label>
+                <label for="quantitiy_per_unit" class="form-label">Quantity Per Unit</label>
                 <input class="form-control" id="quantitiy_per_unit" name="quantitiy_per_unit" rows="3"></input>
             </div>
             <div class="mb-3">
@@ -155,87 +155,95 @@ th.sortable.asc::after {
           <td><a  style="color: black;" href="/suppliers">{{ company_name }}</a></td>
           <td>{{ product.category }}</td>
           <td>
-            <button type="button" id="updateButton" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#updateProductCollapse{{product_id}}">Update</button> 
+            <button type="button" id="updateButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateProductModal{{product_id}}">Update</button> 
           </td>
           <td>
             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" >Delete</button>
           </td>
-          
-            <div class="collapse" id="updateProductCollapse{{product_id}}">
-              
-              <div class="container mt-3">
-                  <form method="POST">
-                      <div class="mb-3">
-                          <label for="product_name" class="form-label">Product Name</label>
+          <div class="modal fade" id="updateProductModal{{product_id}}">
+            
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Update Employee {{employee_id}}:</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" >
+                  <div class="container mt-3">
+                    <form method="POST">
+                        <div class="mb-3">
+                          <label for="new_product_name" class="form-label">Product Name</label>
                           <input type="text" value="{{product.product_name}}" class="form-control" id="new_product_name" name="new_product_name" placeholder="{{product.product_name}}" required>
-                      </div>
-            
-                      <div class="mb-3">
-                          <label for="product_code" class="form-label">Product Code</label>
+                        </div>
+                  
+                        <div class="mb-3">
+                          <label for="new_product_code" class="form-label">Product Code</label>
                           <input type="text" value="{{ product.code }}" placeholder="{{ product.code }}" class="form-control" id="new_product_code" name="new_product_code" required>
-                      </div>
-            
-                      <div class="mb-3">
-                          <label for="standard_cost" class="form-label">Standard Cost</label>
-                          <input type="number" value="{{ product.cost }}" placeholder="{{ product.cost }}" class="form-control" id="new_standard_cost" name="new_standard_cost" required>
-                      </div>
-            
-                      <div class="mb-3">
-                          <label for="list_price" class="form-label">List Price</label>
-                          <input type="number" value="{{ product.list_price }}" placeholder="{{ product.list_price }}" class="form-control" id="new_list_price" name="new_list_price" required>
-                      </div>
-            
-                      <div class="mb-3">
-                          <label for="quantitiy_per_unit" class="form-label">Extra Notes</label>
-                          <input class="form-control" value="{{ product.quantitiy_per_unit }}" placeholder="{{ product.quantitiy_per_unit }}" id="new_quantitiy_per_unit" name="new_quantitiy_per_unit" rows="3"></input>
-                      </div>
-                      <div class="mb-3">
-                        <select class="form-select" id="new_categorySelect" name="new_selected_category" aria-label="Category">
-                          
-                          {% for category in category_list%}
-                          <option {% if category[0] == product.category  %} selected {%endif%} value="{{category[0]}}">{{category[0]}}</option>
-                          
-                          {%endfor%}
-                        </select>
-                        <small class="text-muted">
-                          Can't find your category? Just click
-                          <button type="button" class="btn btn-link p-0" data-bs-toggle="collapse" data-bs-target="#newCategoryUpdateCollapse">
-                              here
-                          </button>!
-                      </small>
-                      <div class="collapse" id="newCategoryUpdateCollapse">
-                        
-                          <label for="category" class="form-label">Category</label>
-                          <input type="text" class="form-control" id="category" name="new_category">
-                        
-                      </div>
-                      </div>
-                      <div class="mb-3">
-                        <select class="form-select" id="selectedSupplier" name="new_selected_supplier" aria-label="Category">
-                          
-                          {% for id, company in company_list %}
-                          <option {% if company == company_name %}selected{% endif %} value="{{ id }}">
-                              {{ id }} {{ company }}
-                          </option>
-  
-                      
-                          {%endfor%}
-                          <option class="selected">asd</option>
-                        </select>
-                        <small class="text-muted">
-                          Can't find your supplier company? You should add the company information first. Just click
-                          <a href="/suppliers">here</a>!
-                      </small>
-                      </div>
-                      <input type="hidden" id="updateId" name="updateId" value="{{product_id}}">
-                      <button type="submit" class="btn btn-success">Update Product</button>
-                      <button type="button" class="btn btn-secondary" onclick="closeUpdateCollapse()">
-                        
-                        Cancel
-                    </button>
-                  </form>
+                        </div>
+                  
+                            <div class="mb-3">
+                                <label for="new_standard_cost" class="form-label">Standard Cost</label>
+                                <input type="number" value="{{ product.cost }}" placeholder="{{ product.cost }}" class="form-control" id="new_standard_cost" name="new_standard_cost" required>
+                            </div>
+                  
+                            <div class="mb-3">
+                                <label for="new_list_price" class="form-label">List Price</label>
+                                <input type="number" value="{{ product.list_price }}" placeholder="{{ product.list_price }}" class="form-control" id="new_list_price" name="new_list_price" required>
+                            </div>
+                  
+                            <div class="mb-3">
+                                <label for="new_quantitiy_per_unit" class="form-label">Quantity Per Unit</label>
+                                <input class="form-control" value="{{ product.quantitiy_per_unit }}" placeholder="{{ product.quantitiy_per_unit }}" id="new_quantitiy_per_unit" name="new_quantitiy_per_unit" rows="3"></input>
+                            </div>
+                            <div class="mb-3">
+                              <select class="form-select" id="new_categorySelect" name="new_selected_category" aria-label="Category">
+                                
+                                {% for category in category_list%}
+                                <option {% if category[0] == product.category  %} selected {%endif%} value="{{category[0]}}">{{category[0]}}</option>
+                                
+                                {%endfor%}
+                              </select>
+                              <small class="text-muted">
+                                Can't find your category? Just click
+                                <button type="button" class="btn btn-link p-0" data-bs-toggle="collapse" data-bs-target="#newCategoryUpdateCollapse">
+                                    here
+                                </button>!
+                            </small>
+                            <div class="collapse" id="newCategoryUpdateCollapse">
+                              
+                                <label for="category" class="form-label">Category</label>
+                                <input type="text" class="form-control" id="category" name="new_category">
+                              
+                            </div>
+                            </div>
+                            <div class="mb-3">
+                              <select class="form-select" id="selectedSupplier" name="new_selected_supplier" aria-label="Category">
+                                
+                                {% for id, company in company_list %}
+                                <option {% if company == company_name %}selected{% endif %} value="{{ id }}">
+                                    {{ id }} {{ company }}
+                                </option>
+        
+                            
+                                {%endfor%}
+                                <option class="selected">asd</option>
+                              </select>
+                              <small class="text-muted">
+                                Can't find your supplier company? You should add the company information first. Just click
+                                <a href="/suppliers">here</a>!
+                            </small>
+                            </div>
+                            <input type="hidden" id="updateId" name="updateId" value="{{product_id}}">
+                            <button type="submit" class="btn btn-success">Update Product</button>
+                            <button type="button" class="btn btn-secondary" onclick="">
+                              
+                              Cancel
+                            </button>
+                          </form>
               </div>
-            
+                </div>
+             </div>
+            </div>
           </div>
           
           
@@ -272,12 +280,7 @@ th.sortable.asc::after {
         });
         newProductCollapse.hide();
     }
-    function closeUpdateProductCollapse() {
-        var updateProductCollapse = new bootstrap.Collapse(document.getElementById('updateProductCollapse'), {
-            toggle: false
-        });
-        updateProductCollapse.hide();
-    }
+    
   </script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 

@@ -8,7 +8,27 @@ class Employees:
         self.phone_number = phone_number
         self.note = note
 
+    def index(db):
+        jobs = Employees. get_all_jobtitle(db)
+        employee_list= Employees.get_all_employees(db)
+        if request.method == "POST":
+            if("first_name" in request.form):
+                return Employees.add_employee(db)
+            elif("search" in request.form):
+                return Employees.search_employee(db)      
+            elif("deleteId" in request.form):
+                return Employees.delete_employee(db)            
+            elif("updateId" in request.form):
+                return Employees.update_employee(db)   
+            elif ("choosenJob" in request.form): 
+                return Employees.get_filtered_job(db)
+            else:
+                return render_template("employees.html", employee_list=employee_list, jobs=jobs)
+        else:
+            return render_template("employees.html", employee_list=employee_list, jobs=jobs)
+    
     def get_all_employees(db):
+        job_list = Employees.get_all_jobtitle(db)
         cursor = db.cursor()
         employee_list = []
         select_query=""" SELECT id, first_name, last_name, job_title, business_phone, notes FROM employees """
@@ -18,6 +38,7 @@ class Employees:
         cursor.close()
         return employee_list
     def search_employee(employee_list):
+        job_list = Employees.get_all_jobtitle(db)
         employee_name =request.form['search']
         employee_name = employee_name.upper()
         filtered_employee = []
@@ -25,9 +46,10 @@ class Employees:
             full_name = employee.name + ' ' + employee.surname
             if employee_name in full_name.upper(): 
                 filtered_employee.append((employee_id, employee))
-        return render_template("employees.html", employee_list=filtered_employee)
+        return render_template("employees.html", employee_list=filtered_employee, jobs =job_list)
         
     def add_employee(db):
+        job_list = Employees.get_all_jobtitle(db)
         new_employee = Employees(request.form['first_name'], 
                                  request.form['last_name'],
                                  request.form['job_title'],
@@ -41,18 +63,19 @@ class Employees:
         cursor.execute(query, values)
         db.commit()
         new_list = Employees.get_all_employees(db)
-        return render_template("employees.html", employee_list=new_list)
+        return render_template("employees.html", employee_list=new_list, jobs =job_list)
         
     def delete_employee(db):
         deletedEmployeeId = request.form['deleteId']
         cursor = db.cursor()
-        
+        job_list = Employees.get_all_jobtitle(db)
         delete_query = f"DELETE FROM employees WHERE id = '{deletedEmployeeId}'"
         cursor.execute(delete_query)
         db.commit()
         new_list = Employees.get_all_employees(db)
-        return render_template("employees.html", employee_list=new_list)
+        return render_template("employees.html", employee_list=new_list, jobs =job_list)
     def update_employee( db):
+        job_list = Employees.get_all_jobtitle(db)
         updatedEmployeeId = request.form['updateId']
         new_employee = Employees(request.form['newFirst_name'], 
                                  request.form['newLast_name'],
@@ -66,4 +89,28 @@ class Employees:
         cursor.execute(query, values)
         db.commit()
         new_list = Employees.get_all_employees(db)
-        return render_template("employees.html", employee_list=new_list)
+        return render_template("employees.html", employee_list=new_list, jobs =job_list)
+    
+    def get_all_jobtitle(db):
+        jobtitle_list = []
+        cursor = db.cursor()
+        select_query = """ SELECT DISTINCT job_title FROM employees """
+        cursor.execute(select_query)
+        for job in cursor:
+            jobtitle_list.append(job)
+        cursor.close()
+        return jobtitle_list
+    def get_filtered_job(db):
+        selected_job = request.form.get('choosenJob')
+        print(selected_job)
+        employee_list = Employees.get_all_employees(db)
+        job_list = Employees.get_all_jobtitle(db)
+        if(selected_job == "all"):
+            return render_template("employees.html", employee_list=employee_list, jobs =job_list)
+        filtered_employees = []
+        for employee_id, employee in employee_list:
+            if(employee.job_title == selected_job):
+                filtered_employees.append((employee_id, employee))
+        
+        return render_template("employees.html", employee_list=filtered_employees, jobs =job_list)
+    
