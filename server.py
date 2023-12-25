@@ -153,9 +153,9 @@ def employees_page():
     
 
 @app.route("/customers", methods=("GET","POST"))
-#@login_required
 def customers_page():
     form = customers.CustomerForm()
+    # handle request by checking request methods and request types and call corresponding functions
     if request.method == 'POST':
         if 'deleteCustomerId' in request.form:
             return customers.delete(db, form)
@@ -163,20 +163,23 @@ def customers_page():
             if form.validate_on_submit():
                 return customers.new(db, form)
             else:
+                # the 1 , 0 parameters indicate that the newCustomer form has not been validated
                 return customers.index(db, form, 1, 0, "")
         elif 'updateCustomerId' in request.form:
             if form.validate_on_submit():
                 return customers.update(db, form)
             else:
+                 # the 0 , 1 parameters indicate that the updateCustomer form has not been validated
                 return customers.index(db, form, 0, 1, request.form.get('updateCustomerId'))
         
     return customers.index(db, form, 0, 0, "")
 
 @app.route("/orders", methods=("GET","POST"))
-#@login_required
 def orders_page():
     form = orders.OrdersForm()
+    # fill options for the form
     form = orders.fillCustomerOptions(db, form)
+    # handle request by checking request methods and request types and call corresponding functions
     if request.method == 'POST':
         if 'deleteOrderId' in request.form:
             return orders.delete(db, form)
@@ -184,11 +187,13 @@ def orders_page():
             if form.validate_on_submit():
                 return orders.new(db, form)
             else:
+                # the 1 , 0 parameters indicate that the newOrder form has not been validated
                 return orders.index(db, form, 1, 0, "")
         elif 'updateOrderId' in request.form:
             if form.validate_on_submit():
                 return orders.update(db, form)
             else:
+                # the 0 , 1 parameters indicate that the updateOrder form has not been validated
                 return orders.index(db, form, 0, 1, request.form.get('updateOrderId'))
 
     return orders.index(db, form, 0, 0, "")
