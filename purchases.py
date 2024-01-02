@@ -296,7 +296,8 @@ def index(db):
     
     cursor.close()
     # Retrieve the active filter from the session
-    active_filter=session['active_filter'] 
+    if 'active_filter' is session.keys():
+        active_filter=session['active_filter'] 
     # print(employees)
     # Render the 'purchases.html' template with the necessary data
     return render_template('purchases.html',records=records,update_time=update_time,active_filter=active_filter,suppliers=suppliers,employees=employees)
